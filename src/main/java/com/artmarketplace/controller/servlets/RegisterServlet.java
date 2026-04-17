@@ -20,8 +20,15 @@ public class RegisterServlet extends HttpServlet {
 
     private UserDAO userDAO;
 
+    @Override
     public void init() throws ServletException {
         userDAO = new UserDAO();
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
     }
 
     @Override
@@ -33,24 +40,24 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
 
-        if (name == null || email == null || password == null || confirmPassword == null ||
-                name.trim().isEmpty() || email.trim().isEmpty() ||
-                password.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
+        if (name == null || email == null || password == null || confirmPassword == null
+                || name.trim().isEmpty() || email.trim().isEmpty()
+                || password.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
 
             request.setAttribute("error", "All fields are required.");
-            request.getRequestDispatcher("/views/common/register.jsp").forward(request, response);
+            request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
             return;
         }
 
         if (!password.equals(confirmPassword)) {
             request.setAttribute("error", "Password and confirm password do not match.");
-            request.getRequestDispatcher("/views/common/register.jsp").forward(request, response);
+            request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
             return;
         }
 
         if (userDAO.isEmailExists(email)) {
             request.setAttribute("error", "Email already exists.");
-            request.getRequestDispatcher("/views/common/register.jsp").forward(request, response);
+            request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
             return;
         }
 
@@ -65,10 +72,10 @@ public class RegisterServlet extends HttpServlet {
         boolean result = userDAO.registerUser(user);
 
         if (result) {
-            response.sendRedirect(request.getContextPath() + "/views/common/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
         } else {
-            request.setAttribute("error", "Registration failed. Please try again.");
-            request.getRequestDispatcher("/views/common/register.jsp").forward(request, response);
+            request.setAttribute("error", "Registration failed.");
+            request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
         }
     }
 }

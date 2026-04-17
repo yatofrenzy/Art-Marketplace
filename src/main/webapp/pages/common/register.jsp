@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +7,7 @@
 </head>
 <body>
 
-    <h2>Register</h2>
+    <h2>Register Page</h2>
 
     <p style="color:red;">
         <%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>
@@ -26,10 +26,13 @@
         <label>Confirm Password:</label><br>
         <input type="password" name="confirmPassword" required><br><br>
 
-        <input type="submit" value="Register">
+        <button type="submit">Register</button>
     </form>
 
-    <p>Already have an account? <a href="<%= request.getContextPath() %>/src/webapp/login.jsp">Login here</a></p>
+    <p>
+        Already have an account?
+        <a href="<%= request.getContextPath() %>/pages/common/login.jsp">Login</a>
+    </p>
 
 </body>
 </html>

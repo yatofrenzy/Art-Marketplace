@@ -10,8 +10,8 @@ public class SessionUtil {
         request.setAttribute("user", user);
     }
 
-    public static User getLoggedInUser(HttpSession session) {
-        return (User) session.getAttribute("user");
+    public static User getLoggedInUser(HttpServletRequest req) {
+        return (User) req.getAttribute("user");
     }
 
     public static void invalidateSession(HttpServletRequest request) {
