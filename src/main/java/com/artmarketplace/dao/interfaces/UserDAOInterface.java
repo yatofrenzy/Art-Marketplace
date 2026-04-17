@@ -1,12 +1,9 @@
+package com.artmarketplace.dao.interfaces;
 
-package com.ingcollegeapt.week7twebapp.dao.interfaces;
-
-import com.ingcollegeapt.week7twebapp.model.User;
+import com.artmarketplace.model.User;
 
 public interface UserDAOInterface {
-    //create new user
-    int insertUser(String name,  String password, String email);
-    
-    //get password for the user
-    User getUser(String user);
+    boolean registerUser(User user);
+    User login(String email, String password);
 }
+

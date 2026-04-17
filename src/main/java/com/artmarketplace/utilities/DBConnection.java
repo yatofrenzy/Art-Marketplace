@@ -11,14 +11,12 @@ public class DBConnection {
 
     public static Connection getConnection() {
         Connection conn = null;
-
         try {
             conn = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Database connected successfully");
+            System.out.println("Connected");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return conn;
     }
 }
