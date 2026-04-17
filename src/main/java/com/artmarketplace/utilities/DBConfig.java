@@ -1,4 +1,4 @@
-package com.ingcollegeapt.week7twebapp.utilities;
+package com.artmarketplace.utilities;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DBConfig {
 
-    private static final String DB_NAME = "learning_logs";
+    private static final String DB_NAME = "art_marketplace";
     private static final String USER = "root";
     private static final String PASSWORD = "";
     private static final String URL = "jdbc:mysql://localhost:3306/" + DB_NAME;
