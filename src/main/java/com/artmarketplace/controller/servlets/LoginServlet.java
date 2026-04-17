@@ -27,6 +27,12 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("/pages/common/login.jsp").forward(request, response);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -35,23 +41,23 @@ public class LoginServlet extends HttpServlet {
 
         if (email == null || password == null || email.trim().isEmpty() || password.trim().isEmpty()) {
             request.setAttribute("error", "Email and password are required.");
-            request.getRequestDispatcher("/views/common/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/pages/common/login.jsp").forward(request, response);
             return;
         }
 
-        User user = userDAO.loginUser(email);
+        User user = userDAO.getUserByEmail(email);
 
-        if (user != null && PasswordUtil.checkPassword1(password, user.getPassword())) {
+        if (user != null && PasswordUtil.checkPassword(password, user.getPassword())) {
             SessionUtil.setUserSession(request, user);
 
             if ("admin".equalsIgnoreCase(user.getRole())) {
-                response.sendRedirect(request.getContextPath() + "/views/admin/dashboard.jsp");
+                response.sendRedirect(request.getContextPath() + "/pages/admin/dashboard.jsp");
             } else {
-                response.sendRedirect(request.getContextPath() + "/views/user/home.jsp");
+                response.sendRedirect(request.getContextPath() + "/pages/user/home.jsp");
             }
         } else {
             request.setAttribute("error", "Invalid email or password.");
-            request.getRequestDispatcher("/views/common/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/pages/common/login.jsp").forward(request, response);
         }
     }
 }

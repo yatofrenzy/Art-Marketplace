@@ -1,36 +1,53 @@
 package com.artmarketplace.controller.filters;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.WebFilter;
 import java.io.IOException;
 
-@WebFilter("/*")
+
+
+import com.artmarketplace.model.User;
+import com.artmarketplace.utilities.SessionUtil;
+
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebFilter("/pages/customer/*")
 public class AuthenticationFilter implements Filter {
 
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+    }
+
+    public void doFilter1(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
-        String uri = req.getRequestURI();
+        User user = SessionUtil.getLoggedInUser(req);
 
-        // Allow these without login
-        if (uri.contains("login.jsp") || uri.contains("register.jsp") ||
-            uri.contains("login") || uri.contains("register") ||
-            uri.contains("css") || uri.contains("js")) {
-
-            chain.doFilter(request, response);
+        if (user == null) {
+            res.sendRedirect(req.getContextPath() + "/pages/common/login.jsp");
             return;
         }
 
-        HttpSession session = req.getSession(false);
-
-        if (session != null && session.getAttribute("user") != null) {
-            chain.doFilter(request, response);
-        } else {
-            res.sendRedirect("login.jsp");
-        }
+        chain.doFilter(request, response);
     }
+
+    @Override
+    public void destroy() {
+    }
+
+	@Override
+	public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain arg2)
+			throws IOException, ServletException {
+		// TODO Auto-generated method stub
+		
+	}
 }
