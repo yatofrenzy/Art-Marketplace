@@ -1,46 +1,68 @@
 package com.artmarketplace.dao;
 
-import com.artmarketplace.dao.interfaces.UserDAOInterface;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import com.artmarketplace.model.User;
-import com.artmarketplace.utilities.DBConnection;
+import com.artmarketplace.utilities.DbConfig;
 
-import java.sql.*;
-
-public class UserDAO implements UserDAOInterface {
+public class UserDAO {
 
     public boolean registerUser(User user) {
-        boolean status = false;
+        boolean isRegistered = false;
+        String sql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
 
-        try {
-            Connection conn = DBConnection.getConnection();
-            String sql = "INSERT INTO users(name, email, password, role) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
             ps.setString(4, user.getRole());
 
-            status = ps.executeUpdate() > 0;
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                isRegistered = true;
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return status;
+        return isRegistered;
     }
 
-    public User login(String email, String password) {
-        User user = null;
+    public boolean isEmailExists(String email) {
+        boolean exists = false;
+        String sql = "SELECT * FROM users WHERE email = ?";
 
-        try {
-            Connection conn = DBConnection.getConnection();
-            String sql = "SELECT * FROM users WHERE email=? AND password=?";
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, email);
-            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
 
+            if (rs.next()) {
+                exists = true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return exists;
+    }
+
+    public User getUserByEmail(String email) {
+        User user = null;
+        String sql = "SELECT * FROM users WHERE email = ?";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -48,6 +70,33 @@ public class UserDAO implements UserDAOInterface {
                 user.setUserId(rs.getInt("user_id"));
                 user.setName(rs.getString("name"));
                 user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setRole(rs.getString("role"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
+    public User loginUser(String email) {
+        User user = null;
+        String sql = "SELECT * FROM users WHERE email = ?";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
                 user.setRole(rs.getString("role"));
             }
 

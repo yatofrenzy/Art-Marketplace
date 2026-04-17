@@ -1,41 +1,34 @@
 package com.artmarketplace.controller.servlets;
 
-import jakarta.servlet.ServletException;
+import com.artmarketplace.dao.OrderDAO;
+import com.artmarketplace.model.Order;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 
-/**
- * Servlet implementation class OrderServlet
- */
-@WebServlet("/OrderServlet")
+@WebServlet("/order")
 public class OrderServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public OrderServlet() {
-        super();
-        // TODO Auto-generated constructor stub
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        int userId = Integer.parseInt(request.getParameter("userId"));
+        double total = Double.parseDouble(request.getParameter("total"));
+
+        Order order = new Order();
+        order.setUserId(userId);
+        order.setTotalAmt(total);
+        order.setOrderDate(LocalDate.now().toString());
+        order.setStatus("Pending");
+        order.setPaymentMethod("COD");
+        order.setPaymentStatus("Unpaid");
+
+        OrderDAO dao = new OrderDAO();
+        dao.createOrder(order);
+
+        response.sendRedirect("success.jsp");
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
-
 }
