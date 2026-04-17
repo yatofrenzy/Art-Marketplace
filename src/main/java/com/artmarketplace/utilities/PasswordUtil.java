@@ -24,4 +24,11 @@ public class PasswordUtil {
             return null;
         }
     }
+
+
+
+	public static boolean checkPassword1(String password, String password2) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
