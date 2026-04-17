@@ -40,6 +40,12 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
 
+        System.out.println("=== RegisterServlet called ===");
+        System.out.println("Name: " + name);
+        System.out.println("Email: " + email);
+        System.out.println("Password: " + password);
+        System.out.println("Confirm Password: " + confirmPassword);
+
         if (name == null || email == null || password == null || confirmPassword == null
                 || name.trim().isEmpty() || email.trim().isEmpty()
                 || password.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
@@ -55,7 +61,10 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        if (userDAO.isEmailExists(email)) {
+        boolean exists = userDAO.isEmailExists(email);
+        System.out.println("Email exists? " + exists);
+
+        if (exists) {
             request.setAttribute("error", "Email already exists.");
             request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
             return;
@@ -70,6 +79,7 @@ public class RegisterServlet extends HttpServlet {
         user.setRole("customer");
 
         boolean result = userDAO.registerUser(user);
+        System.out.println("Register result = " + result);
 
         if (result) {
             response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");

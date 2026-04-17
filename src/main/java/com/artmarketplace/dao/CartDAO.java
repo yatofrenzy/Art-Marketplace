@@ -11,8 +11,7 @@ public class CartDAO implements CartDAOInterface {
         boolean status = false;
 
         try {
-            Connection conn = DBConnection.getConnection();
-            String sql = "INSERT INTO cart(user_id, artwork_id, quantity) VALUES (?, ?, ?)";
+            Connection conn = DBConnection(user_id, artwork_id, quantity) VALUES (?, ?, ?)";
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, userId);
