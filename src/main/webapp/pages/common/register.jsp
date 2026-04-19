@@ -1,32 +1,30 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Register</title>
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/login_register.css">
 </head>
 <body>
 
-<div class="container">
-    <h2>Register</h2>
+<h2>Register</h2>
 
-    <p class="error">
-        <%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>
-    </p>
+<p style="color:red;">
+    <%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>
+</p>
 
-    <form action="<%= request.getContextPath() %>/register" method="post">
-        <input type="text" name="name" placeholder="Full Name" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
-        <button type="submit">Register</button>
-    </form>
+<form action="${pageContext.request.contextPath}/register" method="post">
+    <input type="text" name="name" placeholder="Full Name" required><br><br>
+    <input type="email" name="email" placeholder="Email" required><br><br>
+    <input type="password" name="password" placeholder="Password" required><br><br>
+    <input type="password" name="confirmPassword" placeholder="Confirm Password" required><br><br>
+    <button type="submit">Register</button>
+</form>
 
-    <p>
-        Already have an account?
-        <a href="<%= request.getContextPath() %>/pages/common/login.jsp">Login</a>
-    </p>
-</div>
+<p>
+    Already have an account?
+    <a href="${pageContext.request.contextPath}/pages/common/login.jsp">Login</a>
+</p>
 
 </body>
 </html>

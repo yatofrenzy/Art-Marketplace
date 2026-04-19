@@ -2,8 +2,6 @@ package com.artmarketplace.controller.filters;
 
 import java.io.IOException;
 
-
-
 import com.artmarketplace.model.User;
 import com.artmarketplace.utilities.SessionUtil;
 
@@ -24,7 +22,8 @@ public class AuthenticationFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 
-    public void doFilter1(ServletRequest request, ServletResponse response, FilterChain chain)
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
         HttpServletRequest req = (HttpServletRequest) request;
@@ -43,11 +42,4 @@ public class AuthenticationFilter implements Filter {
     @Override
     public void destroy() {
     }
-
-	@Override
-	public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain arg2)
-			throws IOException, ServletException {
-		// TODO Auto-generated method stub
-		
-	}
 }

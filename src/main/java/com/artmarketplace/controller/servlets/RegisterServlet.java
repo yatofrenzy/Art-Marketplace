@@ -2,8 +2,6 @@ package com.artmarketplace.controller.servlets;
 
 import java.io.IOException;
 
-
-
 import com.artmarketplace.dao.UserDAO;
 import com.artmarketplace.model.User;
 
@@ -32,10 +30,6 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
 
-        System.out.println("RegisterServlet called");
-        System.out.println("Name: " + name);
-        System.out.println("Email: " + email);
-
         if (name == null || email == null || password == null || confirmPassword == null ||
             name.trim().isEmpty() || email.trim().isEmpty() ||
             password.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
@@ -53,16 +47,16 @@ public class RegisterServlet extends HttpServlet {
 
         UserDAO dao = new UserDAO();
 
-        if (dao.isEmailExists(email)) {
+        if (dao.isEmailExists(email.trim())) {
             request.setAttribute("error", "Email already exists");
             request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
             return;
         }
 
         User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        user.setPassword(password);
+        user.setName(name.trim());
+        user.setEmail(email.trim());
+        user.setPassword(password.trim());
         user.setRole("customer");
 
         boolean result = dao.registerUser(user);

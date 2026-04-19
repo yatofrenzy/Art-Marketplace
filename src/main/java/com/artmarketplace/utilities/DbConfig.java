@@ -11,13 +11,14 @@ public class DbConfig {
 
     public static Connection getConnection() {
         try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Database connected successfully");
+            System.out.println("DB connected successfully");
             return conn;
         } catch (Exception e) {
-            System.out.println("Database connection error:");
+            System.out.println("DB connection error");
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 }

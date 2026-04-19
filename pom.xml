@@ -5,8 +5,18 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
   
-   <dependencies>
- 
+  <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jakartaee>11.0.0-M1</jakartaee>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>${jakartaee}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- Source: https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
         <dependency>
             <groupId>com.mysql</groupId>
@@ -29,9 +39,9 @@
             <artifactId>jbcrypt</artifactId>
             <version>0.4</version> <!-- Use the latest version -->
         </dependency>
-        
 
     </dependencies>
+
   <build>
     <plugins>
       <plugin>

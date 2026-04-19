@@ -15,18 +15,40 @@ public class UserDAO {
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            if (conn == null) {
+                return false;
+            }
+
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
             ps.setString(4, user.getRole());
 
             int rows = ps.executeUpdate();
-            System.out.println("Rows inserted: " + rows);
-
             return rows > 0;
 
         } catch (Exception e) {
-            System.out.println("REGISTER ERROR:");
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean isEmailExists(String email) {
+        String sql = "SELECT user_id FROM users WHERE email = ?";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            if (conn == null) {
+                return false;
+            }
+
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -38,6 +60,10 @@ public class UserDAO {
 
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            if (conn == null) {
+                return null;
+            }
 
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
@@ -53,29 +79,9 @@ public class UserDAO {
             }
 
         } catch (Exception e) {
-            System.out.println("GET USER ERROR:");
             e.printStackTrace();
         }
 
         return null;
-    }
-
-    public boolean isEmailExists(String email) {
-        String sql = "SELECT * FROM users WHERE email = ?";
-
-        try (Connection conn = DbConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-
-            return rs.next();
-
-        } catch (Exception e) {
-            System.out.println("EMAIL CHECK ERROR:");
-            e.printStackTrace();
-        }
-
-        return false;
     }
 }

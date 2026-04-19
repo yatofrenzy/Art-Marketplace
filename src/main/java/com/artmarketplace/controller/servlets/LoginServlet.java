@@ -2,8 +2,6 @@ package com.artmarketplace.controller.servlets;
 
 import java.io.IOException;
 
-
-
 import com.artmarketplace.dao.UserDAO;
 import com.artmarketplace.model.User;
 
@@ -31,9 +29,6 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        System.out.println("LoginServlet called");
-        System.out.println("Email: " + email);
-
         if (email == null || password == null ||
             email.trim().isEmpty() || password.trim().isEmpty()) {
 
@@ -43,17 +38,12 @@ public class LoginServlet extends HttpServlet {
         }
 
         UserDAO dao = new UserDAO();
-        User user = dao.getUserByEmail(email);
+        User user = dao.getUserByEmail(email.trim());
 
-        if (user != null && password.equals(user.getPassword())) {
+        if (user != null && password.trim().equals(user.getPassword())) {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-
-            if ("admin".equalsIgnoreCase(user.getRole())) {
-                response.sendRedirect(request.getContextPath() + "/pages/admin/dashboard.jsp");
-            } else {
-                response.sendRedirect(request.getContextPath() + "/pages/user/home.jsp");
-            }
+            response.sendRedirect(request.getContextPath() + "/pages/customer/home.jsp");
         } else {
             request.setAttribute("error", "Invalid email or password");
             request.getRequestDispatcher("/pages/common/login.jsp").forward(request, response);

@@ -1,25 +1,28 @@
 package com.artmarketplace.utilities;
 
+import com.artmarketplace.model.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import com.artmarketplace.model.User;
 
 public class SessionUtil {
 
     public static void setUserSession(HttpServletRequest request, User user) {
-        request.setAttribute("user", user);
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user);
     }
 
-    public static User getLoggedInUser(HttpServletRequest req) {
-        return (User) req.getAttribute("user");
+    public static User getLoggedInUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            return (User) session.getAttribute("user");
+        }
+        return null;
     }
 
     public static void invalidateSession(HttpServletRequest request) {
-        ((HttpSession) request).invalidate();
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
     }
-
-	public static void setUserSession1(HttpServletRequest request, User user) {
-		// TODO Auto-generated method stub
-		
-	}
 }
