@@ -11,7 +11,11 @@ public class DbConfig {
 
     public static Connection getConnection() {
         try {
+<<<<<<< HEAD
             Class.forName("com.mysql.cj.jdbc.Driver");
+=======
+        	Class.forName("com.mysql.cj.jdbc.Driver");
+>>>>>>> f15bbcbe75b2c1f39df07582fc700aff99d5b9b3
             Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
             System.out.println("DB connected successfully");
             return conn;

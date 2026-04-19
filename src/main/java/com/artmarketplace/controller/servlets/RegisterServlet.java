@@ -62,7 +62,7 @@ public class RegisterServlet extends HttpServlet {
         boolean result = dao.registerUser(user);
 
         if (result) {
-            response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login");
         } else {
             request.setAttribute("error", "Registration failed");
             request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
