@@ -1,4 +1,4 @@
-package com.ingcollegeapt.week7twebapp.utilities;
+package com.artmarketplace.utilities;
 
 import java.time.LocalDate;
 import java.time.Period;

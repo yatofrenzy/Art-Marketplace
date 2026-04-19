@@ -6,7 +6,7 @@ public class PasswordUtil {
         return password;
     }
 
-    public static boolean checkPassword(String inputPassword, String storedPassword) {
-        return inputPassword.equals(storedPassword);
+    public static boolean checkPassword(String input, String stored) {
+        return input.equals(stored);
     }
 }

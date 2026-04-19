@@ -10,7 +10,6 @@ import com.artmarketplace.utilities.DbConfig;
 public class UserDAO {
 
     public boolean registerUser(User user) {
-        boolean isRegistered = false;
         String sql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DbConfig.getConnection();
@@ -22,41 +21,19 @@ public class UserDAO {
             ps.setString(4, user.getRole());
 
             int rows = ps.executeUpdate();
+            System.out.println("Rows inserted: " + rows);
 
-            if (rows > 0) {
-                isRegistered = true;
-            }
+            return rows > 0;
 
         } catch (Exception e) {
+            System.out.println("REGISTER ERROR:");
             e.printStackTrace();
         }
 
-        return isRegistered;
-    }
-
-    public boolean isEmailExists(String email) {
-        boolean exists = false;
-        String sql = "SELECT * FROM users WHERE email = ?";
-
-        try (Connection conn = DbConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                exists = true;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return exists;
+        return false;
     }
 
     public User getUserByEmail(String email) {
-        User user = null;
         String sql = "SELECT * FROM users WHERE email = ?";
 
         try (Connection conn = DbConfig.getConnection();
@@ -66,23 +43,24 @@ public class UserDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                user = new User();
+                User user = new User();
                 user.setUserId(rs.getInt("user_id"));
                 user.setName(rs.getString("name"));
                 user.setEmail(rs.getString("email"));
                 user.setPassword(rs.getString("password"));
                 user.setRole(rs.getString("role"));
+                return user;
             }
 
         } catch (Exception e) {
+            System.out.println("GET USER ERROR:");
             e.printStackTrace();
         }
 
-        return user;
+        return null;
     }
 
-    public User loginUser(String email) {
-        User user = null;
+    public boolean isEmailExists(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
 
         try (Connection conn = DbConfig.getConnection();
@@ -91,19 +69,13 @@ public class UserDAO {
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                user = new User();
-                user.setUserId(rs.getInt("user_id"));
-                user.setName(rs.getString("name"));
-                user.setEmail(rs.getString("email"));
-                user.setPassword(rs.getString("password"));
-                user.setRole(rs.getString("role"));
-            }
+            return rs.next();
 
         } catch (Exception e) {
+            System.out.println("EMAIL CHECK ERROR:");
             e.printStackTrace();
         }
 
-        return user;
+        return false;
     }
 }

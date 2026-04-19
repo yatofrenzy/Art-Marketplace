@@ -7,6 +7,7 @@
 </head>
 <body>
     <h2>User Home Page</h2>
+    <p>Login successful</p>
     <a href="<%= request.getContextPath() %>/logout">Logout</a>
 </body>
 </html>

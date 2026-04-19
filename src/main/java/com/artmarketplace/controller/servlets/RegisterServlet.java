@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import com.artmarketplace.dao.UserDAO;
 import com.artmarketplace.model.User;
-import com.artmarketplace.utilities.PasswordUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,13 +16,6 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-
-    private UserDAO userDAO;
-
-    @Override
-    public void init() throws ServletException {
-        userDAO = new UserDAO();
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -40,41 +32,45 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
 
-        if (name == null || email == null || password == null || confirmPassword == null
-                || name.trim().isEmpty() || email.trim().isEmpty()
-                || password.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
+        System.out.println("RegisterServlet called");
+        System.out.println("Name: " + name);
+        System.out.println("Email: " + email);
 
-            request.setAttribute("error", "All fields are required.");
+        if (name == null || email == null || password == null || confirmPassword == null ||
+            name.trim().isEmpty() || email.trim().isEmpty() ||
+            password.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
+
+            request.setAttribute("error", "All fields are required");
             request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            request.setAttribute("error", "Password and confirm password do not match.");
+            request.setAttribute("error", "Passwords do not match");
             request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
             return;
         }
 
-        if (userDAO.isEmailExists(email)) {
-            request.setAttribute("error", "Email already exists.");
+        UserDAO dao = new UserDAO();
+
+        if (dao.isEmailExists(email)) {
+            request.setAttribute("error", "Email already exists");
             request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
             return;
         }
-
-        String hashedPassword = PasswordUtil.hashPassword(password);
 
         User user = new User();
         user.setName(name);
         user.setEmail(email);
-        user.setPassword(hashedPassword);
+        user.setPassword(password);
         user.setRole("customer");
 
-        boolean result = userDAO.registerUser(user);
+        boolean result = dao.registerUser(user);
 
         if (result) {
             response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
         } else {
-            request.setAttribute("error", "Registration failed.");
+            request.setAttribute("error", "Registration failed");
             request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
         }
     }
