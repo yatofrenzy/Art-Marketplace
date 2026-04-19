@@ -1,25 +1,22 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/login_register.css">
 </head>
 <body>
 
-    <h2>Login Page</h2>
+<div class="container">
+    <h2>Login</h2>
 
-    <p style="color:red;">
+    <p class="error">
         <%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>
     </p>
 
     <form action="<%= request.getContextPath() %>/login" method="post">
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br><br>
-
-        <label>Password:</label><br>
-        <input type="password" name="password" required><br><br>
-
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
         <button type="submit">Login</button>
     </form>
 
@@ -27,6 +24,7 @@
         Don’t have an account?
         <a href="<%= request.getContextPath() %>/pages/common/register.jsp">Register</a>
     </p>
+</div>
 
 </body>
 </html>
