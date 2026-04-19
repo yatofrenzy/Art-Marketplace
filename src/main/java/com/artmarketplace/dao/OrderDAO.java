@@ -15,7 +15,7 @@ public class OrderDAO implements OrderDAOInterface {
         try {
             Connection conn = DBConnection.getConnection();
 
-            String sql = "INSERT INTO orders(user_id, total_amt, order_date, status, payment_method, payment_status, payment_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO orders(user_id, total_amount, order_date, status, payment_method, payment_status, payment_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, order.getUserId());
@@ -49,8 +49,8 @@ public class OrderDAO implements OrderDAOInterface {
 
             while (rs.next()) {
                 Order o = new Order();
-                o.setOrderId(rs.getInt("order_id"));
-                o.setTotalAmt(rs.getDouble("total_amt"));
+                o.setOrderId(rs.getInt("orders_id"));
+                o.setTotalAmt(rs.getDouble("total_amount"));
 
                 list.add(o);
             }
