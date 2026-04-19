@@ -23,28 +23,30 @@ public class RegisterServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         userDAO = new UserDAO();
+        System.out.println("RegisterServlet loaded");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/pages/common/register.jsp");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        System.out.println("RegisterServlet doPost called");
+
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
 
-        System.out.println("=== RegisterServlet called ===");
-        System.out.println("Name: " + name);
-        System.out.println("Email: " + email);
-        System.out.println("Password: " + password);
-        System.out.println("Confirm Password: " + confirmPassword);
+        System.out.println("name = " + name);
+        System.out.println("email = " + email);
+        System.out.println("password = " + password);
+        System.out.println("confirmPassword = " + confirmPassword);
 
         if (name == null || email == null || password == null || confirmPassword == null
                 || name.trim().isEmpty() || email.trim().isEmpty()
@@ -62,7 +64,7 @@ public class RegisterServlet extends HttpServlet {
         }
 
         boolean exists = userDAO.isEmailExists(email);
-        System.out.println("Email exists? " + exists);
+        System.out.println("email exists = " + exists);
 
         if (exists) {
             request.setAttribute("error", "Email already exists.");
@@ -70,16 +72,14 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        String hashedPassword = PasswordUtil.hashPassword(password);
-
         User user = new User();
         user.setName(name);
         user.setEmail(email);
-        user.setPassword(hashedPassword);
+        user.setPassword(PasswordUtil.hashPassword(password));
         user.setRole("customer");
 
         boolean result = userDAO.registerUser(user);
-        System.out.println("Register result = " + result);
+        System.out.println("register result = " + result);
 
         if (result) {
             response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
