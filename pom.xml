@@ -5,18 +5,8 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
   
-  <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jakartaee>11.0.0-M1</jakartaee>
-    </properties>
-    
-    <dependencies>
-        <dependency>
-            <groupId>jakarta.platform</groupId>
-            <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>${jakartaee}</version>
-            <scope>provided</scope>
-        </dependency>
+   <dependencies>
+ 
         <!-- Source: https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
         <dependency>
             <groupId>com.mysql</groupId>
@@ -25,9 +15,10 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>jakarta.servlet.jsp.jstl</groupId>
-            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-            <version>3.0.0</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.web</groupId>
@@ -39,9 +30,9 @@
             <artifactId>jbcrypt</artifactId>
             <version>0.4</version> <!-- Use the latest version -->
         </dependency>
+        
 
     </dependencies>
-
   <build>
     <plugins>
       <plugin>
