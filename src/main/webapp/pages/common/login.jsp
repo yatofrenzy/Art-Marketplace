@@ -23,11 +23,6 @@
             </div>
         <% } %>
 
-
-<p>
-    Don’t have an account?
-    <a> href="${pageContext.request.contextPath}/pages/common/register.jsp">Register</a>
-</p>
         <form action="${pageContext.request.contextPath}/login" method="post">
             <div class="form-group">
                 <label>Email Address</label>
@@ -48,7 +43,6 @@
         </p>
     </div>
 </div>
-
 
 </body>
 </html>
