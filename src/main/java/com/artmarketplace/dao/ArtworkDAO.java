@@ -3,6 +3,7 @@ package com.artmarketplace.dao;
 import com.artmarketplace.dao.interfaces.ArtworkDAOInterface;
 import com.artmarketplace.model.Artwork;
 import com.artmarketplace.utilities.DBConnection;
+import com.artmarketplace.utilities.DbConfig;
 
 import java.sql.*;
 import java.util.*;
@@ -15,7 +16,7 @@ public class ArtworkDAO implements ArtworkDAOInterface {
         boolean status = false;
 
         try {
-            Connection conn = DBConnection.getConnection();
+            Connection conn = DbConfig.getConnection();
 
             String sql = "INSERT INTO artwork(title, price, category_id, artist_id, image_path) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -41,7 +42,7 @@ public class ArtworkDAO implements ArtworkDAOInterface {
         List<Artwork> list = new ArrayList<>();
 
         try {
-            Connection conn = DBConnection.getConnection();
+            Connection conn = DbConfig.getConnection();
 
             String sql = "SELECT * FROM artwork";
             PreparedStatement ps = conn.prepareStatement(sql);

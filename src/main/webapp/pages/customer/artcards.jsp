@@ -20,8 +20,9 @@
 
             <div class="page-body">
                 <div class="art-grid">
+
                     <div class="art-card">
-                        <div class="art-image">Art 1</div>
+                        <img src="${pageContext.request.contextPath}/resources/images/cherryblossom.jpg" alt="Sunset Beauty" class="art-real-image">
                         <div class="art-details">
                             <h3>Sunset Beauty</h3>
                             <p>A calming landscape artwork with warm evening colors.</p>
@@ -31,7 +32,7 @@
                     </div>
 
                     <div class="art-card">
-                        <div class="art-image">Art 2</div>
+                        <img src="${pageContext.request.contextPath}/resources/images/picaso 1.jpg" alt="Dream Waves" class="art-real-image">
                         <div class="art-details">
                             <h3>Dream Waves</h3>
                             <p>An abstract creation with soft motion and modern feel.</p>
@@ -41,7 +42,7 @@
                     </div>
 
                     <div class="art-card">
-                        <div class="art-image">Art 3</div>
+                        <img src="${pageContext.request.contextPath}/resources/images/picaso 2.jpg" alt="Mountain View" class="art-real-image">
                         <div class="art-details">
                             <h3>Mountain View</h3>
                             <p>A detailed painting inspired by natural mountain scenery.</p>
@@ -51,7 +52,7 @@
                     </div>
 
                     <div class="art-card">
-                        <div class="art-image">Art 4</div>
+                        <img src="${pageContext.request.contextPath}/resources/images/wukong.jpg" alt="City Lights" class="art-real-image">
                         <div class="art-details">
                             <h3>City Lights</h3>
                             <p>A modern digital art piece showing bright night life.</p>
@@ -59,6 +60,7 @@
                             <a href="#" class="action-btn primary-btn">View Details</a>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
