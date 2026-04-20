@@ -9,14 +9,17 @@ import java.util.*;
 
 public class ArtworkDAO implements ArtworkDAOInterface {
 
+    // ✅ ADD ARTWORK
+    @Override
     public boolean addArtwork(Artwork artwork) {
         boolean status = false;
 
         try {
             Connection conn = DBConnection.getConnection();
-            String sql = "INSERT INTO artwork(title, price, category_id, artist_id, image_path) VALUES (?, ?, ?, ?, ?)";
 
+            String sql = "INSERT INTO artwork(title, price, category_id, artist_id, image_path) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
+
             ps.setString(1, artwork.getTitle());
             ps.setDouble(2, artwork.getPrice());
             ps.setInt(3, artwork.getCategoryId());
@@ -32,21 +35,28 @@ public class ArtworkDAO implements ArtworkDAOInterface {
         return status;
     }
 
+    // ✅ GET ALL ARTWORKS
+    @Override
     public List<Artwork> getAllArtworks() {
         List<Artwork> list = new ArrayList<>();
 
         try {
             Connection conn = DBConnection.getConnection();
-            String sql = "SELECT * FROM artwork";
 
+            String sql = "SELECT * FROM artwork";
             PreparedStatement ps = conn.prepareStatement(sql);
+
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 Artwork a = new Artwork();
+
                 a.setArtworkId(rs.getInt("artwork_id"));
                 a.setTitle(rs.getString("title"));
                 a.setPrice(rs.getDouble("price"));
+                a.setCategoryId(rs.getInt("category_id"));
+                a.setArtistId(rs.getInt("artist_id"));
+                a.setImagePath(rs.getString("image_path")); // ✅ IMPORTANT FIX
 
                 list.add(a);
             }

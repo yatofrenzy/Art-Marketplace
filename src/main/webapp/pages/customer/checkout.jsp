@@ -11,7 +11,7 @@
 
 <h2>Checkout</h2>
 
-<form action="order" method="post">
+<form action="<%= request.getContextPath() %>>/order" method="post">
 
     <label>Payment Method:</label>
     <select name="payment_method" required>
