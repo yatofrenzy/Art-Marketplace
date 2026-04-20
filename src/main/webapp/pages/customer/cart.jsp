@@ -25,7 +25,7 @@
             <p>Price: Rs. 2000</p>
             <p>Quantity: 1</p>
             <button>Remove</button>
-        </div>
+       
 
         <div class="summary">
             <h3>Total: Rs. 2000</h3>

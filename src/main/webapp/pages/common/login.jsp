@@ -23,6 +23,5 @@
     Don’t have an account?
     <a href="${pageContext.request.contextPath}/pages/common/register.jsp">Register</a>
 </p>
-
 </body>
 </html>
