@@ -2,27 +2,17 @@ package com.artmarketplace.utilities;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DbConfig {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/art_marketplace";
+    private static final String DB_NAME = "art_marketplace";
     private static final String USER = "root";
     private static final String PASSWORD = "";
+    private static final String URL = "jdbc:mysql://localhost:3306/" + DB_NAME;
 
-    public static Connection getConnection() {
-        try {
-<<<<<<< HEAD
-            Class.forName("com.mysql.cj.jdbc.Driver");
-=======
-        	Class.forName("com.mysql.cj.jdbc.Driver");
->>>>>>> f15bbcbe75b2c1f39df07582fc700aff99d5b9b3
-            Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("DB connected successfully");
-            return conn;
-        } catch (Exception e) {
-            System.out.println("DB connection error");
-            e.printStackTrace();
-            return null;
-        }
+    public static Connection getConnection() throws SQLException, ClassNotFoundException {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 }
