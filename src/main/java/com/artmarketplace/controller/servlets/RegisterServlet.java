@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.artmarketplace.dao.UserDAO;
 import com.artmarketplace.model.User;
+import com.artmarketplace.utilities.PasswordUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -56,7 +57,8 @@ public class RegisterServlet extends HttpServlet {
         User user = new User();
         user.setName(name.trim());
         user.setEmail(email.trim());
-        user.setPassword(password.trim());
+        String hashed = PasswordUtil.hashPassword(password);
+        user.setPassword(hashed);
         user.setRole("customer");
 
         boolean result = dao.registerUser(user);

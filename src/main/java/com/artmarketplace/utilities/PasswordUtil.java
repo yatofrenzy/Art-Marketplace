@@ -1,12 +1,14 @@
 package com.artmarketplace.utilities;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 public class PasswordUtil {
 
-    public static String hashPassword(String password) {
-        return password;
+    public static String hashPassword(String plainPassword) {
+        return BCrypt.hashpw(plainPassword, BCrypt.gensalt());
     }
 
-    public static boolean checkPassword(String input, String stored) {
-        return input.equals(stored);
+    public static boolean checkPassword(String plainPassword, String hashedPassword) {
+        return BCrypt.checkpw(plainPassword, hashedPassword);
     }
 }

@@ -4,13 +4,13 @@ import java.io.IOException;
 
 import com.artmarketplace.dao.UserDAO;
 import com.artmarketplace.model.User;
+import com.artmarketplace.utilities.PasswordUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -37,15 +37,15 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
+        
         UserDAO dao = new UserDAO();
-        User user = dao.getUserByEmail(email.trim());
+        User user = dao.getUserByEmail(email);
 
-        if (user != null && password.trim().equals(user.getPassword())) {
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-            response.sendRedirect(request.getContextPath() + "/pages/customer/home.jsp");
+        if (user != null && PasswordUtil.checkPassword(password, user.getPassword())) {
+            request.getSession().setAttribute("user", user);
+            response.sendRedirect("home");
         } else {
-            request.setAttribute("error", "Invalid email or password");
+            request.setAttribute("error", "Invalid email or password.");
             request.getRequestDispatcher("/pages/common/login.jsp").forward(request, response);
         }
     }
