@@ -2,6 +2,7 @@ package com.artmarketplace.controller.servlets;
 
 import com.artmarketplace.dao.*;
 import com.artmarketplace.model.*;
+
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,17 +14,15 @@ import java.util.List;
 @WebServlet("/order")
 public class OrderServlet extends HttpServlet {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
+        
         if (user == null) {
             response.sendRedirect("login.jsp");
             return;
@@ -32,18 +31,21 @@ public class OrderServlet extends HttpServlet {
         int userId = user.getUserId();
 
         CartDAO cartDAO = new CartDAO();
-        List<CartItem> cartList = cartDAO.getCartByUserId(userId);
+        List<CartItem> cartList = cartDAO.getCartItems(userId);
 
-        if (cartList.isEmpty()) {
+       
+        if (cartList == null || cartList.isEmpty()) {
             response.sendRedirect("cart.jsp");
             return;
         }
 
+       
         double total = 0;
         for (CartItem item : cartList) {
             total += item.getPrice() * item.getQuantity();
         }
 
+       
         Order order = new Order();
         order.setUserId(userId);
         order.setTotalAmt(total);
@@ -56,19 +58,28 @@ public class OrderServlet extends HttpServlet {
         OrderDAO orderDAO = new OrderDAO();
         int orderId = orderDAO.createOrder(order);
 
+        //  Check if order created
+        if (orderId <= 0) {
+            response.sendRedirect("error.jsp");
+            return;
+        }
+
+        // Save order items
         OrderItemDAO orderItemDAO = new OrderItemDAO();
 
         for (CartItem item : cartList) {
             orderItemDAO.addOrderItem(
-                orderId,
-                item.getArtworkId(),
-                item.getQuantity(),
-                item.getPrice()
+                    orderId,
+                    item.getArtworkId(),
+                    item.getQuantity(),
+                    item.getPrice()
             );
         }
 
+        //  Clear cart
         cartDAO.clearCart(userId);
 
+        //  Success
         response.sendRedirect("success.jsp");
     }
 }

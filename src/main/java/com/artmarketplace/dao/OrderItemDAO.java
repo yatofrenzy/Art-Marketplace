@@ -1,17 +1,16 @@
 package com.artmarketplace.dao;
 
-import com.artmarketplace.dao.interfaces.OrderItemDAOInterface;
-import com.artmarketplace.utilities.DBConnection;
+import com.artmarketplace.utilities.DbConfig;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
-public class OrderItemDAO implements OrderItemDAOInterface {
+public class OrderItemDAO {
 
-    public boolean addOrderItem(boolean orderId, int artworkId, int quantity, double price) {
+    public boolean addOrderItem(int orderId, int artworkId, int quantity, double price) {
         boolean status = false;
 
-        try {
-            Connection conn = DBConnection.getConnection();
+        try (Connection conn = DbConfig.getConnection()) {
 
             String sql = "INSERT INTO order_item(order_id, artwork_id, quantity, price) VALUES (?, ?, ?, ?)";
 
