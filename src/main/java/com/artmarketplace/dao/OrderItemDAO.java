@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 
 public class OrderItemDAO {
 
-    public boolean addOrderItem(int orderId, int artworkId, int quantity, double price) {
+    public boolean addOrderItem(boolean orderId, int artworkId, int quantity, double price) {
         boolean status = false;
 
         try (Connection conn = DbConfig.getConnection()) {
