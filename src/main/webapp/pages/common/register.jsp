@@ -4,54 +4,66 @@
 <head>
     <meta charset="UTF-8">
     <title>Register | Art Marketplace</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/login_register.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth_art.css">
 </head>
 <body>
 
-<div class="page-wrapper">
-    <div class="card">
-        <div class="brand">
-            <h1>Art Marketplace</h1>
-            <p>Create your account and start your art journey</p>
+<div class="auth-shell">
+    <section class="art-side">
+        <div class="brand-badge">Art Marketplace</div>
+
+        <div class="hero-text">
+            <h1>Start your art journey today.</h1>
+            <p>Create an account to discover artworks, save your favorites, and become part of a creative digital community.</p>
         </div>
 
-        <h2 class="form-title">Register</h2>
+        <div class="paint-board">
+            <div class="paint-tile"></div>
+            <div class="paint-tile"></div>
+            <div class="paint-tile"></div>
+        </div>
+    </section>
 
-        <% if(request.getAttribute("error") != null) { %>
-            <div class="error-message">
-                <%= request.getAttribute("error") %>
+    <section class="form-side">
+        <div class="auth-card">
+            <div class="mini-title">Join Us</div>
+            <h2>Create Account</h2>
+            <p class="sub">Register your details and begin exploring the marketplace.</p>
+
+            <% if(request.getAttribute("error") != null) { %>
+                <div class="notice-error"><%= request.getAttribute("error") %></div>
+            <% } %>
+
+            <form action="${pageContext.request.contextPath}/register" method="post">
+                <div class="input-box">
+                    <label>Full Name</label>
+                    <input type="text" name="name" placeholder="Your full name" autocomplete="name" required>
+                </div>
+
+                <div class="input-box">
+                    <label>Email Address</label>
+                    <input type="email" name="email" placeholder="example@email.com" autocomplete="email" required>
+                </div>
+
+                <div class="input-box">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Create password" autocomplete="new-password" required>
+                </div>
+
+                <div class="input-box">
+                    <label>Confirm Password</label>
+                    <input type="password" name="confirmPassword" placeholder="Confirm password" autocomplete="new-password" required>
+                </div>
+
+                <button type="submit" class="art-btn">Create My Account</button>
+            </form>
+
+            <div class="switch-line">
+                Already registered?
+                <a href="${pageContext.request.contextPath}/pages/common/login.jsp">Login here</a>
             </div>
-        <% } %>
-
-        <form action="${pageContext.request.contextPath}/register" method="post">
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" name="name" class="form-control" placeholder="Enter your full name" required>
-            </div>
-
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
-            </div>
-
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" name="password" class="form-control" placeholder="Create password" required>
-            </div>
-
-            <div class="form-group">
-                <label>Confirm Password</label>
-                <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm password" required>
-            </div>
-
-            <button type="submit" class="btn">Create Account</button>
-        </form>
-
-        <p class="bottom-text text-center">
-            Already have an account?
-            <a href="${pageContext.request.contextPath}/pages/common/login.jsp">Login</a>
-        </p>
-    </div>
+        </div>
+    </section>
 </div>
 
 </body>

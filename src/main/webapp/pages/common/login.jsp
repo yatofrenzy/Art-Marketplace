@@ -4,44 +4,56 @@
 <head>
     <meta charset="UTF-8">
     <title>Login | Art Marketplace</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/login_register.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth_art.css">
 </head>
 <body>
 
-<div class="page-wrapper">
-    <div class="card">
-        <div class="brand">
-            <h1>Art Marketplace</h1>
-            <p>Login to explore and manage beautiful artwork</p>
+<div class="auth-shell">
+    <section class="art-side">
+        <div class="brand-badge">Art Marketplace</div>
+
+        <div class="hero-text">
+            <h1>Where art finds its people.</h1>
+            <p>Login to explore creative artworks, manage your profile, and continue your journey inside a digital art space.</p>
         </div>
 
-        <h2 class="form-title">Login</h2>
+        <div class="paint-board">
+            <div class="paint-tile"></div>
+            <div class="paint-tile"></div>
+            <div class="paint-tile"></div>
+        </div>
+    </section>
 
-        <% if(request.getAttribute("error") != null) { %>
-            <div class="error-message">
-                <%= request.getAttribute("error") %>
+    <section class="form-side">
+        <div class="auth-card">
+            <div class="mini-title">Welcome Back</div>
+            <h2>Login</h2>
+            <p class="sub">Enter your account details to continue browsing the marketplace.</p>
+
+            <% if(request.getAttribute("error") != null) { %>
+                <div class="notice-error"><%= request.getAttribute("error") %></div>
+            <% } %>
+
+            <form action="${pageContext.request.contextPath}/login" method="post">
+                <div class="input-box">
+                    <label>Email Address</label>
+                    <input type="email" name="email" placeholder="example@email.com" autocomplete="email" required>
+                </div>
+
+                <div class="input-box">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Enter password" autocomplete="current-password" required>
+                </div>
+
+                <button type="submit" class="art-btn">Enter Marketplace</button>
+            </form>
+
+            <div class="switch-line">
+                New here?
+                <a href="${pageContext.request.contextPath}/pages/common/register.jsp">Create an account</a>
             </div>
-        <% } %>
-
-        <form action="${pageContext.request.contextPath}/login" method="post">
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
-            </div>
-
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
-            </div>
-
-            <button type="submit" class="btn">Login</button>
-        </form>
-
-        <p class="bottom-text text-center">
-            Don’t have an account?
-            <a href="${pageContext.request.contextPath}/pages/common/register.jsp">Register</a>
-        </p>
-    </div>
+        </div>
+    </section>
 </div>
 
 </body>
