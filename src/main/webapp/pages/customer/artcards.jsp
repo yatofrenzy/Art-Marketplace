@@ -22,40 +22,40 @@
                 <div class="art-grid">
 
                     <div class="art-card">
-                        <img src="${pageContext.request.contextPath}/resources/images/cherryblossom.jpg" alt="Sunset Beauty" class="art-real-image">
+                        <img src="${pageContext.request.contextPath}/resources/images/cherryblossom.jpg" alt="cherryblossom" class="art-real-image">
                         <div class="art-details">
-                            <h3>Sunset Beauty</h3>
-                            <p>A calming landscape artwork with warm evening colors.</p>
+                            <h3>cherryblossom</h3>
+                            <p>A calming cherryblossom artwork with warm colors.</p>
                             <div class="art-price">Rs. 5000</div>
                             <a href="#" class="action-btn primary-btn">View Details</a>
                         </div>
                     </div>
 
                     <div class="art-card">
-                        <img src="${pageContext.request.contextPath}/resources/images/picaso 1.jpg" alt="Dream Waves" class="art-real-image">
+                        <img src="${pageContext.request.contextPath}/resources/images/picaso 1.jpg" alt="picaso lady" class="art-real-image">
                         <div class="art-details">
-                            <h3>Dream Waves</h3>
-                            <p>An abstract creation with soft motion and modern feel.</p>
+                            <h3>picaso lady</h3>
+                            <p>An abstract creation of picaso copy.</p>
                             <div class="art-price">Rs. 4200</div>
                             <a href="#" class="action-btn primary-btn">View Details</a>
                         </div>
                     </div>
 
                     <div class="art-card">
-                        <img src="${pageContext.request.contextPath}/resources/images/picaso 2.jpg" alt="Mountain View" class="art-real-image">
+                        <img src="${pageContext.request.contextPath}/resources/images/picaso 2.jpg" alt="picaso devil" class="art-real-image">
                         <div class="art-details">
-                            <h3>Mountain View</h3>
-                            <p>A detailed painting inspired by natural mountain scenery.</p>
+                            <h3>picaso devil</h3>
+                            <p>A devil painting copy of picaso painting inspired by minator.</p>
                             <div class="art-price">Rs. 6200</div>
                             <a href="#" class="action-btn primary-btn">View Details</a>
                         </div>
                     </div>
 
                     <div class="art-card">
-                        <img src="${pageContext.request.contextPath}/resources/images/wukong.jpg" alt="City Lights" class="art-real-image">
+                        <img src="${pageContext.request.contextPath}/resources/images/wukong.jpg" alt="wukong" class="art-real-image">
                         <div class="art-details">
-                            <h3>City Lights</h3>
-                            <p>A modern digital art piece showing bright night life.</p>
+                            <h3>wukong</h3>
+                            <p>An ancient painting of wukong facing against buddha.</p>
                             <div class="art-price">Rs. 7100</div>
                             <a href="#" class="action-btn primary-btn">View Details</a>
                         </div>
