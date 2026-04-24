@@ -1,29 +1,48 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Checkout</title>
+    <title>Checkout | Art Marketplace</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/art_marketplace.css">
 </head>
-
 <body>
+<div class="main-layout">
+    <%@ include file="/pages/common/navbar.jsp" %>
 
-<h2>Checkout</h2>
+    <main class="container">
+        <section class="hero">
+            <h1>Checkout</h1>
+            <p>Complete your order by selecting your payment method and confirming your details.</p>
+        </section>
 
-<form action="<%= request.getContextPath() %>/order" method="post">
+        <h2 class="section-title">Payment Details</h2>
 
-    <label>Payment Method:</label>
-    <select name="payment_method" required>
-        <option value="COD">Cash on Delivery</option>
-        <option value="eSewa">eSewa</option>
-        <option value="Khalti">Khalti</option>
-    </select>
+        <div class="form-card">
+            <form action="#" method="post">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="Enter your name">
+                </div>
 
-    <br><br>
+                <div class="form-group">
+                    <label>Delivery Address</label>
+                    <textarea placeholder="Enter your delivery address"></textarea>
+                </div>
 
-    <button type="submit">Place Order</button>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select>
+                        <option>Cash on Delivery</option>
+                        <option>eSewa</option>
+                        <option>Khalti</option>
+                        <option>Card</option>
+                    </select>
+                </div>
 
-</form>
+                <button type="submit" class="btn btn-primary">Place Order</button>
+            </form>
+        </div>
+    </main>
+</div>
 </body>
 </html>

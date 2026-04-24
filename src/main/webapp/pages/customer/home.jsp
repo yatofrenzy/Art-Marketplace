@@ -2,66 +2,35 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
     User user = (User) session.getAttribute("user");
-    String userName = "User";
-    if (user != null) {
-        userName = user.getName();
-    }
+    String userName = user != null ? user.getName() : "Artist";
 %>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>Home | Art Marketplace</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/login_register.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/art_marketplace.css">
 </head>
 <body>
-
-<div class="main-page">
+<div class="main-layout">
     <%@ include file="/pages/common/navbar.jsp" %>
 
-    <div class="page-content">
-        <div class="page-card">
-            <div class="page-header">
-                <h1>Welcome, <%= userName %>!</h1>
-                <p>Discover, explore, and enjoy amazing artworks in our marketplace.</p>
+    <main class="container">
+        <section class="hero">
+            <h1>Welcome, <%= userName %>!</h1>
+            <p>Discover original artwork, collect meaningful pieces, and enjoy a creative marketplace made for art lovers.</p>
+            <div class="btn-row">
+                <a href="${pageContext.request.contextPath}/pages/customer/artworks.jsp" class="btn btn-primary">Explore Artworks</a>
+                <a href="${pageContext.request.contextPath}/pages/customer/profile.jsp" class="btn btn-dark">View Profile</a>
             </div>
+        </section>
 
-            <div class="page-body">
-                <div class="success-message">
-                    Login successful. Welcome to your home page.
-                </div>
-
-                <div class="info-grid">
-                    <div class="info-box">
-                        <h3>Browse Artwork</h3>
-                        <p>View different categories and explore creative artwork from talented artists.</p>
-                    </div>
-
-                    <div class="info-box">
-                        <h3>Manage Profile</h3>
-                        <p>Check your account details and keep your profile updated.</p>
-                    </div>
-
-                    <div class="info-box">
-                        <h3>Cart & Orders</h3>
-                        <p>Add artwork to your cart and manage your future purchases with ease.</p>
-                    </div>
-
-                    <div class="info-box">
-                        <h3>Stay Inspired</h3>
-                        <p>Enjoy a clean and creative platform built for discovering visual art.</p>
-                    </div>
-                </div>
-
-                <div class="action-row">
-                    <a href="${pageContext.request.contextPath}/pages/customer/artcards.jsp" class="action-btn primary-btn">Explore Art</a>
-                    <a href="${pageContext.request.contextPath}/pages/customer/profile.jsp" class="action-btn secondary-btn">View Profile</a>
-                    <a href="${pageContext.request.contextPath}/logout" class="action-btn logout-btn">Logout</a>
-                </div>
-            </div>
+        <h2 class="section-title">What you can do</h2>
+        <div class="grid grid-3">
+            <div class="card"><h3>Browse Art</h3><p>Explore paintings, sketches, digital art, photography, and more.</p></div>
+            <div class="card"><h3>Manage Cart</h3><p>Add artworks you like and review them before checkout.</p></div>
+            <div class="card"><h3>Track Orders</h3><p>View your order details and payment status easily.</p></div>
         </div>
-    </div>
+    </main>
 </div>
-
 </body>
 </html>
