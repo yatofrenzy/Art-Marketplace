@@ -7,7 +7,7 @@ import java.sql.*;
 
 public class OrderItemDAO implements OrderItemDAOInterface {
 
-    public boolean addOrderItem(int orderId, int artworkId, int quantity, double price) {
+    public boolean addOrderItem(boolean orderId, int artworkId, int quantity, double price) {
         boolean status = false;
 
         try {
