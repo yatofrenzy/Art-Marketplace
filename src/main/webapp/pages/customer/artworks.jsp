@@ -119,7 +119,10 @@
             <h2 id="modalTitle"></h2>
             <div class="price" id="modalPrice"></div>
             <p id="modalDescription"></p>
-            <a href="${pageContext.request.contextPath}/pages/customer/cart.jsp" class="btn btn-secondary">Add to Cart</a>
+            <form action="${pageContext.request.contextPath}/add-to-cart" method="post" onsubmit="showToast('Added to cart')">
+    <input type="hidden" id="modalArtworkId" name="artworkId">
+    <button type="submit" class="btn btn-secondary">Add to Cart</button>
+</form>
         </div>
     </div>
 </div>
@@ -131,6 +134,6 @@
 <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark</button>
 
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
-
+<div id="toast" class="toast">Added to cart</div>
 </body>
 </html>

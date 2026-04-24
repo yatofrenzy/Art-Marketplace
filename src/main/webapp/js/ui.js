@@ -30,18 +30,33 @@ function toggleDarkMode() {
     }
 }
 
-function openArtModal(title, price, image, description) {
+function openArtModal(title, price, image, description, artworkId) {
     const modalTitle = document.getElementById("modalTitle");
     const modalPrice = document.getElementById("modalPrice");
     const modalImage = document.getElementById("modalImage");
     const modalDescription = document.getElementById("modalDescription");
+    const modalArtworkId = document.getElementById("modalArtworkId");
     const modal = document.getElementById("artModal");
 
     if (modalTitle) modalTitle.innerText = title;
     if (modalPrice) modalPrice.innerText = price;
     if (modalImage) modalImage.src = image;
     if (modalDescription) modalDescription.innerText = description;
+    if (modalArtworkId) modalArtworkId.value = artworkId;
     if (modal) modal.classList.add("show");
+}
+
+function showToast(message) {
+    let toast = document.getElementById("toast");
+
+    if (!toast) return;
+
+    toast.innerText = message;
+    toast.classList.add("show-toast");
+
+    setTimeout(() => {
+        toast.classList.remove("show-toast");
+    }, 2000);
 }
 
 function closeArtModal() {

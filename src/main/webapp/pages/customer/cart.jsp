@@ -1,4 +1,23 @@
+<%@ page import="java.util.List" %>
+<%@ page import="com.artmarketplace.dao.CartDAO" %>
+<%@ page import="com.artmarketplace.model.CartItem" %>
+<%@ page import="com.artmarketplace.model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%
+    User user = (User) session.getAttribute("user");
+
+    if (user == null) {
+        response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
+        return;
+    }
+
+    CartDAO cartDAO = new CartDAO();
+    List<CartItem> cartItems = cartDAO.getCartItems(user.getUserId());
+
+    double grandTotal = 0;
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,6 +25,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/art_marketplace.css">
 </head>
 <body>
+
 <div class="main-layout">
     <%@ include file="/pages/common/navbar.jsp" %>
 
@@ -24,32 +44,53 @@
                     <th>Quantity</th>
                     <th>Price</th>
                     <th>Total</th>
+                    <th>Action</th>
                 </tr>
 
+                <%
+                    for (CartItem item : cartItems) {
+                        grandTotal += item.getTotal();
+                %>
                 <tr>
-                    <td>Cherry Blossom</td>
+                    <td><%= item.getTitle() %></td>
+
                     <td>
                         <div class="qty-control">
-                            <button onclick="decreaseQty('qty1')">−</button>
-                            <span id="qty1">1</span>
-                            <button onclick="increaseQty('qty1')">+</button>
+                            <form action="${pageContext.request.contextPath}/update-cart" method="post">
+                                <input type="hidden" name="cartItemId" value="<%= item.getCartItemId() %>">
+                                <input type="hidden" name="quantity" value="<%= item.getQuantity() %>">
+                                <input type="hidden" name="action" value="decrease">
+                                <button type="submit">−</button>
+                            </form>
+
+                            <span><%= item.getQuantity() %></span>
+
+                            <form action="${pageContext.request.contextPath}/update-cart" method="post">
+                                <input type="hidden" name="cartItemId" value="<%= item.getCartItemId() %>">
+                                <input type="hidden" name="quantity" value="<%= item.getQuantity() %>">
+                                <input type="hidden" name="action" value="increase">
+                                <button type="submit">+</button>
+                            </form>
                         </div>
                     </td>
-                    <td>Rs. 5000</td>
-                    <td>Rs. 5000</td>
+
+                    <td>Rs. <%= item.getPrice() %></td>
+                    <td>Rs. <%= item.getTotal() %></td>
+
+                    <td>
+                        <form action="${pageContext.request.contextPath}/update-cart" method="post">
+                            <input type="hidden" name="cartItemId" value="<%= item.getCartItemId() %>">
+                            <input type="hidden" name="quantity" value="<%= item.getQuantity() %>">
+                            <input type="hidden" name="action" value="remove">
+                            <button type="submit" class="btn btn-dark">Remove</button>
+                        </form>
+                    </td>
                 </tr>
+                <% } %>
 
                 <tr>
-                    <td>Picasso Lady</td>
-                    <td>
-                        <div class="qty-control">
-                            <button onclick="decreaseQty('qty2')">−</button>
-                            <span id="qty2">1</span>
-                            <button onclick="increaseQty('qty2')">+</button>
-                        </div>
-                    </td>
-                    <td>Rs. 4200</td>
-                    <td>Rs. 4200</td>
+                    <th colspan="3">Grand Total</th>
+                    <th colspan="2">Rs. <%= grandTotal %></th>
                 </tr>
             </table>
 
@@ -65,7 +106,7 @@
     <div class="loader-circle"></div>
 </div>
 
-<button class="dark-toggle" onclick="toggleDarkMode()">🌙 Mode</button>
+<button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark</button>
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
 
 </body>
