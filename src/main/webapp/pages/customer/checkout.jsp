@@ -10,7 +10,7 @@
     <%@ include file="/pages/common/navbar.jsp" %>
 
     <main class="container">
-        <section class="hero">
+        <section class="hero compact-hero">
             <h1>Checkout</h1>
             <p>Complete your order by selecting your payment method and confirming your details.</p>
         </section>
@@ -44,5 +44,12 @@
         </div>
     </main>
 </div>
+<div class="loader" id="loader">
+    <div class="loader-circle"></div>
+</div>
+
+<button class="dark-toggle" onclick="toggleDarkMode()">🌙 Mode</button>
+
+<script src="${pageContext.request.contextPath}/js/ui.js"></script>
 </body>
 </html>

@@ -10,10 +10,29 @@
     <%@ include file="/pages/common/navbar.jsp" %>
 
     <main class="container">
-        <section class="hero">
-            <h1>Admin Dashboard</h1>
-            <p>Manage users, artworks, categories, orders, and marketplace activities.</p>
-        </section>
+        <section class="hero admin-hero">
+    <h1>Admin Command Center</h1>
+    <p>Monitor marketplace activity, manage artworks, review orders, and keep the platform running smoothly.</p>
+
+    <div class="admin-quick-grid">
+        <div class="admin-quick">
+            <strong>120</strong>
+            <span>Total Users</span>
+        </div>
+        <div class="admin-quick">
+            <strong>36</strong>
+            <span>Pending Artworks</span>
+        </div>
+        <div class="admin-quick">
+            <strong>18</strong>
+            <span>Orders Today</span>
+        </div>
+        <div class="admin-quick">
+            <strong>Rs. 82K</strong>
+            <span>Sales</span>
+        </div>
+    </div>
+</section>
 
         <h2 class="section-title">Admin Controls</h2>
 
@@ -27,5 +46,12 @@
         </div>
     </main>
 </div>
+<div class="loader" id="loader">
+    <div class="loader-circle"></div>
+</div>
+
+<button class="dark-toggle" onclick="toggleDarkMode()">🌙 Mode</button>
+<script src="${pageContext.request.contextPath}/js/ui.js"></script>
+
 </body>
 </html>

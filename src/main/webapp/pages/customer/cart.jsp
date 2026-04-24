@@ -10,9 +10,9 @@
     <%@ include file="/pages/common/navbar.jsp" %>
 
     <main class="container">
-        <section class="hero">
+        <section class="hero compact-hero">
             <h1>Your Cart</h1>
-            <p>Review selected artworks before placing your order.</p>
+            <p>Review selected artworks and adjust quantities before checkout.</p>
         </section>
 
         <h2 class="section-title">Cart Items</h2>
@@ -25,15 +25,29 @@
                     <th>Price</th>
                     <th>Total</th>
                 </tr>
+
                 <tr>
                     <td>Cherry Blossom</td>
-                    <td>1</td>
+                    <td>
+                        <div class="qty-control">
+                            <button onclick="decreaseQty('qty1')">−</button>
+                            <span id="qty1">1</span>
+                            <button onclick="increaseQty('qty1')">+</button>
+                        </div>
+                    </td>
                     <td>Rs. 5000</td>
                     <td>Rs. 5000</td>
                 </tr>
+
                 <tr>
                     <td>Picasso Lady</td>
-                    <td>1</td>
+                    <td>
+                        <div class="qty-control">
+                            <button onclick="decreaseQty('qty2')">−</button>
+                            <span id="qty2">1</span>
+                            <button onclick="increaseQty('qty2')">+</button>
+                        </div>
+                    </td>
                     <td>Rs. 4200</td>
                     <td>Rs. 4200</td>
                 </tr>
@@ -46,5 +60,13 @@
         </div>
     </main>
 </div>
+
+<div class="loader" id="loader">
+    <div class="loader-circle"></div>
+</div>
+
+<button class="dark-toggle" onclick="toggleDarkMode()">🌙 Mode</button>
+<script src="${pageContext.request.contextPath}/js/ui.js"></script>
+
 </body>
 </html>

@@ -65,6 +65,12 @@
         </div>
     </section>
 </div>
+<div class="loader" id="loader">
+    <div class="loader-circle"></div>
+</div>
+
+<button class="dark-toggle" onclick="toggleDarkMode()">🌙 Mode</button>
+<script src="${pageContext.request.contextPath}/js/ui.js"></script>
 
 </body>
 </html>

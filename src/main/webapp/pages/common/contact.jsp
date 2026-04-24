@@ -10,7 +10,7 @@
     <%@ include file="/pages/common/navbar.jsp" %>
 
     <main class="container">
-        <section class="hero">
+        <section class="hero compact-hero">
             <h1>Contact Us</h1>
             <p>Send your questions, support requests, or feedback to our team.</p>
         </section>
@@ -39,5 +39,12 @@
         </div>
     </main>
 </div>
+<div class="loader" id="loader">
+    <div class="loader-circle"></div>
+</div>
+
+<button class="dark-toggle" onclick="toggleDarkMode()">🌙 Mode</button>
+<script src="${pageContext.request.contextPath}/js/ui.js"></script>
+
 </body>
 </html>
