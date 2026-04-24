@@ -2,7 +2,6 @@ package com.artmarketplace.dao;
 
 import com.artmarketplace.dao.interfaces.ArtworkDAOInterface;
 import com.artmarketplace.model.Artwork;
-import com.artmarketplace.utilities.DBConnection;
 import com.artmarketplace.utilities.DbConfig;
 
 import java.sql.*;

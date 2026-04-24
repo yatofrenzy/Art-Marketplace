@@ -1,7 +1,7 @@
 package com.artmarketplace.dao;
 
 import com.artmarketplace.dao.interfaces.CartDAOInterface;
-import com.artmarketplace.utilities.DBConnection;
+
 
 import java.sql.*;
 
