@@ -2,28 +2,75 @@ package com.artmarketplace.model;
 
 public class Artwork {
     private int artworkId;
-    private String title;
-    private double price;
+    private int userId;
     private int categoryId;
-    private int artistId;
+    private String title;
+    private String description;
+    private double price;
     private String imagePath;
+    private String status;
 
-    // Getters & Setters
-    public int getArtworkId() { return artworkId; }
-    public void setArtworkId(int artworkId) { this.artworkId = artworkId; }
+    public int getArtworkId() {
+        return artworkId;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public void setArtworkId(int artworkId) {
+        this.artworkId = artworkId;
+    }
 
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    public int getUserId() {
+        return userId;
+    }
 
-    public int getCategoryId() { return categoryId; }
-    public void setCategoryId(int categoryId) { this.categoryId = categoryId; }
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
-    public int getArtistId() { return artistId; }
-    public void setArtistId(int artistId) { this.artistId = artistId; }
+    public int getCategoryId() {
+        return categoryId;
+    }
 
-    public String getImagePath() { return imagePath; }
-    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

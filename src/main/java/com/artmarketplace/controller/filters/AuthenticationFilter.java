@@ -3,43 +3,42 @@ package com.artmarketplace.controller.filters;
 import java.io.IOException;
 
 import com.artmarketplace.model.User;
-import com.artmarketplace.utilities.SessionUtil;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebFilter("/pages/customer/*")
-public class AuthenticationFilter implements Filter {
+@WebFilter("/pages/*")
+public class AuthenticationFilter extends HttpFilter implements Filter {
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-    }
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+	@Override
+    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse res = (HttpServletResponse) response;
+        String path = request.getRequestURI();
 
-        User user = SessionUtil.getLoggedInUser(req);
-
-        if (user == null) {
-            res.sendRedirect(req.getContextPath() + "/pages/common/login.jsp");
+        // allow login/register pages
+        if (path.contains("login.jsp") || path.contains("register.jsp")) {
+            chain.doFilter(request, response);
             return;
         }
 
-        chain.doFilter(request, response);
-    }
+        // check session
+        User user = (User) request.getSession().getAttribute("user");
 
-    @Override
-    public void destroy() {
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
+        } else {
+            chain.doFilter(request, response);
+        }
     }
 }

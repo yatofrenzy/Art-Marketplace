@@ -1,64 +1,59 @@
 package com.artmarketplace.dao;
 
-import com.artmarketplace.dao.interfaces.ArtworkDAOInterface;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.artmarketplace.model.Artwork;
 import com.artmarketplace.utilities.DbConfig;
 
-import java.sql.*;
-import java.util.*;
+public class ArtworkDAO {
 
-public class ArtworkDAO implements ArtworkDAOInterface {
-
-    // ✅ ADD ARTWORK
-    @Override
     public boolean addArtwork(Artwork artwork) {
-        boolean status = false;
+        String sql = "INSERT INTO artworks (user_id, category_id, title, description, price, image_path, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try {
-            Connection conn = DbConfig.getConnection();
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            String sql = "INSERT INTO artwork(title, price, category_id, artist_id, image_path) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, artwork.getUserId());
+            ps.setInt(2, artwork.getCategoryId());
+            ps.setString(3, artwork.getTitle());
+            ps.setString(4, artwork.getDescription());
+            ps.setDouble(5, artwork.getPrice());
+            ps.setString(6, artwork.getImagePath());
+            ps.setString(7, artwork.getStatus());
 
-            ps.setString(1, artwork.getTitle());
-            ps.setDouble(2, artwork.getPrice());
-            ps.setInt(3, artwork.getCategoryId());
-            ps.setInt(4, artwork.getArtistId());
-            ps.setString(5, artwork.getImagePath());
-
-            status = ps.executeUpdate() > 0;
+            return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return status;
+        return false;
     }
 
-    // ✅ GET ALL ARTWORKS
-    @Override
     public List<Artwork> getAllArtworks() {
         List<Artwork> list = new ArrayList<>();
+        String sql = "SELECT * FROM artworks ORDER BY artwork_id DESC";
 
-        try {
-            Connection conn = DbConfig.getConnection();
-
-            String sql = "SELECT * FROM artwork";
-            PreparedStatement ps = conn.prepareStatement(sql);
-
-            ResultSet rs = ps.executeQuery();
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                Artwork a = new Artwork();
+                Artwork artwork = new Artwork();
+                artwork.setArtworkId(rs.getInt("artwork_id"));
+                artwork.setUserId(rs.getInt("user_id"));
+                artwork.setCategoryId(rs.getInt("category_id"));
+                artwork.setTitle(rs.getString("title"));
+                artwork.setDescription(rs.getString("description"));
+                artwork.setPrice(rs.getDouble("price"));
+                artwork.setImagePath(rs.getString("image_path"));
+                artwork.setStatus(rs.getString("status"));
 
-                a.setArtworkId(rs.getInt("artwork_id"));
-                a.setTitle(rs.getString("title"));
-                a.setPrice(rs.getDouble("price"));
-                a.setCategoryId(rs.getInt("category_id"));
-                a.setArtistId(rs.getInt("artist_id"));
-                a.setImagePath(rs.getString("image_path")); // ✅ IMPORTANT FIX
-
-                list.add(a);
+                list.add(artwork);
             }
 
         } catch (Exception e) {
@@ -66,5 +61,73 @@ public class ArtworkDAO implements ArtworkDAOInterface {
         }
 
         return list;
+    }
+
+    public Artwork getArtworkById(int artworkId) {
+        String sql = "SELECT * FROM artworks WHERE artwork_id = ?";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, artworkId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Artwork artwork = new Artwork();
+                artwork.setArtworkId(rs.getInt("artwork_id"));
+                artwork.setUserId(rs.getInt("user_id"));
+                artwork.setCategoryId(rs.getInt("category_id"));
+                artwork.setTitle(rs.getString("title"));
+                artwork.setDescription(rs.getString("description"));
+                artwork.setPrice(rs.getDouble("price"));
+                artwork.setImagePath(rs.getString("image_path"));
+                artwork.setStatus(rs.getString("status"));
+                return artwork;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public boolean updateArtwork(Artwork artwork) {
+        String sql = "UPDATE artworks SET category_id=?, title=?, description=?, price=?, image_path=?, status=? WHERE artwork_id=?";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, artwork.getCategoryId());
+            ps.setString(2, artwork.getTitle());
+            ps.setString(3, artwork.getDescription());
+            ps.setDouble(4, artwork.getPrice());
+            ps.setString(5, artwork.getImagePath());
+            ps.setString(6, artwork.getStatus());
+            ps.setInt(7, artwork.getArtworkId());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean deleteArtwork(int artworkId) {
+        String sql = "DELETE FROM artworks WHERE artwork_id = ?";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, artworkId);
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }
