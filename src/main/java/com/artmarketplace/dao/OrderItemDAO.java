@@ -15,7 +15,7 @@ public class OrderItemDAO {
             String sql = "INSERT INTO order_item(order_id, artwork_id, quantity, price) VALUES (?, ?, ?, ?)";
 
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, orderId);
+            ps.setBoolean(1, orderId);
             ps.setInt(2, artworkId);
             ps.setInt(3, quantity);
             ps.setDouble(4, price);
