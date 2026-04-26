@@ -91,6 +91,33 @@ public class ArtworkDAO {
 
         return null;
     }
+    public List<Artwork> getApprovedArtworks() {
+        List<Artwork> list = new ArrayList<>();
+        String sql = "SELECT * FROM artworks WHERE status='Approved' ORDER BY artwork_id DESC";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Artwork artwork = new Artwork();
+                artwork.setArtworkId(rs.getInt("artwork_id"));
+                artwork.setUserId(rs.getInt("user_id"));
+                artwork.setCategoryId(rs.getInt("category_id"));
+                artwork.setTitle(rs.getString("title"));
+                artwork.setDescription(rs.getString("description"));
+                artwork.setPrice(rs.getDouble("price"));
+                artwork.setImagePath(rs.getString("image_path"));
+                artwork.setStatus(rs.getString("status"));
+                list.add(artwork);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
 
     public boolean updateArtwork(Artwork artwork) {
         String sql = "UPDATE artworks SET category_id=?, title=?, description=?, price=?, image_path=?, status=? WHERE artwork_id=?";

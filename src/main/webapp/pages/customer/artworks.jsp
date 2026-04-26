@@ -1,4 +1,13 @@
+<%@ page import="java.util.List" %>
+<%@ page import="com.artmarketplace.dao.ArtworkDAO" %>
+<%@ page import="com.artmarketplace.model.Artwork" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%
+    ArtworkDAO dao = new ArtworkDAO();
+    List<Artwork> artworks = dao.getApprovedArtworks();
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,26 +21,24 @@
 
     <main class="container">
 
+        <!-- HEADER -->
         <section class="hero gallery-header">
             <div class="gallery-top">
                 <div>
-                    <h1>Art Gallery</h1>
-                    <p>Explore beautiful artworks across different creative styles.</p>
+                    <h1>Curated Gallery</h1>
+                    <p>Explore artworks added by artists.</p>
                 </div>
 
                 <div class="gallery-stats">
                     <div class="gallery-stat">
-                        <strong>5</strong>
-                        <span>Categories</span>
-                    </div>
-                    <div class="gallery-stat">
-                        <strong>4</strong>
+                        <strong><%= artworks.size() %></strong>
                         <span>Artworks</span>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- FILTER -->
         <div style="margin: 30px 0 20px; display: flex; justify-content: flex-end;">
             <select id="categoryFilter" onchange="filterArtworks()" style="
                 padding: 12px 18px;
@@ -44,89 +51,81 @@
                 box-shadow: var(--shadow);
             ">
                 <option value="all">All Categories</option>
-                <option value="painting">Painting</option>
-                <option value="sketch">Sketch</option>
-                <option value="digital">Digital Art</option>
-                <option value="portrait">Portrait</option>
-                <option value="nature">Nature Art</option>
+                <option value="1">Painting</option>
+                <option value="2">Sketch</option>
+                <option value="3">Digital Art</option>
+                <option value="4">Portrait</option>
+                <option value="5">Nature Art</option>
             </select>
         </div>
 
+        <!-- ART GRID -->
         <div class="art-grid">
 
-            <div class="art-card" data-category="painting">
-                <img src="${pageContext.request.contextPath}/resources/images/cherryblossom.jpg" alt="Cherry Blossom">
+            <% if (artworks != null && !artworks.isEmpty()) {
+                for (Artwork art : artworks) {
+            %>
+
+            <div class="art-card" data-category="<%= art.getCategoryId() %>">
+
+                <img src="${pageContext.request.contextPath}/<%= art.getImagePath() %>" alt="<%= art.getTitle() %>">
+
                 <div class="art-info">
-                    <h3>Cherry Blossom</h3>
-                    <p>Soft floral painting with peaceful colors.</p>
-                    <div class="price">Rs. 5000</div>
+                    <h3><%= art.getTitle() %></h3>
+                    <p><%= art.getDescription() %></p>
+                    <div class="price">Rs. <%= art.getPrice() %></div>
+
                     <button class="btn btn-primary"
-                        onclick="openArtModal('Cherry Blossom','Rs. 5000','${pageContext.request.contextPath}/resources/images/cherryblossom.jpg','A peaceful painting with floral beauty and calm composition.')">
+                        onclick="openArtModal(
+                        '<%= art.getTitle() %>',
+                        'Rs. <%= art.getPrice() %>',
+                        '${pageContext.request.contextPath}/<%= art.getImagePath() %>',
+                        '<%= art.getDescription() %>',
+                        '<%= art.getArtworkId() %>'
+                        )">
                         View Details
                     </button>
                 </div>
+
             </div>
 
-            <div class="art-card" data-category="portrait">
-                <img src="${pageContext.request.contextPath}/resources/images/picaso 1.jpg" alt="Picasso Lady">
-                <div class="art-info">
-                    <h3>Picasso Lady</h3>
-                    <p>Abstract portrait artwork.</p>
-                    <div class="price">Rs. 4200</div>
-                    <button class="btn btn-primary"
-                        onclick="openArtModal('Picasso Lady','Rs. 4200','${pageContext.request.contextPath}/resources/images/picaso 1.jpg','A modern abstract portrait with bold artistic expression.')">
-                        View Details
-                    </button>
-                </div>
-            </div>
+            <% } } else { %>
 
-            <div class="art-card" data-category="sketch">
-                <img src="${pageContext.request.contextPath}/resources/images/picaso 2.jpg" alt="Picasso Devil">
-                <div class="art-info">
-                    <h3>Picasso Devil</h3>
-                    <p>Sketch-style dramatic artwork.</p>
-                    <div class="price">Rs. 6200</div>
-                    <button class="btn btn-primary"
-                        onclick="openArtModal('Picasso Devil','Rs. 6200','${pageContext.request.contextPath}/resources/images/picaso 2.jpg','A powerful sketch artwork with strong emotions and dark tone.')">
-                        View Details
-                    </button>
-                </div>
-            </div>
+            <p>No artworks available.</p>
 
-            <div class="art-card" data-category="digital">
-                <img src="${pageContext.request.contextPath}/resources/images/wukong.jpg" alt="Wukong">
-                <div class="art-info">
-                    <h3>Wukong</h3>
-                    <p>Digital artwork inspired by mythology.</p>
-                    <div class="price">Rs. 7100</div>
-                    <button class="btn btn-primary"
-                        onclick="openArtModal('Wukong','Rs. 7100','${pageContext.request.contextPath}/resources/images/wukong.jpg','A digital artwork showing a mythological warrior with strong visual impact.')">
-                        View Details
-                    </button>
-                </div>
-            </div>
+            <% } %>
 
         </div>
 
     </main>
 </div>
 
+<!-- MODAL -->
 <div class="modal" id="artModal">
     <div class="modal-content">
         <button class="close-modal" onclick="closeArtModal()">×</button>
-        <img id="modalImage" src="" alt="Artwork">
+
+        <img id="modalImage">
+
         <div class="modal-info">
             <h2 id="modalTitle"></h2>
             <div class="price" id="modalPrice"></div>
             <p id="modalDescription"></p>
+
+            <!-- ADD TO CART -->
             <form action="${pageContext.request.contextPath}/add-to-cart" method="post" onsubmit="showToast('Added to cart')">
-    <input type="hidden" id="modalArtworkId" name="artworkId">
-    <button type="submit" class="btn btn-secondary">Add to Cart</button>
-</form>
+                <input type="hidden" id="modalArtworkId" name="artworkId">
+                <button type="submit" class="btn btn-secondary">Add to Cart</button>
+            </form>
+
         </div>
     </div>
 </div>
 
+<!-- TOAST -->
+<div id="toast" class="toast">Added to cart</div>
+
+<!-- LOADER -->
 <div class="loader" id="loader">
     <div class="loader-circle"></div>
 </div>
@@ -134,6 +133,6 @@
 <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark</button>
 
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
-<div id="toast" class="toast">Added to cart</div>
+
 </body>
 </html>
