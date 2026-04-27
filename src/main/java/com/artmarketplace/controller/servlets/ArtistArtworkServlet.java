@@ -17,9 +17,9 @@ import jakarta.servlet.http.Part;
 
 @WebServlet("/artist/add-artwork")
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024,      // 1 MB — keep in memory below this
-    maxFileSize       = 1024 * 1024 * 10, // 10 MB max per file
-    maxRequestSize    = 1024 * 1024 * 15  // 15 MB max total request
+    fileSizeThreshold = 1024 * 1024,
+    maxFileSize       = 1024 * 1024 * 10,
+    maxRequestSize    = 1024 * 1024 * 15
 )
 public class ArtistArtworkServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -31,59 +31,52 @@ public class ArtistArtworkServlet extends HttpServlet {
         artworkDAO = new ArtworkDAO();
     }
 
-    // GET → show the add-artwork form
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/pages/customer/add-artwork.jsp")
-               .forward(request, response);
-    }
 
-    // POST → handle form submission with file upload
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        // 1. Check login
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
             return;
         }
-        request.getRequestDispatcher("/pages/customer/add-artwork.jsp")
-        .forward(request, response);
-}
 
-        // 2. Read text fields
+        request.getRequestDispatcher("/pages/customer/add-artwork.jsp")
+               .forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
+            return;
+        }
+
         int    categoryId  = Integer.parseInt(request.getParameter("categoryId"));
         String title       = request.getParameter("title");
         String description = request.getParameter("description");
         double price       = Double.parseDouble(request.getParameter("price"));
 
-        // 3. Handle the uploaded image file
-        Part   filePart   = request.getPart("imageFile");
-        String fileName   = extractFileName(filePart);  // get original filename
-
-        // 4. Save image to webapp/resources/images/artworks/
-        //    getServletContext().getRealPath() gives the absolute path on disk
-        String uploadFolder = getServletContext().getRealPath("")
-                              + File.separator + "resources"
-                              + File.separator + "images"
-                              + File.separator + "artworks";
+        Part   filePart       = request.getPart("imageFile");
+        String fileName       = extractFileName(filePart);
+        String uploadFolder   = getServletContext().getRealPath("")
+                                + File.separator + "resources"
+                                + File.separator + "images"
+                                + File.separator + "artworks";
 
         File uploadDir = new File(uploadFolder);
         if (!uploadDir.exists()) {
-            uploadDir.mkdirs(); // create folder if it doesn't exist
+            uploadDir.mkdirs();
         }
 
-        // Make filename unique to avoid overwriting: timestamp + original name
         String uniqueFileName = System.currentTimeMillis() + "_" + fileName;
         filePart.write(uploadFolder + File.separator + uniqueFileName);
 
-        // 5. Store relative path (used in <img src="..."> in JSP)
         String imagePath = "resources/images/artworks/" + uniqueFileName;
 
-        // 6. Build Artwork object — status defaults to "Pending" for artist submissions
         Artwork artwork = new Artwork();
         artwork.setUserId(user.getUserId());
         artwork.setCategoryId(categoryId);
@@ -91,12 +84,10 @@ public class ArtistArtworkServlet extends HttpServlet {
         artwork.setDescription(description);
         artwork.setPrice(price);
         artwork.setImagePath(imagePath);
-        artwork.setStatus("Pending"); // always Pending for customer/artist submissions
+        artwork.setStatus("Pending");
 
-        // 7. Save to database
         boolean success = artworkDAO.addArtwork(artwork);
 
-        // 8. Redirect with result message
         if (success) {
             response.sendRedirect(request.getContextPath()
                 + "/pages/customer/add-artwork.jsp?success=true");
@@ -106,12 +97,10 @@ public class ArtistArtworkServlet extends HttpServlet {
         }
     }
 
-    // Helper: extract filename from the Part header
     private String extractFileName(Part part) {
         String contentDisposition = part.getHeader("content-disposition");
         for (String token : contentDisposition.split(";")) {
             if (token.trim().startsWith("filename")) {
-                // filename="photo.jpg"  →  photo.jpg
                 return token.substring(token.indexOf("=") + 2,
                                        token.length() - 1);
             }
