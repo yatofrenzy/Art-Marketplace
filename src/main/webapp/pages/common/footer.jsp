@@ -4,6 +4,7 @@
     text-align: center;
     border-top: 1px solid var(--border);
     background: var(--surface);
+    
 ">
 
     <div style="margin-bottom: 12px;">

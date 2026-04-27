@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import com.artmarketplace.model.User;
 
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
@@ -12,8 +11,8 @@ import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebFilter("/pages/*")
-public class AuthenticationFilter extends HttpFilter implements Filter {
+@WebFilter("/*")
+public class AuthenticationFilter extends HttpFilter {
 
     /**
 	 * 
@@ -25,20 +24,44 @@ public class AuthenticationFilter extends HttpFilter implements Filter {
             throws IOException, ServletException {
 
         String path = request.getRequestURI();
+        String context = request.getContextPath();
 
-        // allow login/register pages
-        if (path.contains("login.jsp") || path.contains("register.jsp")) {
+        // Allow static resources
+        if (path.contains("/css/") || path.contains("/js/") || path.contains("/resources/")) {
             chain.doFilter(request, response);
             return;
         }
 
-        // check session
+        // Allow login/register
+        if (path.contains("login.jsp") || path.contains("register.jsp") || path.contains("/login") || path.contains("/register")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        // Get logged user
         User user = (User) request.getSession().getAttribute("user");
 
+        // If not logged in
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
-        } else {
-            chain.doFilter(request, response);
+            response.sendRedirect(context + "/pages/common/login.jsp");
+            return;
         }
+
+        String role = user.getRole();
+
+        // Admin trying to access customer pages
+        if (path.contains("/pages/customer") && role.equalsIgnoreCase("admin")) {
+            response.sendRedirect(context + "/pages/admin/dashboard.jsp");
+            return;
+        }
+
+        // Customer trying to access admin pages
+        if (path.contains("/pages/admin") && role.equalsIgnoreCase("customer")) {
+            response.sendRedirect(context + "/pages/customer/home.jsp");
+            return;
+        }
+
+        // Everything OK
+        chain.doFilter(request, response);
     }
 }
