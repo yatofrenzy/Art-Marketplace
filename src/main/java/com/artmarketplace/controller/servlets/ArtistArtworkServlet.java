@@ -61,6 +61,14 @@ public class ArtistArtworkServlet extends HttpServlet {
         double price       = Double.parseDouble(request.getParameter("price"));
 
         Part   filePart       = request.getPart("imageFile");
+        String submittedName = filePart.getSubmittedFileName();
+        String ext = submittedName.substring(submittedName.lastIndexOf(".") + 1).toLowerCase();
+        if (!ext.equals("jpg") && !ext.equals("jpeg") 
+         && !ext.equals("png") && !ext.equals("gif")) {
+            request.setAttribute("error", "Invalid image format. Only jpg, jpeg, png, gif allowed.");
+            request.getRequestDispatcher("/pages/customer/add-artwork.jsp").forward(request, response);
+            return;
+        }
         String fileName       = extractFileName(filePart);
         String uploadFolder   = getServletContext().getRealPath("")
                                 + File.separator + "resources"
