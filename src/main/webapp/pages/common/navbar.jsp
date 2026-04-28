@@ -10,7 +10,13 @@
         <a href="${pageContext.request.contextPath}/pages/customer/artworks.jsp">Gallery</a>
         <a href="${pageContext.request.contextPath}/pages/customer/cart.jsp">Cart</a>
         <a href="${pageContext.request.contextPath}/pages/customer/orders.jsp">Orders</a>
-        <a href="${pageContext.request.contextPath}/artist/add-artwork">Add Artwork</a>
+        <% 
+    com.artmarketplace.model.User navUser = 
+        (com.artmarketplace.model.User) session.getAttribute("user");
+    if (navUser != null && "admin".equalsIgnoreCase(navUser.getRole())) { 
+%>
+    <a href="${pageContext.request.contextPath}/admin/artwork?action=add">Add Artwork</a>
+<% } %>
         <a href="${pageContext.request.contextPath}/pages/customer/profile.jsp">Profile</a>
         <a href="${pageContext.request.contextPath}/logout" class="nav-logout">Logout</a>
     </div>
