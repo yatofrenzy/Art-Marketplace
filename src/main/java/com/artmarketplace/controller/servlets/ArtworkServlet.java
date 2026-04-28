@@ -66,20 +66,54 @@ public class ArtworkServlet extends HttpServlet {
             return;
         }
 
-        int categoryId = Integer.parseInt(request.getParameter("categoryId"));
+        String categoryIdText = request.getParameter("categoryId");
         String title = request.getParameter("title");
         String description = request.getParameter("description");
-        double price = Double.parseDouble(request.getParameter("price"));
+        String priceText = request.getParameter("price");
         String imagePath = request.getParameter("imagePath");
         String status = request.getParameter("status");
+
+        String targetPage = "update".equals(action)
+                ? "/pages/admin/edit-artwork.jsp"
+                : "/pages/admin/add-artwork.jsp";
+
+        if (categoryIdText == null || categoryIdText.trim().isEmpty()
+                || title == null || title.trim().isEmpty()
+                || description == null || description.trim().isEmpty()
+                || priceText == null || priceText.trim().isEmpty()
+                || imagePath == null || imagePath.trim().isEmpty()
+                || status == null || status.trim().isEmpty()) {
+
+            request.setAttribute("error", "All artwork fields are required.");
+            request.getRequestDispatcher(targetPage).forward(request, response);
+            return;
+        }
+
+        double price;
+
+        try {
+            price = Double.parseDouble(priceText);
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Price must be a valid number.");
+            request.getRequestDispatcher(targetPage).forward(request, response);
+            return;
+        }
+
+        if (price <= 0) {
+            request.setAttribute("error", "Price must be greater than 0.");
+            request.getRequestDispatcher(targetPage).forward(request, response);
+            return;
+        }
+
+        int categoryId = Integer.parseInt(categoryIdText);
 
         Artwork artwork = new Artwork();
         artwork.setUserId(user.getUserId());
         artwork.setCategoryId(categoryId);
-        artwork.setTitle(title);
-        artwork.setDescription(description);
+        artwork.setTitle(title.trim());
+        artwork.setDescription(description.trim());
         artwork.setPrice(price);
-        artwork.setImagePath(imagePath);
+        artwork.setImagePath(imagePath.trim());
         artwork.setStatus(status);
 
         if ("update".equals(action)) {
