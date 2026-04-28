@@ -41,8 +41,9 @@ public class ArtistArtworkServlet extends HttpServlet {
             return;
         }
 
-        request.getRequestDispatcher("/pages/customer/add-artwork.jsp")
-               .forward(request, response);
+        // add-artwork has been moved to the admin section.
+        // Redirect customers back to their home page.
+        response.sendRedirect(request.getContextPath() + "/pages/customer/home.jsp");
     }
 
     @Override
@@ -65,9 +66,8 @@ public class ArtistArtworkServlet extends HttpServlet {
         String ext = submittedName.substring(submittedName.lastIndexOf(".") + 1).toLowerCase();
         if (!ext.equals("jpg") && !ext.equals("jpeg") 
          && !ext.equals("png") && !ext.equals("gif")) {
-            request.setAttribute("error", "Invalid image format. Only jpg, jpeg, png, gif allowed.");
-            request.getRequestDispatcher("/pages/customer/add-artwork.jsp").forward(request, response);
-            return;
+        	request.setAttribute("error", "Invalid image format. Only jpg, jpeg, png, gif allowed.");
+        	request.getRequestDispatcher("/pages/customer/home.jsp").forward(request, response);
         }
         String fileName       = extractFileName(filePart);
         String uploadFolder   = getServletContext().getRealPath("")
@@ -98,10 +98,10 @@ public class ArtistArtworkServlet extends HttpServlet {
 
         if (success) {
             response.sendRedirect(request.getContextPath()
-                + "/pages/customer/add-artwork.jsp?success=true");
+                + "/pages/customer/artworks.jsp?success=true");
         } else {
             response.sendRedirect(request.getContextPath()
-                + "/pages/customer/add-artwork.jsp?error=true");
+                + "/pages/customer/home.jsp?error=true");
         }
     }
 

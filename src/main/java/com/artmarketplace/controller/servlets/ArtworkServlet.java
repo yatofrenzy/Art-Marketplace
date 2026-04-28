@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/admin/artwork")
+@WebServlet({"/admin/artwork","/artworks"})
 public class ArtworkServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -26,6 +26,13 @@ public class ArtworkServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	String path = request.getServletPath();
+    	
+    	if (path.equals("/artworks")) {
+    		request.setAttribute("artworks",artworkDAO.getApprovedArtworks());
+    		request.getRequestDispatcher("/pages/customer/artworks.jsp").forward(request,response);
+    		return;
+    	}
 
         String action = request.getParameter("action");
 
