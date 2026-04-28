@@ -20,8 +20,7 @@
         <h2 class="section-title">Artwork Details</h2>
 
         <div class="form-card">
-            <form action="${pageContext.request.contextPath}/admin/artwork"
-                  method="post">
+            <form action="${pageContext.request.contextPath}/admin/artwork" method="post" enctype="multipart/form-data">
 
                 <input type="hidden" name="action" value="add">
 
@@ -54,8 +53,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Image Path</label>
-                    <input type="text" name="imagePath" placeholder="e.g. resources/images/artworks/example.jpg" required>
+                    <label>Upload Image</label>
+                    <input type="file" name="imageFile" accept="image/*" required>
                 </div>
 
                 <div class="form-group">
