@@ -64,14 +64,26 @@
                 if (artworks != null && !artworks.isEmpty()) {
                     for (Artwork art : artworks) {
 
-                        String imagePath = art.getImagePath() != null ? art.getImagePath() : "";
+                        String imagePath = art.getImagePath();
+
+                        if (imagePath == null || imagePath.trim().isEmpty()) {
+                            imagePath = "images/artworks/default.jpg";
+                        }
+
+                        String fullImagePath = request.getContextPath() + "/" + imagePath;
+
                         String title = art.getTitle() != null ? art.getTitle() : "";
                         String description = art.getDescription() != null ? art.getDescription() : "";
+
+                        String safeTitle = title.replace("'", "\\'");
+                        String safeDescription = description.replace("'", "\\'");
             %>
 
             <div class="art-card" data-category="<%= art.getCategoryId() %>">
 
-                <img src="<%= request.getContextPath() + "/" + imagePath %>" alt="<%= title %>">
+                <img src="<%= fullImagePath %>" 
+                     alt="<%= title %>" 
+                     class="art-image">
 
                 <div class="art-info">
                     <h3><%= title %></h3>
@@ -80,10 +92,10 @@
 
                     <button class="btn btn-primary"
                         onclick="openArtModal(
-                            '<%= title.replace("'", "\\'") %>',
+                            '<%= safeTitle %>',
                             'Rs. <%= art.getPrice() %>',
-                            '<%= request.getContextPath() + "/" + imagePath %>',
-                            '<%= description.replace("'", "\\'") %>',
+                            '<%= fullImagePath %>',
+                            '<%= safeDescription %>',
                             '<%= art.getArtworkId() %>'
                         )">
                         View Details
@@ -113,7 +125,7 @@
     <div class="modal-content">
         <button class="close-modal" onclick="closeArtModal()">×</button>
 
-        <img id="modalImage">
+        <img id="modalImage" alt="Artwork image">
 
         <div class="modal-info">
             <h2 id="modalTitle"></h2>
@@ -142,10 +154,7 @@
 
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
 
-<script src="${pageContext.request.contextPath}/js/ui.js"></script>
-
 <%@ include file="/pages/common/footer.jsp" %>
 
-</body>
 </body>
 </html>

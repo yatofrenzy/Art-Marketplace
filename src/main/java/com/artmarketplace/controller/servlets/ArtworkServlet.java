@@ -21,7 +21,7 @@ import jakarta.servlet.http.Part;
     maxFileSize       = 1024 * 1024 * 10,
     maxRequestSize    = 1024 * 1024 * 15
 )
-public class ArtworkServlet extends HttpServlet {{
+public class ArtworkServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private ArtworkDAO artworkDAO;

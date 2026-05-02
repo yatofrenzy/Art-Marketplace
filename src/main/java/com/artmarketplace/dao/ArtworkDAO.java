@@ -92,16 +92,17 @@ public class ArtworkDAO {
         return null;
     }
     public List<Artwork> getApprovedArtworks() {
-        List<Artwork> list = new ArrayList<>();
-        String sql = "SELECT * FROM artworks WHERE status='Approved'";
+        List<Artwork> artworks = new ArrayList<>();
+        String sql = "SELECT * FROM artworks WHERE status='Approved' ORDER BY artwork_id DESC";
 
-        List<Artwork> artworks = null;
-		try (Connection conn = DbConfig.getDbConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+       
+		try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Artwork artwork = new Artwork();
+                
                 artwork.setArtworkId(rs.getInt("artwork_id"));
                 artwork.setUserId(rs.getInt("user_id"));
                 artwork.setCategoryId(rs.getInt("category_id"));
