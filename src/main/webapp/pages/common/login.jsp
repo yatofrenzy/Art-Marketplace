@@ -5,7 +5,33 @@
     <meta charset="UTF-8">
     <title>Login | Art Marketplace</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth_art.css">
+
+    <style>
+        /* Minimal addition — blends with your theme */
+        .role-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            background: #e0e0e0;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .role-btn.active {
+            background: #111;
+            color: #fff;
+        }
+    </style>
 </head>
+
 <body>
 
 <div class="auth-shell">
@@ -34,7 +60,18 @@
                 <div class="notice-error"><%= request.getAttribute("error") %></div>
             <% } %>
 
+            <!-- 🔹 ROLE TOGGLE ADDED -->
+            <div class="role-toggle">
+                <button type="button" id="userBtn" class="role-btn active" onclick="setRole('user')">User</button>
+                <button type="button" id="adminBtn" class="role-btn" onclick="setRole('admin')">Admin</button>
+            </div>
+
+            <!-- 🔹 FORM UPDATED -->
             <form action="${pageContext.request.contextPath}/login" method="post">
+
+                <!-- Hidden role field -->
+                <input type="hidden" name="role" id="role" value="user">
+
                 <div class="input-box">
                     <label>Email Address</label>
                     <input type="email" name="email" placeholder="example@email.com" autocomplete="email" required>
@@ -55,17 +92,31 @@
         </div>
     </section>
 </div>
+
 <div class="loader" id="loader">
     <div class="loader-circle"></div>
 </div>
 
 <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Mode</button>
-<script src="${pageContext.request.contextPath}/js/ui.js"></script>
 
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
+
+<!-- 🔹 ROLE SWITCH SCRIPT -->
+<script>
+function setRole(role) {
+    document.getElementById("role").value = role;
+
+    if (role === "admin") {
+        document.getElementById("adminBtn").classList.add("active");
+        document.getElementById("userBtn").classList.remove("active");
+    } else {
+        document.getElementById("userBtn").classList.add("active");
+        document.getElementById("adminBtn").classList.remove("active");
+    }
+}
+</script>
 
 <%@ include file="/pages/common/footer.jsp" %>
 
-</body>
 </body>
 </html>
