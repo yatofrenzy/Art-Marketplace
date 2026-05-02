@@ -30,5 +30,10 @@
 <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Mode</button>
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
 
+<script src="${pageContext.request.contextPath}/js/ui.js"></script>
+
+<%@ include file="/pages/common/footer.jsp" %>
+
+</body>
 </body>
 </html>

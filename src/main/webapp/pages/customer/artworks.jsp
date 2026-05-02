@@ -1,11 +1,9 @@
 <%@ page import="java.util.List" %>
-<%@ page import="com.artmarketplace.dao.ArtworkDAO" %>
 <%@ page import="com.artmarketplace.model.Artwork" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
-    ArtworkDAO dao = new ArtworkDAO();
-    List<Artwork> artworks = dao.getApprovedArtworks();
+    List<Artwork> artworks = (List<Artwork>) request.getAttribute("artworks");
 %>
 
 <!DOCTYPE html>
@@ -31,7 +29,7 @@
 
                 <div class="gallery-stats">
                     <div class="gallery-stat">
-                        <strong><%= artworks.size() %></strong>
+                        <strong><%= artworks != null ? artworks.size() : 0 %></strong>
                         <span>Artworks</span>
                     </div>
                 </div>
@@ -62,26 +60,31 @@
         <!-- ART GRID -->
         <div class="art-grid">
 
-            <% if (artworks != null && !artworks.isEmpty()) {
-                for (Artwork art : artworks) {
+            <%
+                if (artworks != null && !artworks.isEmpty()) {
+                    for (Artwork art : artworks) {
+
+                        String imagePath = art.getImagePath() != null ? art.getImagePath() : "";
+                        String title = art.getTitle() != null ? art.getTitle() : "";
+                        String description = art.getDescription() != null ? art.getDescription() : "";
             %>
 
             <div class="art-card" data-category="<%= art.getCategoryId() %>">
 
-                <img src="${pageContext.request.contextPath}/<%= art.getImagePath() %>" alt="<%= art.getTitle() %>">
+                <img src="<%= request.getContextPath() + "/" + imagePath %>" alt="<%= title %>">
 
                 <div class="art-info">
-                    <h3><%= art.getTitle() %></h3>
-                    <p><%= art.getDescription() %></p>
+                    <h3><%= title %></h3>
+                    <p><%= description %></p>
                     <div class="price">Rs. <%= art.getPrice() %></div>
 
                     <button class="btn btn-primary"
                         onclick="openArtModal(
-                        '<%= art.getTitle() %>',
-                        'Rs. <%= art.getPrice() %>',
-                        '${pageContext.request.contextPath}/<%= art.getImagePath() %>',
-                        '<%= art.getDescription() %>',
-                        '<%= art.getArtworkId() %>'
+                            '<%= title.replace("'", "\\'") %>',
+                            'Rs. <%= art.getPrice() %>',
+                            '<%= request.getContextPath() + "/" + imagePath %>',
+                            '<%= description.replace("'", "\\'") %>',
+                            '<%= art.getArtworkId() %>'
                         )">
                         View Details
                     </button>
@@ -89,11 +92,16 @@
 
             </div>
 
-            <% } } else { %>
+            <%
+                    }
+                } else {
+            %>
 
             <p>No artworks available.</p>
 
-            <% } %>
+            <%
+                }
+            %>
 
         </div>
 
@@ -134,5 +142,10 @@
 
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
 
+<script src="${pageContext.request.contextPath}/js/ui.js"></script>
+
+<%@ include file="/pages/common/footer.jsp" %>
+
+</body>
 </body>
 </html>

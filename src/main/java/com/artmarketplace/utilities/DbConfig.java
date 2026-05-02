@@ -15,4 +15,9 @@ public class DbConfig {
         Class.forName("com.mysql.cj.jdbc.Driver");
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
+
+	public static Connection getDbConnection() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

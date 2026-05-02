@@ -7,12 +7,17 @@
 
     <div class="nav-links">
         <a href="${pageContext.request.contextPath}/pages/customer/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/pages/customer/artworks.jsp">Gallery</a>
+        <a href="${pageContext.request.contextPath}/artworks">Artworks</a>
         <a href="${pageContext.request.contextPath}/pages/customer/cart.jsp">Cart</a>
         <a href="${pageContext.request.contextPath}/pages/customer/orders.jsp">Orders</a>
+        <% 
+    com.artmarketplace.model.User navUser = 
+        (com.artmarketplace.model.User) session.getAttribute("user");
+    if (navUser != null && "admin".equalsIgnoreCase(navUser.getRole())) { 
+%>
+    <a href="${pageContext.request.contextPath}/admin/artwork?action=add">Add Artwork</a>
+<% } %>
         <a href="${pageContext.request.contextPath}/pages/customer/profile.jsp">Profile</a>
-        <a href="${pageContext.request.contextPath}/pages/common/about.jsp">About</a>
-        <a href="${pageContext.request.contextPath}/pages/common/contact.jsp">Contact</a>
         <a href="${pageContext.request.contextPath}/logout" class="nav-logout">Logout</a>
     </div>
 </nav>

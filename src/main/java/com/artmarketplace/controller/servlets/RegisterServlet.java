@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -31,42 +31,62 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
 
-        if (name == null || email == null || password == null || confirmPassword == null ||
-            name.trim().isEmpty() || email.trim().isEmpty() ||
-            password.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
+        UserDAO dao = new UserDAO();
 
-            request.setAttribute("error", "All fields are required");
+        if (name == null || name.trim().isEmpty()
+                || email == null || email.trim().isEmpty()
+                || password == null || password.trim().isEmpty()
+                || confirmPassword == null || confirmPassword.trim().isEmpty()) {
+
+            request.setAttribute("error", "All fields are required.");
+            request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
+            return;
+        }
+
+        if (!name.matches("^[A-Za-z ]+$")) {
+            request.setAttribute("error", "Name must contain only letters.");
+            request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
+            return;
+        }
+
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            request.setAttribute("error", "Please enter a valid email address.");
+            request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
+            return;
+        }
+
+        if (password.length() < 6) {
+            request.setAttribute("error", "Password must be at least 6 characters long.");
             request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            request.setAttribute("error", "Passwords do not match");
+            request.setAttribute("error", "Passwords do not match.");
             request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
             return;
         }
-
-        UserDAO dao = new UserDAO();
 
         if (dao.isEmailExists(email.trim())) {
-            request.setAttribute("error", "Email already exists");
+            request.setAttribute("error", "Email already exists.");
             request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
             return;
         }
+
+        String hashedPassword = PasswordUtil.hashPassword(password);
 
         User user = new User();
         user.setName(name.trim());
         user.setEmail(email.trim());
-        String hashed = PasswordUtil.hashPassword(password);
-        user.setPassword(hashed);
+        user.setPassword(hashedPassword);
         user.setRole("customer");
 
         boolean result = dao.registerUser(user);
 
         if (result) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
         } else {
-            request.setAttribute("error", "Registration failed");
+            request.setAttribute("error", "Registration failed. Please try again.");
             request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
         }
     }

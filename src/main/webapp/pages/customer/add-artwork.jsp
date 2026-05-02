@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add Artwork | Admin | Art Marketplace</title>
+    <title>Add Artwork | Art Marketplace</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/art_marketplace.css">
 </head>
 <body>
@@ -13,14 +13,17 @@
 
     <main class="container">
         <section class="hero compact-hero">
-            <h1>Add New Artwork</h1>
-            <p>Add a new artwork directly to the marketplace with full control over status.</p>
+            <h1>Submit Your Artwork</h1>
+            <p>Upload your artwork to the marketplace. It will be reviewed before going live.</p>
         </section>
 
         <h2 class="section-title">Artwork Details</h2>
 
         <div class="form-card">
-            <form action="${pageContext.request.contextPath}/admin/artwork" method="post" enctype="multipart/form-data">
+            <%-- enctype="multipart/form-data" is required for file upload --%>
+            <form action="${pageContext.request.contextPath}/artist/add-artwork"
+                  method="post"
+                  enctype="multipart/form-data">
 
                 <input type="hidden" name="action" value="add">
 
@@ -44,7 +47,7 @@
                 <div class="form-group">
                     <label>Description</label>
                     <textarea name="description" rows="4"
-                              placeholder="Describe the artwork..."></textarea>
+                              placeholder="Describe your artwork..."></textarea>
                 </div>
 
                 <div class="form-group">
@@ -52,23 +55,17 @@
                     <input type="number" name="price" placeholder="Enter price" min="1" required>
                 </div>
 
+                <%-- FILE INPUT instead of text path --%>
                 <div class="form-group">
                     <label>Upload Image</label>
                     <input type="file" name="imageFile" accept="image/*" required>
                 </div>
 
-                <div class="form-group">
-                    <label>Status</label>
-                    <select name="status" required>
-                        <option value="Approved">Approved</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Rejected">Rejected</option>
-                    </select>
-                </div>
+                <%-- Status is auto-set to Pending, no need to show it to artist --%>
 
                 <div class="btn-row">
-                    <button type="submit" class="btn btn-primary">Add Artwork</button>
-                    <a href="${pageContext.request.contextPath}/admin/artwork"
+                    <button type="submit" class="btn btn-primary">Submit Artwork</button>
+                    <a href="${pageContext.request.contextPath}/pages/customer/home.jsp"
                        class="btn btn-dark">Cancel</a>
                 </div>
 
@@ -83,8 +80,6 @@
 
 <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark</button>
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
-
-<%@ include file="/pages/common/footer.jsp" %>
 
 </body>
 </html>
