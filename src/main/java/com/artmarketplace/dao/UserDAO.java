@@ -33,6 +33,25 @@ public class UserDAO {
 
         return false;
     }
+    public boolean updateProfile(User user) {
+        String sql = "UPDATE users SET email=?, contact_number=?, profile_image=? WHERE user_id=?";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getContactNumber());
+            ps.setString(3, user.getProfileImage());
+            ps.setInt(4, user.getUserId());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 
     public boolean isEmailExists(String email) {
         String sql = "SELECT user_id FROM users WHERE email = ?";
@@ -75,6 +94,8 @@ public class UserDAO {
                 user.setEmail(rs.getString("email"));
                 user.setPassword(rs.getString("password"));
                 user.setRole(rs.getString("role"));
+                user.setContactNumber(rs.getString("contact_number"));
+                user.setProfileImage(rs.getString("profile_image"));
                 return user;
             }
 
