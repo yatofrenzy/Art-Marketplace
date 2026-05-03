@@ -1,6 +1,8 @@
 package com.artmarketplace.dao;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +11,10 @@ import com.artmarketplace.utilities.DbConfig;
 
 public class CartDAO {
 
-   
     public boolean addToCart(int userId, int artworkId) {
-        String checkSql = "SELECT quantity FROM cart WHERE user_id=? AND artwork_id=?";
-        String updateSql = "UPDATE cart SET quantity = quantity + 1 WHERE user_id=? AND artwork_id=?";
-        String insertSql = "INSERT INTO cart (user_id, artwork_id, quantity) VALUES (?, ?, 1)";
+        String checkSql = "SELECT quantity FROM cart_items WHERE user_id=? AND artwork_id=?";
+        String updateSql = "UPDATE cart_items SET quantity = quantity + 1 WHERE user_id=? AND artwork_id=?";
+        String insertSql = "INSERT INTO cart_items (user_id, artwork_id, quantity) VALUES (?, ?, 1)";
 
         try (Connection conn = DbConfig.getConnection()) {
 
@@ -36,20 +37,20 @@ public class CartDAO {
             }
 
         } catch (Exception e) {
+            System.out.println("ADD TO CART ERROR:");
             e.printStackTrace();
         }
 
         return false;
     }
 
-   
     public List<CartItem> getCartItems(int userId) {
         List<CartItem> items = new ArrayList<>();
 
-        String sql = "SELECT c.cart_id, c.artwork_id, c.quantity, " +
-                     "a.title, a.price " +
-                     "FROM cart c " +
-                     "JOIN artwork a ON c.artwork_id = a.artwork_id " +
+        String sql = "SELECT c.cart_item_id, c.artwork_id, c.quantity, " +
+                     "a.title, a.price, a.image_path " +
+                     "FROM cart_items c " +
+                     "JOIN artworks a ON c.artwork_id = a.artwork_id " +
                      "WHERE c.user_id=?";
 
         try (Connection conn = DbConfig.getConnection();
@@ -60,61 +61,62 @@ public class CartDAO {
 
             while (rs.next()) {
                 CartItem item = new CartItem();
-                item.setCartItemId(rs.getInt("cart_id"));
+                item.setCartItemId(rs.getInt("cart_item_id"));
                 item.setArtworkId(rs.getInt("artwork_id"));
                 item.setQuantity(rs.getInt("quantity"));
                 item.setTitle(rs.getString("title"));
                 item.setPrice(rs.getDouble("price"));
+                item.setImagePath(rs.getString("image_path"));
 
                 items.add(item);
             }
 
         } catch (Exception e) {
+            System.out.println("GET CART ITEMS ERROR:");
             e.printStackTrace();
         }
 
         return items;
     }
 
-   
-    public boolean updateQuantity(int cartId, int quantity) {
-        String sql = "UPDATE cart SET quantity=? WHERE cart_id=?";
+    public boolean updateQuantity(int cartItemId, int quantity) {
+        String sql = "UPDATE cart_items SET quantity=? WHERE cart_item_id=?";
 
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, quantity);
-            ps.setInt(2, cartId);
+            ps.setInt(2, cartItemId);
 
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
+            System.out.println("UPDATE CART ERROR:");
             e.printStackTrace();
         }
 
         return false;
     }
 
-   
-    public boolean removeItem(int cartId) {
-        String sql = "DELETE FROM cart WHERE cart_id=?";
+    public boolean removeItem(int cartItemId) {
+        String sql = "DELETE FROM cart_items WHERE cart_item_id=?";
 
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, cartId);
+            ps.setInt(1, cartItemId);
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
+            System.out.println("REMOVE CART ERROR:");
             e.printStackTrace();
         }
 
         return false;
     }
 
-    
     public boolean clearCart(int userId) {
-        String sql = "DELETE FROM cart WHERE user_id=?";
+        String sql = "DELETE FROM cart_items WHERE user_id=?";
 
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -123,6 +125,7 @@ public class CartDAO {
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
+            System.out.println("CLEAR CART ERROR:");
             e.printStackTrace();
         }
 
