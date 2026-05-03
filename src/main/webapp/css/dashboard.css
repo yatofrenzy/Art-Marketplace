@@ -38,7 +38,7 @@
 }
 
 .dark{
-    color:#1f1f1f;
+    color:#ffffff;
 }
 
 .blue{
@@ -53,7 +53,7 @@
     align-items:center;
     gap:12px;
     text-decoration:none;
-    color:#5b1fa6;
+    color:#ffffff;
     font-size:18px;
     font-weight:500;
 }
@@ -74,11 +74,11 @@
     transition:0.3s;
     font-size:17px;
     font-weight:500;
-    color:#555;
+    color:#ffffff;
 }
 
 .menu li:hover{
-    background:#dff9fc;
+    background:rgba(47, 199, 216, 0.2);
     color:#2fc7d8;
 }
 
@@ -90,7 +90,7 @@
 .sidebar-logout {
     margin-top: auto !important;
     padding: 20px 0 0 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .sidebar-logout a {
@@ -117,9 +117,9 @@
     position: fixed !important;
     top: 0;
     left: 0;
-    width: 260px;
+    width: 300px;
     height: 100vh !important;
-    background: #ffffff;
+    background: #0d1b2a;
     padding: 30px 20px;
     display: flex !important;
     flex-direction: column !important;
@@ -132,8 +132,8 @@
 .main-content{
     flex: 1;
     padding: 35px;
-    margin-left: 260px;
-    width: calc(100% - 260px);
+    margin-left: 300px;
+    width: calc(100% - 300px);
 }
 
 /* TOPBAR */
