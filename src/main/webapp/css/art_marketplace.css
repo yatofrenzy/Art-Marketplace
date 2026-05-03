@@ -853,3 +853,29 @@ body.dark-mode .nav-search {
         width: 120px;
     }
 }
+
+.search-input {
+    width: 210px;
+    height: 36px;
+    padding: 0 15px;
+    border-radius: 999px;
+    border: 1px solid rgba(34, 211, 238, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    color: #f8fafc;
+    font-size: 14px;
+    font-weight: 600;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.25s ease;
+}
+
+.search-input::placeholder {
+    color: rgba(248, 250, 252, 0.55);
+    font-weight: 500;
+}
+
+.search-input:focus {
+    border-color: #22d3ee;
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
+}
