@@ -7,22 +7,31 @@
 <%
     ArtworkDAO dao = new ArtworkDAO();
     List<Artwork> artworks = dao.getAllArtworks();
-    
+
+    // 🔹 Only show Approved artworks
+    List<Artwork> approvedList = new ArrayList<>();
+    for (Artwork art : artworks) {
+        if ("Approved".equalsIgnoreCase(art.getStatus())) {
+            approvedList.add(art);
+        }
+    }
+    artworks = approvedList;
+
     String search = request.getParameter("search");
-    
-    if (search != null && !search.trim().isEmpty()){
-    	String keyword = search.trim().toLowerCase();
-    	List<Artwork> filteredArtworks = new ArrayList<>();
-    	
-    	for (Artwork art : artworks){
-    		String title = art.getTitle() != null ? art.getTitle().toLowerCase() : "";
-    		String description = art.getDescription() != null? art.getDescription().toLowerCase() : "";
-    		
-    		if (title.contains(keyword) || description.contains(keyword)){
-    			filteredArtworks.add(art);
-    		}
-    	}
-    	artworks = filteredArtworks;
+
+    if (search != null && !search.trim().isEmpty()) {
+        String keyword = search.trim().toLowerCase();
+        List<Artwork> filteredArtworks = new ArrayList<>();
+
+        for (Artwork art : artworks) {
+            String title = art.getTitle() != null ? art.getTitle().toLowerCase() : "";
+            String description = art.getDescription() != null ? art.getDescription().toLowerCase() : "";
+
+            if (title.contains(keyword) || description.contains(keyword)) {
+                filteredArtworks.add(art);
+            }
+        }
+        artworks = filteredArtworks;
     }
 %>
 
@@ -73,7 +82,7 @@
                 <option value="2">Sketch</option>
                 <option value="3">Digital Art</option>
                 <option value="4">Portrait</option>
-                <option value="5">Nature Art</option>
+                <option value="6">Nature Art</option> <!-- ✅ FIXED -->
             </select>
         </div>
 
@@ -87,7 +96,7 @@
                         String imagePath = art.getImagePath();
 
                         if (imagePath == null || imagePath.trim().isEmpty()) {
-                            imagePath = "images/artworks/default.jpg";
+                            imagePath = "resources/images/Nature-Art/default.jpg";
                         }
 
                         String fullImagePath = request.getContextPath() + "/" + imagePath;
