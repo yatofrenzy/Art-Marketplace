@@ -29,7 +29,7 @@
                    name="search"
                    placeholder="Search art..."
                    value="<%= request.getParameter("search") != null ? request.getParameter("search") : "" %>">
-            <button type="submit">🔍</button>
+            <button type="submit">⌕</button>
         </form>
 
         <a href="${pageContext.request.contextPath}/logout" class="nav-logout">Logout</a>
