@@ -1,37 +1,78 @@
 package com.artmarketplace.model;
 
+import java.util.List;
+
 public class Order {
     private int orderId;
     private int userId;
-    private double totalAmt;
-    private String orderDate;
-    private String status;
+    private double totalAmount;
+    private String orderStatus;
     private String paymentMethod;
     private String paymentStatus;
-    private String paymentDate;
+    private String orderDate;
+    private List<OrderItem> items;
 
-    // Getters & Setters
-    public int getOrderId() { return orderId; }
-    public void setOrderId(int orderId) { this.orderId = orderId; }
+    public int getOrderId() {
+        return orderId;
+    }
 
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
 
-    public double getTotalAmt() { return totalAmt; }
-    public void setTotalAmt(double totalAmt) { this.totalAmt = totalAmt; }
+    public int getUserId() {
+        return userId;
+    }
 
-    public String getOrderDate() { return orderDate; }
-    public void setOrderDate(String orderDate) { this.orderDate = orderDate; }
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public double getTotalAmount() {
+        return totalAmount;
+    }
 
-    public String getPaymentMethod() { return paymentMethod; }
-    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
-    public String getPaymentStatus() { return paymentStatus; }
-    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+    public String getOrderStatus() {
+        return orderStatus;
+    }
 
-    public String getPaymentDate() { return paymentDate; }
-    public void setPaymentDate(String paymentDate) { this.paymentDate = paymentDate; }
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
+    }
 }

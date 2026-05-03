@@ -4,21 +4,56 @@ public class OrderItem {
     private int orderItemId;
     private int orderId;
     private int artworkId;
+    private String title;
     private int quantity;
     private double price;
 
-    public int getOrderItemId() { return orderItemId; }
-    public void setOrderItemId(int orderItemId) { this.orderItemId = orderItemId; }
+    public int getOrderItemId() {
+        return orderItemId;
+    }
 
-    public int getOrderId() { return orderId; }
-    public void setOrderId(int orderId) { this.orderId = orderId; }
+    public void setOrderItemId(int orderItemId) {
+        this.orderItemId = orderItemId;
+    }
 
-    public int getArtworkId() { return artworkId; }
-    public void setArtworkId(int artworkId) { this.artworkId = artworkId; }
+    public int getOrderId() {
+        return orderId;
+    }
 
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
 
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    public int getArtworkId() {
+        return artworkId;
+    }
+
+    public void setArtworkId(int artworkId) {
+        this.artworkId = artworkId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }

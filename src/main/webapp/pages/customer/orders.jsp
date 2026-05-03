@@ -1,4 +1,22 @@
+<%@ page import="java.util.List" %>
+<%@ page import="com.artmarketplace.dao.OrderDAO" %>
+<%@ page import="com.artmarketplace.model.Order" %>
+<%@ page import="com.artmarketplace.model.OrderItem" %>
+<%@ page import="com.artmarketplace.model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%
+    User user = (User) session.getAttribute("user");
+
+    if (user == null) {
+        response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
+        return;
+    }
+
+    OrderDAO orderDAO = new OrderDAO();
+    List<Order> orders = orderDAO.getOrdersByUser(user.getUserId());
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,6 +24,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/art_marketplace.css">
 </head>
 <body>
+
 <div class="main-layout">
     <%@ include file="/pages/common/navbar.jsp" %>
 
@@ -15,47 +34,58 @@
             <p>View your order history and payment status.</p>
         </section>
 
+        <% if(request.getParameter("success") != null) { %>
+            <div class="success-message">Order placed successfully.</div>
+        <% } %>
+
         <h2 class="section-title">Order History</h2>
 
-        <div class="table-card">
-            <table>
+        <% if(orders != null && !orders.isEmpty()) { 
+            for(Order order : orders) {
+        %>
+
+        <div class="table-card" style="margin-bottom: 25px;">
+            <h3>Order #<%= order.getOrderId() %></h3>
+            <p>Date: <%= order.getOrderDate() %></p>
+            <p>Total: Rs. <%= order.getTotalAmount() %></p>
+            <p>Payment: <%= order.getPaymentMethod() %> - <%= order.getPaymentStatus() %></p>
+            <p>Status: <span class="badge"><%= order.getOrderStatus() %></span></p>
+
+            <table style="margin-top: 20px;">
                 <tr>
-                    <th>Order ID</th>
                     <th>Artwork</th>
-                    <th>Total</th>
-                    <th>Payment</th>
-                    <th>Status</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
                 </tr>
+
+                <% for(OrderItem item : order.getItems()) { %>
                 <tr>
-                    <td>#1001</td>
-                    <td>Cherry Blossom</td>
-                    <td>Rs. 5000</td>
-                    <td>Paid</td>
-                    <td><span class="badge">Completed</span></td>
+                    <td><%= item.getTitle() %></td>
+                    <td><%= item.getQuantity() %></td>
+                    <td>Rs. <%= item.getPrice() %></td>
                 </tr>
-                <tr>
-                    <td>#1002</td>
-                    <td>Picasso Lady</td>
-                    <td>Rs. 4200</td>
-                    <td>Pending</td>
-                    <td><span class="badge">Processing</span></td>
-                </tr>
+                <% } %>
             </table>
         </div>
+
+        <% } } else { %>
+
+        <div class="table-card">
+            <p>No orders found.</p>
+        </div>
+
+        <% } %>
     </main>
 </div>
+
 <div class="loader" id="loader">
     <div class="loader-circle"></div>
 </div>
 
-<button class="dark-toggle" onclick="toggleDarkMode()">🌙 Mode</button>
-
-<script src="${pageContext.request.contextPath}/js/ui.js"></script>
-
+<button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark</button>
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
 
 <%@ include file="/pages/common/footer.jsp" %>
 
-</body>
 </body>
 </html>
