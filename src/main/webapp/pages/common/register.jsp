@@ -46,6 +46,11 @@
                 </div>
 
                 <div class="input-box">
+                    <label>Phone Number</label>
+                    <input type="text" name="phone" placeholder="10 digit phone number" autocomplete="tel" required>
+                </div>
+
+                <div class="input-box">
                     <label>Password</label>
                     <input type="password" name="password" placeholder="Create password" autocomplete="new-password" required>
                 </div>
@@ -65,17 +70,16 @@
         </div>
     </section>
 </div>
+
 <div class="loader" id="loader">
     <div class="loader-circle"></div>
 </div>
 
 <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Mode</button>
-<script src="${pageContext.request.contextPath}/js/ui.js"></script>
 
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
 
 <%@ include file="/pages/common/footer.jsp" %>
 
-</body>
 </body>
 </html>

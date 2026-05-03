@@ -8,6 +8,7 @@ public class User {
     private String role;
     private String contactNumber;
     private String profileImage;
+    private String phone;
 
     public int getUserId() {
         return userId;
@@ -25,7 +26,7 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
+	public String getEmail() {
         return email;
     }
 
@@ -63,5 +64,13 @@ public class User {
 
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

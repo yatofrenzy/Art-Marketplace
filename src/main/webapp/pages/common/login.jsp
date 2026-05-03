@@ -56,20 +56,24 @@
             <h2>Login</h2>
             <p class="sub">Enter your account details to continue browsing the marketplace.</p>
 
+            <% if(request.getParameter("registered") != null) { %>
+                <div class="success-message">Registration successful. Please login.</div>
+            <% } %>
+
+            <% if(request.getParameter("reset") != null) { %>
+                <div class="success-message">Password reset successful. Please login.</div>
+            <% } %>
+
             <% if(request.getAttribute("error") != null) { %>
                 <div class="notice-error"><%= request.getAttribute("error") %></div>
             <% } %>
 
-            <!-- 🔹 ROLE TOGGLE ADDED -->
             <div class="role-toggle">
                 <button type="button" id="userBtn" class="role-btn active" onclick="setRole('user')">User</button>
                 <button type="button" id="adminBtn" class="role-btn" onclick="setRole('admin')">Admin</button>
             </div>
 
-            <!-- 🔹 FORM UPDATED -->
             <form action="${pageContext.request.contextPath}/login" method="post">
-
-                <!-- Hidden role field -->
                 <input type="hidden" name="role" id="role" value="user">
 
                 <div class="input-box">
@@ -80,6 +84,13 @@
                 <div class="input-box">
                     <label>Password</label>
                     <input type="password" name="password" placeholder="Enter password" autocomplete="current-password" required>
+                </div>
+
+                <div style="text-align:right; margin-top:-8px; margin-bottom:14px;">
+                    <a href="${pageContext.request.contextPath}/pages/common/forgot-password.jsp"
+                       style="color:var(--pink); font-weight:800; font-size:13px; text-decoration:none;">
+                        Forgot Password?
+                    </a>
                 </div>
 
                 <button type="submit" class="art-btn">Enter Marketplace</button>
@@ -101,7 +112,6 @@
 
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
 
-<!-- 🔹 ROLE SWITCH SCRIPT -->
 <script>
 function setRole(role) {
     document.getElementById("role").value = role;

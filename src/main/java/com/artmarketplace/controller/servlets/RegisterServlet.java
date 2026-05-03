@@ -28,6 +28,7 @@ public class RegisterServlet extends HttpServlet {
 
         String name = request.getParameter("name");
         String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
 
@@ -35,6 +36,7 @@ public class RegisterServlet extends HttpServlet {
 
         if (name == null || name.trim().isEmpty()
                 || email == null || email.trim().isEmpty()
+                || phone == null || phone.trim().isEmpty()
                 || password == null || password.trim().isEmpty()
                 || confirmPassword == null || confirmPassword.trim().isEmpty()) {
 
@@ -45,6 +47,12 @@ public class RegisterServlet extends HttpServlet {
 
         if (!name.matches("^[A-Za-z ]+$")) {
             request.setAttribute("error", "Name must contain only letters.");
+            request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
+            return;
+        }
+
+        if (!phone.matches("^[0-9]{10}$")) {
+            request.setAttribute("error", "Phone number must be 10 digits.");
             request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
             return;
         }
@@ -78,13 +86,14 @@ public class RegisterServlet extends HttpServlet {
         User user = new User();
         user.setName(name.trim());
         user.setEmail(email.trim());
+        user.setPhone(phone.trim());
         user.setPassword(hashedPassword);
         user.setRole("customer");
 
         boolean result = dao.registerUser(user);
 
         if (result) {
-            response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp?registered=true");
         } else {
             request.setAttribute("error", "Registration failed. Please try again.");
             request.getRequestDispatcher("/pages/common/register.jsp").forward(request, response);
