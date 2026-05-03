@@ -24,51 +24,9 @@
 
 <div class="dashboard">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-
-        <div class="logo">
-    	<h2>
-        <span class="dark">Art</span>
-        <span class="blue">Marketplace</span>
-   	 	</h2>
-		</div>
-
-        <ul class="menu">
-
-            <li class="active">
-                <i class="fa-solid fa-house"></i>
-                <span>Dashboard</span>
-            </li>
-
-            <li>
-                <i class="fa-solid fa-chart-line"></i>
-                <span>Analytics</span>
-            </li>
-
-            <li>
-                <i class="fa-solid fa-box"></i>
-                <span>Products</span>
-            </li>
-
-            <li>
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span>Orders</span>
-            </li>
-
-            <li>
-                <i class="fa-solid fa-users"></i>
-                <span>Customers</span>
-            </li>
-
-            <li>
-                <i class="fa-solid fa-gear"></i>
-                <span>Settings</span>
-            </li>
-
-        </ul>
-
-    </aside>
+	<jsp:include page="/pages/common/sidebar.jsp">
+    <jsp:param name="active" value="dashboard"/>
+	</jsp:include>
 
     <!-- MAIN CONTENT -->
     <main class="main-content">
@@ -216,7 +174,6 @@
 
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
 
-<%@ include file="/pages/common/footer.jsp" %>
 
 </body>
 </body>

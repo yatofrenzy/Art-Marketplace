@@ -57,9 +57,9 @@ public class LoginServlet extends HttpServlet {
 
                 // Optional redirect split
                 if (actualRole.equals("artist")) {
-                    response.sendRedirect(request.getContextPath() + "/pages/artist/dashboard.jsp");
+                    response.sendRedirect(request.getContextPath() + "/pages/artist/dashboard-admin.jsp");
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/pages/admin/dashboard.jsp");
+                    response.sendRedirect(request.getContextPath() + "/pages/admin/dashboard-admin.jsp");
                 }
 
                 return;
