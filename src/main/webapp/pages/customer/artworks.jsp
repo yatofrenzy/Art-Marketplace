@@ -1,12 +1,29 @@
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.artmarketplace.dao.ArtworkDAO" %>
 <%@ page import="com.artmarketplace.model.Artwork" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-
-<%@ page import="com.artmarketplace.dao.ArtworkDAO" %>
 <%
     ArtworkDAO dao = new ArtworkDAO();
     List<Artwork> artworks = dao.getAllArtworks();
+    
+    String search = request.getParameter("search");
+    
+    if (search != null && !search.trim().isEmpty()){
+    	String keyword = search.trim().toLowerCase();
+    	List<Artwork> filteredArtworks = new ArrayList<>();
+    	
+    	for (Artwork art : artworks){
+    		String title = art.getTitle() != null ? art.getTitle().toLowerCase() : "";
+    		String description = art.getDescription() != null? art.getDescription().toLowerCase() : "";
+    		
+    		if (title.contains(keyword) || description.contains(keyword)){
+    			filteredArtworks.add(art);
+    		}
+    	}
+    	artworks = filteredArtworks;
+    }
 %>
 
 <!DOCTYPE html>

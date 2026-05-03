@@ -797,3 +797,49 @@ td {
     opacity: 1;
     transform: translateY(0);
 }
+
+/* Navbar search */
+.nav-search {
+    display: flex;
+    align-items: center;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 5px 6px 5px 14px;
+    gap: 6px;
+}
+
+.nav-search input {
+    width: 145px;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.nav-search input::placeholder {
+    color: var(--muted);
+}
+
+.nav-search button {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #061012;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.nav-search button:hover {
+    transform: scale(1.05);
+}
+
+@media(max-width: 850px) {
+    .nav-search input {
+        width: 115px;
+    }
+}
