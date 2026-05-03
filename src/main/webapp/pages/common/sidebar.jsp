@@ -52,5 +52,12 @@
         </li>
 
     </ul>
+    
+    <div class="sidebar-logout">
+        <a href="${pageContext.request.contextPath}/logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+        </a>
+    </div>
 
 </aside>

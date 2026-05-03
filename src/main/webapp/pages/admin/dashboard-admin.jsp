@@ -53,10 +53,9 @@
                 <div>
                     <h4>Total Revenue</h4>
                     <h2>Rs 82,650</h2>
-                    <span>+11% this month </span>
+                    <span class="up">+11% this month</span>
                 </div>
-
-                <div class="icon green">
+                <div class="icon">
                     <i class="fa-solid fa-dollar-sign"></i>
                 </div>
             </div>
@@ -65,10 +64,9 @@
                 <div>
                     <h4>Total Orders</h4>
                     <h2>1645</h2>
-                    <span>+8% this month</span>
+                    <span class="up">+8% this month</span>
                 </div>
-
-                <div class="icon blue">
+                <div class="icon">
                     <i class="fa-solid fa-cart-shopping"></i>
                 </div>
             </div>
@@ -77,10 +75,9 @@
                 <div>
                     <h4>Total Customers</h4>
                     <h2>1462</h2>
-                    <span>+5% this month</span>
+                    <span class="up">+5% this month</span>
                 </div>
-
-                <div class="icon orange">
+                <div class="icon">
                     <i class="fa-solid fa-users"></i>
                 </div>
             </div>
@@ -99,7 +96,9 @@
                 </select>
             </div>
 
-            <canvas id="salesChart"></canvas>
+            <div class="chart-card">
+                <canvas id="salesChart"></canvas>
+            </div>
 
         </div>
 
@@ -145,26 +144,42 @@
 <!-- CHART SCRIPT -->
 <script>
 
-    const ctx = document.getElementById('salesChart');
+    const ctx = document.getElementById('salesChart').getContext('2d');
 
     new Chart(ctx, {
         type: 'line',
         data: {
             labels: ['22 Jul', '23 Jul', '24 Jul', '25 Jul', '26 Jul', '27 Jul', '28 Jul'],
             datasets: [{
-                label: 'Sales',
                 data: [12000, 42000, 18000, 38000, 52000, 22000, 48000],
                 borderColor: '#52d6c5',
-                backgroundColor: 'rgba(82,214,197,0.2)',
+                backgroundColor: 'rgba(82,214,197,0.20)',
                 fill: true,
-                tension: 0.4
+                tension: 0.45,
+                pointRadius: 0
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     display: false
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value / 1000 + 'k';
+                        }
+                    }
                 }
             }
         }
@@ -175,6 +190,5 @@
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
 
 
-</body>
 </body>
 </html>
