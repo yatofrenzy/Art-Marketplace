@@ -10,22 +10,18 @@ import com.artmarketplace.utilities.DbConfig;
 public class UserDAO {
 
     public boolean registerUser(User user) {
-        String sql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO users (name, email, password, role, phone) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            if (conn == null) {
-                return false;
-            }
 
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
             ps.setString(4, user.getRole());
+            ps.setString(5, user.getPhone());
 
-            int rows = ps.executeUpdate();
-            return rows > 0;
+            return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,6 +29,65 @@ public class UserDAO {
 
         return false;
     }
+
+    public boolean isEmailExists(String email) {
+        String sql = "SELECT user_id FROM users WHERE email = ?";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public User getUserByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                User user = new User();
+
+                user.setUserId(rs.getInt("user_id"));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setRole(rs.getString("role"));
+
+                try {
+                    user.setContactNumber(rs.getString("contact_number"));
+                } catch (Exception ignored) {}
+
+                try {
+                    user.setProfileImage(rs.getString("profile_image"));
+                } catch (Exception ignored) {}
+
+                try {
+                    user.setPhone(rs.getString("phone"));
+                } catch (Exception ignored) {}
+
+                return user;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public boolean updateProfile(User user) {
         String sql = "UPDATE users SET email=?, contact_number=?, profile_image=? WHERE user_id=?";
 
@@ -53,38 +108,15 @@ public class UserDAO {
         return false;
     }
 
-    public boolean isEmailExists(String email) {
-        String sql = "SELECT user_id FROM users WHERE email = ?";
+    public User getUserByEmailAndPhone(String email, String phone) {
+        String sql = "SELECT * FROM users WHERE email=? AND phone=?";
 
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            if (conn == null) {
-                return false;
-            }
-
             ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            return rs.next();
+            ps.setString(2, phone);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    public User getUserByEmail(String email) {
-        String sql = "SELECT * FROM users WHERE email = ?";
-
-        try (Connection conn = DbConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            if (conn == null) {
-                return null;
-            }
-
-            ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -92,10 +124,7 @@ public class UserDAO {
                 user.setUserId(rs.getInt("user_id"));
                 user.setName(rs.getString("name"));
                 user.setEmail(rs.getString("email"));
-                user.setPassword(rs.getString("password"));
-                user.setRole(rs.getString("role"));
-                user.setContactNumber(rs.getString("contact_number"));
-                user.setProfileImage(rs.getString("profile_image"));
+                user.setPhone(rs.getString("phone"));
                 return user;
             }
 
@@ -104,5 +133,23 @@ public class UserDAO {
         }
 
         return null;
+    }
+
+    public boolean updatePassword(int userId, String newPassword) {
+        String sql = "UPDATE users SET password=? WHERE user_id=?";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, newPassword);
+            ps.setInt(2, userId);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }
