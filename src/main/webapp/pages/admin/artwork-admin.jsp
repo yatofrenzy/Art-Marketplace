@@ -37,28 +37,28 @@
         <div class="product-grid">
 
             <div class="product-card">
-                <img src="https://via.placeholder.com/200" alt="">
-                <h4>Mountain Painting</h4>
-                <p>Rs 3000</p>
-            </div>
+   	 			<img src="${pageContext.request.contextPath}/resources/images/wukong.jpg" alt="Wukong">
+    			<h4>Wukong</h4>
+    			<p>Rs 7100</p>
+			</div>
 
-            <div class="product-card">
-                <img src="https://via.placeholder.com/200" alt="">
-                <h4>Nature Art</h4>
-                <p>Rs 2500</p>
-            </div>
-            
-            <div class="product-card">
-                <img src="https://via.placeholder.com/200" alt="">
-                <h4>Picaso Art</h4>
-                <p>Rs 25000</p>
-            </div>
-            
-            <div class="product-card">
-                <img src="https://via.placeholder.com/200" alt="">
-                <h4>Modern Art</h4>
-                <p>Rs 5000</p>
-            </div>
+			<div class="product-card">
+   				<img src="${pageContext.request.contextPath}/resources/images/picaso 2.jpg" alt="Picaso Devil">
+    			<h4>Picaso Devil</h4>
+    			<p>Rs 6200</p>
+			</div>
+
+			<div class="product-card">
+    			<img src="${pageContext.request.contextPath}/resources/images/picaso 1.jpg" alt="Picaso Lady">
+    			<h4>Picaso Lady</h4>
+    			<p>Rs 4200</p>
+			</div>
+
+			<div class="product-card">
+   		 		<img src="${pageContext.request.contextPath}/resources/images/cherryblossom.jpg" alt="cherryblossom">
+    			<h4>Cherryblossom</h4>
+    			<p>Rs 5000</p>
+			</div>
 
         </div>
 

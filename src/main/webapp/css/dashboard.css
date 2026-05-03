@@ -50,6 +50,17 @@
     padding:0 !important;
 }
 
+.sidebar ul li a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    color:#5b1fa6;
+    font-size:18px;
+    font-weight:500;
+}
+
+
 .menu{
     list-style:none;
 }
