@@ -2,8 +2,11 @@
 <%@ page import="com.artmarketplace.model.Artwork" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+
+<%@ page import="com.artmarketplace.dao.ArtworkDAO" %>
 <%
-    List<Artwork> artworks = (List<Artwork>) request.getAttribute("artworks");
+    ArtworkDAO dao = new ArtworkDAO();
+    List<Artwork> artworks = dao.getAllArtworks();
 %>
 
 <!DOCTYPE html>
