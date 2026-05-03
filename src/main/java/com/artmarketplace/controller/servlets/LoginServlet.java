@@ -27,8 +27,14 @@ public class LoginServlet extends HttpServlet {
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        String selectedRole = request.getParameter("role"); // "admin" or "user"
+        String selectedRole = request.getParameter("role");
 
+        // 🔹 Default role safety
+        if (selectedRole == null || selectedRole.trim().isEmpty()) {
+            selectedRole = "user";
+        }
+
+        // 🔹 Input validation
         if (email == null || email.trim().isEmpty()
                 || password == null || password.trim().isEmpty()) {
 
@@ -40,11 +46,15 @@ public class LoginServlet extends HttpServlet {
         UserDAO dao = new UserDAO();
         User user = dao.getUserByEmail(email.trim());
 
+        // 🔹 Authentication check
         if (user != null && PasswordUtil.checkPassword(password, user.getPassword())) {
 
             String actualRole = user.getRole().toLowerCase();
 
-            // 🔹 ADMIN LOGIN (admin + artist allowed)
+            // =========================
+            // 🔹 ADMIN LOGIN
+            // (admin + artist allowed)
+            // =========================
             if ("admin".equalsIgnoreCase(selectedRole)) {
 
                 if (!(actualRole.equals("admin") || actualRole.equals("artist"))) {
@@ -55,7 +65,7 @@ public class LoginServlet extends HttpServlet {
 
                 SessionUtil.setUserSession(request, user);
 
-                // Optional redirect split
+                // Redirect based on actual role
                 if (actualRole.equals("artist")) {
                     response.sendRedirect(request.getContextPath() + "/pages/artist/dashboard-admin.jsp");
                 } else {
@@ -65,11 +75,14 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
-            // 🔹 USER LOGIN (customer only)
+            // =========================
+            // 🔹 USER LOGIN
+            // (customer only)
+            // =========================
             if ("user".equalsIgnoreCase(selectedRole)) {
 
                 if (!actualRole.equals("customer")) {
-                    request.setAttribute("error", "Access denied: Users only.");
+                    request.setAttribute("error", "Access denied: Customers only.");
                     request.getRequestDispatcher("/pages/common/login.jsp").forward(request, response);
                     return;
                 }
@@ -79,9 +92,13 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
+            // 🔹 Invalid role fallback
+            request.setAttribute("error", "Invalid login option.");
+            request.getRequestDispatcher("/pages/common/login.jsp").forward(request, response);
+
         } else {
             request.setAttribute("error", "Invalid email or password.");
             request.getRequestDispatcher("/pages/common/login.jsp").forward(request, response);
         }
     }
-    }
+}

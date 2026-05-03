@@ -38,11 +38,16 @@ function openArtModal(title, price, image, description, artworkId) {
     const modalArtworkId = document.getElementById("modalArtworkId");
     const modal = document.getElementById("artModal");
 
+    console.log("Opening modal for artworkId:", artworkId);
+
     if (modalTitle) modalTitle.innerText = title;
     if (modalPrice) modalPrice.innerText = price;
     if (modalImage) modalImage.src = image;
     if (modalDescription) modalDescription.innerText = description;
     if (modalArtworkId) modalArtworkId.value = artworkId;
+
+    console.log("Hidden input value:", modalArtworkId ? modalArtworkId.value : "hidden input not found");
+
     if (modal) modal.classList.add("show");
 }
 
