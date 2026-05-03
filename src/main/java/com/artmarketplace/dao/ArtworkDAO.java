@@ -11,29 +11,27 @@ import com.artmarketplace.utilities.DbConfig;
 
 public class ArtworkDAO {
 
-    public boolean addArtwork(Artwork artwork) {
-        String sql = "INSERT INTO artworks (user_id, category_id, title, description, price, image_path, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	public boolean addArtwork(Artwork artwork) {
+	    String sql = "INSERT INTO artworks (user_id, category_id, title, description, price, image_path) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DbConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+	    try (Connection conn = DbConfig.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, artwork.getUserId());
-            ps.setInt(2, artwork.getCategoryId());
-            ps.setString(3, artwork.getTitle());
-            ps.setString(4, artwork.getDescription());
-            ps.setDouble(5, artwork.getPrice());
-            ps.setString(6, artwork.getImagePath());
-            ps.setString(7, artwork.getStatus());
+	        ps.setInt(1, artwork.getUserId());
+	        ps.setInt(2, artwork.getCategoryId());
+	        ps.setString(3, artwork.getTitle());
+	        ps.setString(4, artwork.getDescription());
+	        ps.setDouble(5, artwork.getPrice());
+	        ps.setString(6, artwork.getImagePath());
 
-            return ps.executeUpdate() > 0;
+	        return ps.executeUpdate() > 0;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 
-        return false;
-    }
-
+	    return false;
+	}
     public List<Artwork> getAllArtworks() {
         List<Artwork> list = new ArrayList<>();
         String sql = "SELECT * FROM artworks ORDER BY artwork_id DESC";
@@ -51,7 +49,7 @@ public class ArtworkDAO {
                 artwork.setDescription(rs.getString("description"));
                 artwork.setPrice(rs.getDouble("price"));
                 artwork.setImagePath(rs.getString("image_path"));
-                artwork.setStatus(rs.getString("status"));
+                
 
                 list.add(artwork);
             }
@@ -81,7 +79,7 @@ public class ArtworkDAO {
                 artwork.setDescription(rs.getString("description"));
                 artwork.setPrice(rs.getDouble("price"));
                 artwork.setImagePath(rs.getString("image_path"));
-                artwork.setStatus(rs.getString("status"));
+                
                 return artwork;
             }
 
@@ -109,7 +107,7 @@ public class ArtworkDAO {
                 artwork.setDescription(rs.getString("description"));
                 artwork.setPrice(rs.getDouble("price"));
                 artwork.setImagePath(rs.getString("image_path"));
-                artwork.setStatus(rs.getString("status"));
+                
 
                 list.add(artwork);
             }
@@ -125,7 +123,7 @@ public class ArtworkDAO {
     }
 
     public boolean updateArtwork(Artwork artwork) {
-        String sql = "UPDATE artworks SET category_id=?, title=?, description=?, price=?, image_path=?, status=? WHERE artwork_id=?";
+        String sql = "UPDATE artworks SET category_id=?, title=?, description=?, price=?, image_path=? WHERE artwork_id=?";
 
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -135,8 +133,7 @@ public class ArtworkDAO {
             ps.setString(3, artwork.getDescription());
             ps.setDouble(4, artwork.getPrice());
             ps.setString(5, artwork.getImagePath());
-            ps.setString(6, artwork.getStatus());
-            ps.setInt(7, artwork.getArtworkId());
+            ps.setInt(6, artwork.getArtworkId());
 
             return ps.executeUpdate() > 0;
 

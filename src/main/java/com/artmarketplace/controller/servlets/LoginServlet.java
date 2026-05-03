@@ -48,6 +48,11 @@ public class LoginServlet extends HttpServlet {
 
         // 🔹 Authentication check
         if (user != null && PasswordUtil.checkPassword(password, user.getPassword())) {
+        	if (!"Approved".equalsIgnoreCase(user.getAccountStatus())) {
+        	    request.setAttribute("error", "Your account is pending admin approval.");
+        	    request.getRequestDispatcher("/pages/common/login.jsp").forward(request, response);
+        	    return;
+        	}
 
             String actualRole = user.getRole().toLowerCase();
 

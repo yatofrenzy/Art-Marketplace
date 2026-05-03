@@ -69,12 +69,12 @@
             <% } %>
 
             <div class="role-toggle">
-                <button type="button" id="userBtn" class="role-btn active" onclick="setRole('user')">User</button>
+                <button type="button" id="customerBtn" class="role-btn active" onclick="setRole('Customer')">Customer</button>
                 <button type="button" id="adminBtn" class="role-btn" onclick="setRole('admin')">Admin</button>
             </div>
 
             <form action="${pageContext.request.contextPath}/login" method="post">
-                <input type="hidden" name="role" id="role" value="user">
+                <input type="hidden" name="role" id="role" value="customer">
 
                 <div class="input-box">
                     <label>Email Address</label>
@@ -118,9 +118,9 @@ function setRole(role) {
 
     if (role === "admin") {
         document.getElementById("adminBtn").classList.add("active");
-        document.getElementById("userBtn").classList.remove("active");
+        document.getElementById("customerBtn").classList.remove("active");
     } else {
-        document.getElementById("userBtn").classList.add("active");
+        document.getElementById("customerBtn").classList.add("active");
         document.getElementById("adminBtn").classList.remove("active");
     }
 }

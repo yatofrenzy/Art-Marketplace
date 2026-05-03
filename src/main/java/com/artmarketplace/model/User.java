@@ -26,7 +26,7 @@ public class User {
         this.name = name;
     }
 
-	public String getEmail() {
+    public String getEmail() {
         return email;
     }
 
@@ -72,5 +72,23 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+    private String phone;
+    private String accountStatus;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
     }
 }

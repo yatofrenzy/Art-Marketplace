@@ -9,26 +9,27 @@ import com.artmarketplace.utilities.DbConfig;
 
 public class UserDAO {
 
-    public boolean registerUser(User user) {
-        String sql = "INSERT INTO users (name, email, password, role, phone) VALUES (?, ?, ?, ?, ?)";
+	public boolean registerUser(User user) {
+	    String sql = "INSERT INTO users (name, email, password, role, phone, account_status) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DbConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+	    try (Connection conn = DbConfig.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, user.getName());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getPassword());
-            ps.setString(4, user.getRole());
-            ps.setString(5, user.getPhone());
+	        ps.setString(1, user.getName());
+	        ps.setString(2, user.getEmail());
+	        ps.setString(3, user.getPassword());
+	        ps.setString(4, user.getRole());
+	        ps.setString(5, user.getPhone());
+	        ps.setString(6, user.getAccountStatus());
 
-            return ps.executeUpdate() > 0;
+	        return ps.executeUpdate() > 0;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 
-        return false;
-    }
+	    return false;
+	}
 
     public boolean isEmailExists(String email) {
         String sql = "SELECT user_id FROM users WHERE email = ?";
