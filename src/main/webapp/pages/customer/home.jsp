@@ -27,7 +27,7 @@
     </div>
 
     <div class="hero-art-preview">
-    <img src="${pageContext.request.contextPath}/resources/images/cherryblossom.jpg" alt="Artwork">
+    <img src="${pageContext.request.contextPath}/resources/images/Digital_Art/La Robotte.png" alt="Artwork">
 </div>
 </section>
 
