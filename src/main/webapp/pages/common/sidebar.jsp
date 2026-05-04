@@ -50,12 +50,14 @@
                 <span>Customers</span>
             </a>
         </li>
-
-    </ul>
-    <a href="${pageContext.request.contextPath}/pages/admin/pending-customers.jsp">
+<li>
+<a href="${pageContext.request.contextPath}/pages/admin/pending-customers.jsp">
     <i class="fa-solid fa-user-check"></i>
     <span>Customer Approval</span>
 </a>
+</li>
+    </ul>
+
     <div class="sidebar-logout">
         <a href="${pageContext.request.contextPath}/logout">
             <i class="fa-solid fa-right-from-bracket"></i>
