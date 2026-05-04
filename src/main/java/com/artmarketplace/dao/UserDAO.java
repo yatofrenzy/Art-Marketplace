@@ -3,6 +3,8 @@ package com.artmarketplace.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.artmarketplace.model.User;
 import com.artmarketplace.utilities.DbConfig;
@@ -22,12 +24,9 @@ public class UserDAO {
             ps.setString(5, user.getPhone());
             ps.setString(6, user.getAccountStatus());
 
-            int rows = ps.executeUpdate();
-            System.out.println("Register rows inserted = " + rows);
-            return rows > 0;
+            return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
-            System.out.println("REGISTER USER ERROR:");
             e.printStackTrace();
         }
 
@@ -145,6 +144,53 @@ public class UserDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, newPassword);
+            ps.setInt(2, userId);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public List<User> getPendingCustomers() {
+        List<User> users = new ArrayList<>();
+
+        String sql = "SELECT * FROM users WHERE role='customer' AND account_status='Pending' ORDER BY user_id DESC";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                User user = new User();
+
+                user.setUserId(rs.getInt("user_id"));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                user.setPhone(rs.getString("phone"));
+                user.setAccountStatus(rs.getString("account_status"));
+
+                users.add(user);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+    public boolean updateAccountStatus(int userId, String status) {
+        String sql = "UPDATE users SET account_status=? WHERE user_id=? AND role='customer'";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, status);
             ps.setInt(2, userId);
 
             return ps.executeUpdate() > 0;
