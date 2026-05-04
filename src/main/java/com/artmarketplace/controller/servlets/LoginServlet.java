@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         String selectedRole = request.getParameter("role");
 
-        // Default role safety
+        // Default role safetyr
         if (selectedRole == null || selectedRole.trim().isEmpty()) {
             selectedRole = "customer";
         }
