@@ -11,27 +11,27 @@ import com.artmarketplace.utilities.DbConfig;
 
 public class ArtworkDAO {
 
-	public boolean addArtwork(Artwork artwork) {
-	    String sql = "INSERT INTO artworks (user_id, category_id, title, description, price, image_path) VALUES (?, ?, ?, ?, ?, ?)";
+    public boolean addArtwork(Artwork artwork) {
+        String sql = "INSERT INTO artworks (category_id, title, description, price, image_path) VALUES (?, ?, ?, ?, ?)";
 
-	    try (Connection conn = DbConfig.getConnection();
-	         PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-	        ps.setInt(1, artwork.getUserId());
-	        ps.setInt(2, artwork.getCategoryId());
-	        ps.setString(3, artwork.getTitle());
-	        ps.setString(4, artwork.getDescription());
-	        ps.setDouble(5, artwork.getPrice());
-	        ps.setString(6, artwork.getImagePath());
+            ps.setInt(1, artwork.getCategoryId());
+            ps.setString(2, artwork.getTitle());
+            ps.setString(3, artwork.getDescription());
+            ps.setDouble(4, artwork.getPrice());
+            ps.setString(5, artwork.getImagePath());
 
-	        return ps.executeUpdate() > 0;
+            return ps.executeUpdate() > 0;
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	    return false;
-	}
+        return false;
+    }
+
     public List<Artwork> getAllArtworks() {
         List<Artwork> list = new ArrayList<>();
         String sql = "SELECT * FROM artworks ORDER BY artwork_id DESC";
@@ -43,13 +43,11 @@ public class ArtworkDAO {
             while (rs.next()) {
                 Artwork artwork = new Artwork();
                 artwork.setArtworkId(rs.getInt("artwork_id"));
-                artwork.setUserId(rs.getInt("user_id"));
                 artwork.setCategoryId(rs.getInt("category_id"));
                 artwork.setTitle(rs.getString("title"));
                 artwork.setDescription(rs.getString("description"));
                 artwork.setPrice(rs.getDouble("price"));
                 artwork.setImagePath(rs.getString("image_path"));
-                
 
                 list.add(artwork);
             }
@@ -73,13 +71,12 @@ public class ArtworkDAO {
             if (rs.next()) {
                 Artwork artwork = new Artwork();
                 artwork.setArtworkId(rs.getInt("artwork_id"));
-                artwork.setUserId(rs.getInt("user_id"));
                 artwork.setCategoryId(rs.getInt("category_id"));
                 artwork.setTitle(rs.getString("title"));
                 artwork.setDescription(rs.getString("description"));
                 artwork.setPrice(rs.getDouble("price"));
                 artwork.setImagePath(rs.getString("image_path"));
-                
+
                 return artwork;
             }
 
@@ -88,38 +85,6 @@ public class ArtworkDAO {
         }
 
         return null;
-    }
-    public List<Artwork> getApprovedArtworks() {
-        List<Artwork> list = new ArrayList<>();
-
-        String sql = "SELECT * FROM artworks WHERE TRIM(status) = 'Approved' ORDER BY artwork_id DESC";
-
-        try (Connection conn = DbConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                Artwork artwork = new Artwork();
-                artwork.setArtworkId(rs.getInt("artwork_id"));
-                artwork.setUserId(rs.getInt("user_id"));
-                artwork.setCategoryId(rs.getInt("category_id"));
-                artwork.setTitle(rs.getString("title"));
-                artwork.setDescription(rs.getString("description"));
-                artwork.setPrice(rs.getDouble("price"));
-                artwork.setImagePath(rs.getString("image_path"));
-                
-
-                list.add(artwork);
-            }
-
-            System.out.println("Approved artworks found = " + list.size());
-
-        } catch (Exception e) {
-            System.out.println("GET APPROVED ARTWORKS ERROR:");
-            e.printStackTrace();
-        }
-
-        return list;
     }
 
     public boolean updateArtwork(Artwork artwork) {

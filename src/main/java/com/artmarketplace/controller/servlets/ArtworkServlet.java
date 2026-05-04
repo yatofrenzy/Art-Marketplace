@@ -1,11 +1,11 @@
 package com.artmarketplace.controller.servlets;
 
+import java.io.File;
 import java.io.IOException;
+
 import com.artmarketplace.dao.ArtworkDAO;
 import com.artmarketplace.model.Artwork;
 import com.artmarketplace.model.User;
-
-import java.io.File;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -34,13 +34,14 @@ public class ArtworkServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    	String path = request.getServletPath();
-    	
-    	if (path.equals("/artworks")) {
-    		request.setAttribute("artworks",artworkDAO.getApprovedArtworks());
-    		request.getRequestDispatcher("/pages/customer/artworks.jsp").forward(request,response);
-    		return;
-    	}
+
+        String path = request.getServletPath();
+
+        if (path.equals("/artworks")) {
+            request.setAttribute("artworks", artworkDAO.getAllArtworks());
+            request.getRequestDispatcher("/pages/customer/artworks.jsp").forward(request, response);
+            return;
+        }
 
         String action = request.getParameter("action");
 
@@ -86,7 +87,6 @@ public class ArtworkServlet extends HttpServlet {
         String description = request.getParameter("description");
         String priceText = request.getParameter("price");
         String imagePath = request.getParameter("imagePath");
-        String status = request.getParameter("status");
 
         String targetPage = "update".equals(action)
                 ? "/pages/admin/edit-artwork.jsp"
@@ -98,7 +98,6 @@ public class ArtworkServlet extends HttpServlet {
                 || title == null || title.trim().isEmpty()
                 || description == null || description.trim().isEmpty()
                 || priceText == null || priceText.trim().isEmpty()
-                || status == null || status.trim().isEmpty()
                 || (!isAdd && (imagePath == null || imagePath.trim().isEmpty()))) {
 
             request.setAttribute("error", "All artwork fields are required.");
@@ -124,39 +123,50 @@ public class ArtworkServlet extends HttpServlet {
 
         int categoryId = Integer.parseInt(categoryIdText);
 
-     // Resolve imagePath — file upload for add, text field for update
         String resolvedImagePath;
+
         if (isAdd) {
             Part filePart = request.getPart("imageFile");
+
+            if (filePart == null || filePart.getSize() == 0) {
+                request.setAttribute("error", "Artwork image is required.");
+                request.getRequestDispatcher("/pages/admin/add-artwork.jsp").forward(request, response);
+                return;
+            }
+
             String submittedName = filePart.getSubmittedFileName();
             String ext = submittedName.substring(submittedName.lastIndexOf(".") + 1).toLowerCase();
+
             if (!ext.equals("jpg") && !ext.equals("jpeg")
-             && !ext.equals("png") && !ext.equals("gif")) {
+                    && !ext.equals("png") && !ext.equals("gif")) {
                 request.setAttribute("error", "Invalid image format. Only jpg, jpeg, png, gif allowed.");
                 request.getRequestDispatcher("/pages/admin/add-artwork.jsp").forward(request, response);
                 return;
             }
+
             String uploadFolder = getServletContext().getRealPath("")
-                                + File.separator + "resources"
-                                + File.separator + "images"
-                                + File.separator + "artworks";
+                    + File.separator + "resources"
+                    + File.separator + "images"
+                    + File.separator + "artworks";
+
             new File(uploadFolder).mkdirs();
+
             String uniqueFileName = System.currentTimeMillis() + "_" + submittedName;
             filePart.write(uploadFolder + File.separator + uniqueFileName);
+
             resolvedImagePath = "resources/images/artworks/" + uniqueFileName;
+
         } else {
             resolvedImagePath = imagePath.trim();
         }
 
         Artwork artwork = new Artwork();
-        artwork.setUserId(user.getUserId());
         artwork.setCategoryId(categoryId);
         artwork.setTitle(title.trim());
         artwork.setDescription(description.trim());
         artwork.setPrice(price);
         artwork.setImagePath(resolvedImagePath);
-        artwork.setStatus(status);
-        
+
         if ("update".equals(action)) {
             int artworkId = Integer.parseInt(request.getParameter("artworkId"));
             artwork.setArtworkId(artworkId);
