@@ -2,13 +2,11 @@ package com.artmarketplace.model;
 
 public class Artwork {
     private int artworkId;
-    private int userId;
     private int categoryId;
     private String title;
     private String description;
     private double price;
     private String imagePath;
-    private String status;
 
     public int getArtworkId() {
         return artworkId;
@@ -16,14 +14,6 @@ public class Artwork {
 
     public void setArtworkId(int artworkId) {
         this.artworkId = artworkId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public int getCategoryId() {
@@ -65,6 +55,4 @@ public class Artwork {
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
-
-   
 }
