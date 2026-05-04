@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth_art.css">
 
     <style>
-        /* Minimal addition — blends with your theme */
         .role-toggle {
             display: flex;
             gap: 10px;
@@ -57,7 +56,7 @@
             <p class="sub">Enter your account details to continue browsing the marketplace.</p>
 
             <% if(request.getParameter("registered") != null) { %>
-                <div class="success-message">Registration successful. Please login.</div>
+                <div class="success-message">Registration successful. Please wait for admin approval.</div>
             <% } %>
 
             <% if(request.getParameter("reset") != null) { %>
@@ -69,7 +68,7 @@
             <% } %>
 
             <div class="role-toggle">
-                <button type="button" id="customerBtn" class="role-btn active" onclick="setRole('Customer')">Customer</button>
+                <button type="button" id="customerBtn" class="role-btn active" onclick="setRole('customer')">Customer</button>
                 <button type="button" id="adminBtn" class="role-btn" onclick="setRole('admin')">Admin</button>
             </div>
 
