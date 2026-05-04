@@ -8,14 +8,7 @@
     ArtworkDAO dao = new ArtworkDAO();
     List<Artwork> artworks = dao.getAllArtworks();
 
-    // 🔹 Only show Approved artworks
-    List<Artwork> approvedList = new ArrayList<>();
-    for (Artwork art : artworks) {
-        if ("Approved".equalsIgnoreCase(art.getStatus())) {
-            approvedList.add(art);
-        }
-    }
-    artworks = approvedList;
+   
 
     String search = request.getParameter("search");
 

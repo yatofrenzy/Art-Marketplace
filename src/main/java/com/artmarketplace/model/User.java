@@ -9,6 +9,7 @@ public class User {
     private String contactNumber;
     private String profileImage;
     private String phone;
+    private String accountStatus;
 
     public int getUserId() {
         return userId;
@@ -72,5 +73,13 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
     }
 }

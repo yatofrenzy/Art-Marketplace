@@ -25,10 +25,7 @@
         <form action="${pageContext.request.contextPath}/pages/customer/artworks.jsp"
               method="get"
               class="nav-search">
-            <input type="text"
-                   name="search"
-                   placeholder="Search art..."
-                   value="<%= request.getParameter("search") != null ? request.getParameter("search") : "" %>">
+            <input class="search-input" type="text" name="search" placeholder="Search art..." value="<%= request.getParameter("search") != null ? request.getParameter("search") : "" %>">
             <button type="submit">⌕</button>
         </form>
 

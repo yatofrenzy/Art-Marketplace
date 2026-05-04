@@ -31,6 +31,7 @@ public class RegisterServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
+        
 
         UserDAO dao = new UserDAO();
 
@@ -89,6 +90,7 @@ public class RegisterServlet extends HttpServlet {
         user.setPhone(phone.trim());
         user.setPassword(hashedPassword);
         user.setRole("customer");
+        user.setAccountStatus("Pending");
 
         boolean result = dao.registerUser(user);
 
