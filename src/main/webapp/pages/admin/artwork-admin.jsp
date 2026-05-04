@@ -34,31 +34,30 @@
             <h1>Artworks</h1>
         </div>
 
-        <div class="product-grid">
 
-            <div class="product-card">
-   	 			<img src="${pageContext.request.contextPath}/resources/images/wukong.jpg" alt="Wukong">
-    			<h4>Wukong</h4>
+            <h3>Top Selling Products</h3>
+
+            <div class="product-grid">
+
+                <div class="product-card">
+   	 			<img src="${pageContext.request.contextPath}/resources/images/Digital_Art/La Robotte.png" alt="La Robotte">
+    			<h4>La Robotte</h4>
     			<p>Rs 7100</p>
 			</div>
 
 			<div class="product-card">
-   				<img src="${pageContext.request.contextPath}/resources/images/picaso 2.jpg" alt="Picaso Devil">
-    			<h4>Picaso Devil</h4>
+   				<img src="${pageContext.request.contextPath}/resources/images/Nature-Art/Echoes in the Blue Forest.jpg" alt="Echoes in the Blue Forest">
+    			<h4>Echoes in the Blue Forest</h4>
     			<p>Rs 6200</p>
 			</div>
 
 			<div class="product-card">
-    			<img src="${pageContext.request.contextPath}/resources/images/picaso 1.jpg" alt="Picaso Lady">
-    			<h4>Picaso Lady</h4>
+    			<img src="${pageContext.request.contextPath}/resources/images/Paintings/fox watercolor.png" alt="fox watercolor">
+    			<h4>fox watercolor</h4>
     			<p>Rs 4200</p>
 			</div>
 
-			<div class="product-card">
-   		 		<img src="${pageContext.request.contextPath}/resources/images/cherryblossom.jpg" alt="cherryblossom">
-    			<h4>Cherryblossom</h4>
-    			<p>Rs 5000</p>
-			</div>
+			
 
         </div>
 

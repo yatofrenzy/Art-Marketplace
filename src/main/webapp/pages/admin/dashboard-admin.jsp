@@ -46,10 +46,7 @@
             </div>
 
         </div>
-<a href="${pageContext.request.contextPath}/pages/admin/pending-customers.jsp" class="btn btn-primary">
-    Customer Approval Status
-</a>
-        <!-- STAT CARDS -->
+   <!-- STAT CARDS -->
         <div class="cards">
 
             <div class="card">
@@ -119,7 +116,7 @@
 			</div>
 
 			<div class="product-card">
-   				<img src="${pageContext.request.contextPath}/resources/images/Natural-Art/Echoes in the Blue Forest.png" alt="Echoes in the Blue Forest">
+   				<img src="${pageContext.request.contextPath}/resources/images/Nature-Art/Echoes in the Blue Forest.jpg" alt="Echoes in the Blue Forest">
     			<h4>Echoes in the Blue Forest</h4>
     			<p>Rs 6200</p>
 			</div>
@@ -130,11 +127,7 @@
     			<p>Rs 4200</p>
 			</div>
 
-			<div class="product-card">
-   		 		<img src="${pageContext.request.contextPath}/resources/images/Sketch/lady with the ballon.png" alt="lady with the ballon">
-    			<h4>lady with the ballon</h4>
-    			<p>Rs 5000 </p>
-			</div>
+			
 
             </div>
 

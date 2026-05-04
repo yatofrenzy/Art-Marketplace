@@ -31,103 +31,165 @@
           
 
     <style>
-        .approval-page {
-            padding: 30px;
-        }
+    .approval-page {
+        padding: 45px 45px 70px;
+        background: #f4f7fb;
+        min-height: 100vh;
+    }
 
-        .approval-header {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 28px;
-            margin-bottom: 25px;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.08);
-        }
+    .approval-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+    }
 
-        .approval-header h1 {
-            margin: 0;
-            color: #111;
-        }
+    .approval-header h1 {
+        font-size: 46px;
+        font-weight: 800;
+        color: #111827;
+        margin: 0;
+    }
 
-        .approval-header p {
-            margin-top: 8px;
-            color: #777;
-        }
+    .approval-header p {
+        margin-top: 8px;
+        color: #6b7280;
+        font-size: 16px;
+        font-weight: 500;
+    }
 
-        .pending-section {
-            background: #ffffff;
-            border-radius: 22px;
-            padding: 24px;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.08);
-        }
+    .approval-stat {
+        background: #fff;
+        padding: 22px 28px;
+        border-radius: 24px;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+        min-width: 180px;
+    }
 
-        .pending-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+    .approval-stat span {
+        color: #7b8794;
+        font-weight: 700;
+        font-size: 14px;
+    }
 
-        .pending-table th,
-        .pending-table td {
-            padding: 14px 12px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-            font-size: 14px;
-        }
+    .approval-stat h2 {
+        margin: 8px 0 0;
+        font-size: 34px;
+        color: #27c3d5;
+    }
 
-        .pending-table th {
-            color: #777;
-            font-weight: 700;
-        }
+    .pending-section {
+        background: #ffffff;
+        border-radius: 28px;
+        padding: 28px;
+        box-shadow: 0 22px 55px rgba(15, 23, 42, 0.08);
+    }
 
-        .status-pill {
-            padding: 6px 12px;
-            border-radius: 999px;
-            background: #fff4d8;
-            color: #a46b00;
-            font-weight: 700;
-            font-size: 12px;
-        }
+    .pending-section-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 22px;
+    }
 
-        .approval-actions {
-            display: flex;
-            gap: 8px;
-        }
+    .pending-section-title h3 {
+        font-size: 26px;
+        margin: 0;
+        color: #111827;
+    }
 
-        .approve-btn,
-        .reject-btn {
-            border: none;
-            padding: 9px 14px;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-        }
+    .pending-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 14px;
+    }
 
-        .approve-btn {
-            background: #52d6c5;
-            color: #06201d;
-        }
+    .pending-table th {
+        color: #7b8794;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        padding: 0 16px 8px;
+        text-align: left;
+    }
 
-        .reject-btn {
-            background: #ff6b6b;
-            color: white;
-        }
+    .pending-table td {
+        background: #f8fafc;
+        padding: 18px 16px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #111827;
+    }
 
-        .admin-message {
-            margin-bottom: 18px;
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-weight: 700;
-        }
+    .pending-table tr td:first-child {
+        border-radius: 18px 0 0 18px;
+    }
 
-        .admin-message.success {
-            background: #e7fff8;
-            color: #0f7b63;
-        }
+    .pending-table tr td:last-child {
+        border-radius: 0 18px 18px 0;
+    }
 
-        .admin-message.error {
-            background: #ffeaea;
-            color: #b32020;
-        }
-    </style>
+    .status-pill {
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: #fff4d8;
+        color: #b7791f;
+        font-weight: 800;
+        font-size: 12px;
+    }
+
+    .approval-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .approve-btn,
+    .reject-btn {
+        border: none;
+        padding: 11px 18px;
+        border-radius: 14px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.25s ease;
+    }
+
+    .approve-btn {
+        background: #27c3d5;
+        color: #061012;
+    }
+
+    .approve-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(39, 195, 213, 0.35);
+    }
+
+    .reject-btn {
+        background: #ff5f6d;
+        color: #fff;
+    }
+
+    .reject-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(255, 95, 109, 0.32);
+    }
+
+    .admin-message {
+        margin-bottom: 18px;
+        padding: 14px 18px;
+        border-radius: 16px;
+        font-weight: 800;
+    }
+
+    .admin-message.success {
+        background: #e6fffa;
+        color: #0f766e;
+    }
+
+    .admin-message.error {
+        background: #fff1f2;
+        color: #be123c;
+    }
+</style>
 </head>
 
 <body>
@@ -141,9 +203,16 @@
     <main class="main-content approval-page">
 
         <div class="approval-header">
-            <h1>Customer Approval Status</h1>
-            <p>Review newly registered customers and approve or reject their account access.</p>
-        </div>
+    <div>
+        <h1>Customer Approval</h1>
+        <p>Review pending customer registrations and manage account access.</p>
+    </div>
+
+    <div class="approval-stat">
+        <span>Pending Requests</span>
+        <h2><%= pendingCustomers != null ? pendingCustomers.size() : 0 %></h2>
+    </div>
+</div>
 
         <div class="pending-section">
 
@@ -154,7 +223,9 @@
             <% if("error".equals(request.getParameter("approval"))) { %>
                 <div class="admin-message error">Customer status update failed.</div>
             <% } %>
-
+<div class="pending-section-title">
+    <h3>Pending Customer List</h3>
+</div>
             <table class="pending-table">
                 <tr>
                     <th>User ID</th>
