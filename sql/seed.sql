@@ -22,10 +22,7 @@ ALTER TABLE users AUTO_INCREMENT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 
 INSERT INTO users (user_id, name, email, password, role, contact_number, profile_image, account_status, phone) VALUES
-(1, 'Admin', 'admin@gmail.com', '123', 'admin', NULL, NULL, 'Approved', '9800000000'),
-(2, 'Customer', 'customer@gmail.com', '123', 'customer', '9819821233', NULL, 'Approved', '9819821233'),
-(3, 'Customer One', 'customer1@gmail.com', '123', 'customer', NULL, NULL, 'Approved', '9812340983'),
-(4, 'Customer Two', 'customer2@gmail.com', '123', 'customer', NULL, NULL, 'Pending', '9812340912');
+
 
 INSERT INTO categories (category_id, category_name) VALUES
 (1, 'Painting'),
