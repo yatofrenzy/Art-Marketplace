@@ -74,7 +74,7 @@
                 <option value="1">Painting</option>
                 <option value="2">Sketch</option>
                 <option value="3">Digital Art</option>
-                <option value="4">Portrait</option>
+                <option value="7">Portrait</option>
                 <option value="6">Nature Art</option> <!-- ✅ FIXED -->
             </select>
         </div>
