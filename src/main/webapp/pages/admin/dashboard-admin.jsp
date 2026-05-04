@@ -15,6 +15,7 @@
     <link rel="stylesheet"
       type="text/css"
       href="${pageContext.request.contextPath}/css/dashboard.css?v=10">
+      
 
     <!-- Chart JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -45,7 +46,9 @@
             </div>
 
         </div>
-
+<a href="${pageContext.request.contextPath}/pages/admin/pending-customers.jsp" class="btn btn-primary">
+    Customer Approval Status
+</a>
         <!-- STAT CARDS -->
         <div class="cards">
 
@@ -110,27 +113,27 @@
             <div class="product-grid">
 
                 <div class="product-card">
-   	 			<img src="${pageContext.request.contextPath}/resources/images/wukong.jpg" alt="Wukong">
-    			<h4>Wukong</h4>
+   	 			<img src="${pageContext.request.contextPath}/resources/images/Digital_Art/La Robotte.png" alt="La Robotte">
+    			<h4>La Robotte</h4>
     			<p>Rs 7100</p>
 			</div>
 
 			<div class="product-card">
-   				<img src="${pageContext.request.contextPath}/resources/images/picaso 2.jpg" alt="Picaso Devil">
-    			<h4>Picaso Devil</h4>
+   				<img src="${pageContext.request.contextPath}/resources/images/Natural-Art/Echoes in the Blue Forest.png" alt="Echoes in the Blue Forest">
+    			<h4>Echoes in the Blue Forest</h4>
     			<p>Rs 6200</p>
 			</div>
 
 			<div class="product-card">
-    			<img src="${pageContext.request.contextPath}/resources/images/picaso 1.jpg" alt="Picaso Lady">
-    			<h4>Picaso Lady</h4>
+    			<img src="${pageContext.request.contextPath}/resources/images/Paintings/fox watercolor.png" alt="fox watercolor">
+    			<h4>fox watercolor</h4>
     			<p>Rs 4200</p>
 			</div>
 
 			<div class="product-card">
-   		 		<img src="${pageContext.request.contextPath}/resources/images/cherryblossom.jpg" alt="cherryblossom">
-    			<h4>Cherryblossom</h4>
-    			<p>Rs 5000</p>
+   		 		<img src="${pageContext.request.contextPath}/resources/images/Sketch/lady with the ballon.png" alt="lady with the ballon">
+    			<h4>lady with the ballon</h4>
+    			<p>Rs 5000 </p>
 			</div>
 
             </div>
