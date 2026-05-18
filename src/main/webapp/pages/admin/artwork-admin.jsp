@@ -204,13 +204,23 @@
 
                 <div class="form-group">
 
-                    <label>Category ID</label>
+                   <label>Category</label>
 
-                    <input type="number"
-                           name="categoryId"
-                           placeholder="Category"
-                           required>
+                        <select name="categoryId" required>
 
+                              <option value="">Select Category</option>
+
+                              <option value="1">Digital_Art</option>
+
+                              <option value="2">Nature_Art</option>
+
+                              <option value="3">Paintings</option>
+ 
+                              <option value="4">Portrait</option>
+
+                              <option value="5">Sketch</option>
+
+                       </select> 
                 </div>
 
             </div>
