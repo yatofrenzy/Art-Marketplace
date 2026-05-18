@@ -1,85 +1,43 @@
 package com.artmarketplace.controller.servlets;
 
-import com.artmarketplace.dao.*;
-import com.artmarketplace.model.*;
-
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.WebServlet;
-
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.List;
+
+import com.artmarketplace.dao.OrderDAO;
+import com.artmarketplace.model.User;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
 
 @WebServlet("/order")
 public class OrderServlet extends HttpServlet {
-
     private static final long serialVersionUID = 1L;
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        User user = (User) request.getSession().getAttribute("user");
 
-        
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
             return;
         }
 
-        int userId = user.getUserId();
+        String paymentMethod = request.getParameter("paymentMethod");
 
-        CartDAO cartDAO = new CartDAO();
-        List<CartItem> cartList = cartDAO.getCartItems(userId);
-
-       
-        if (cartList == null || cartList.isEmpty()) {
-            response.sendRedirect("cart.jsp");
+        if (paymentMethod == null || paymentMethod.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/pages/customer/checkout.jsp?error=true");
             return;
         }
-
-       
-        double total = 0;
-        for (CartItem item : cartList) {
-            total += item.getPrice() * item.getQuantity();
-        }
-
-       
-        Order order = new Order();
-        order.setUserId(userId);
-        order.setTotalAmt(total);
-        order.setOrderDate(LocalDate.now().toString());
-        order.setStatus("Pending");
-        order.setPaymentMethod(request.getParameter("payment_method"));
-        order.setPaymentStatus("Pending");
-        order.setPaymentDate(null);
 
         OrderDAO orderDAO = new OrderDAO();
-        int orderId = orderDAO.createOrder(order);
+        boolean created = orderDAO.createOrder(user.getUserId(), paymentMethod);
 
-        //  Check if order created
-        if (orderId <= 0) {
-            response.sendRedirect("error.jsp");
-            return;
+        if (created) {
+            response.sendRedirect(request.getContextPath() + "/pages/customer/orders.jsp?success=true");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/pages/customer/checkout.jsp?error=true");
         }
-
-        // Save order items
-        OrderItemDAO orderItemDAO = new OrderItemDAO();
-
-        for (CartItem item : cartList) {
-            orderItemDAO.addOrderItem(
-                    orderId,
-                    item.getArtworkId(),
-                    item.getQuantity(),
-                    item.getPrice()
-            );
-        }
-
-        //  Clear cart
-        cartDAO.clearCart(userId);
-
-        //  Success
-        response.sendRedirect("success.jsp");
     }
 }
