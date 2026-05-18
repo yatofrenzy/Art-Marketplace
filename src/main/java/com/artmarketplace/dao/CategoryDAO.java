@@ -2,7 +2,6 @@ package com.artmarketplace.dao;
 
 import com.artmarketplace.dao.interfaces.CategoryDAOInterface;
 import com.artmarketplace.model.Category;
-import com.artmarketplace.utilities.DBConnection;
 import com.artmarketplace.utilities.DbConfig;
 
 import java.sql.*;

@@ -1,4 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.artmarketplace.utilities.CookieUtil" %>
+
+<%
+    String rememberedEmail = CookieUtil.getCookieValue(request, "rememberedEmail");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -77,7 +82,7 @@
 
                 <div class="input-box">
                     <label>Email Address</label>
-                    <input type="email" name="email" placeholder="example@email.com" autocomplete="email" required>
+                    <input type="email" name="email" placeholder="example@email.com" autocomplete="email" value="<%= rememberedEmail %>" required>
                 </div>
 
                 <div class="input-box">

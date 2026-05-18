@@ -6,6 +6,7 @@ import com.artmarketplace.dao.UserDAO;
 import com.artmarketplace.model.User;
 import com.artmarketplace.utilities.PasswordUtil;
 import com.artmarketplace.utilities.SessionUtil;
+import com.artmarketplace.utilities.CookieUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -67,6 +68,7 @@ public class LoginServlet extends HttpServlet {
                 }
 
                 SessionUtil.setUserSession(request, user);
+                CookieUtil.addCookie(response, "rememberedEmail", user.getEmail(), 60 * 60 * 24 * 7);
                 response.sendRedirect(request.getContextPath() + "/pages/admin/dashboard-admin.jsp");
                 return;
             }
@@ -81,6 +83,7 @@ public class LoginServlet extends HttpServlet {
                 }
 
                 SessionUtil.setUserSession(request, user);
+                CookieUtil.addCookie(response, "rememberedEmail", user.getEmail(), 60 * 60 * 24 * 7);
                 response.sendRedirect(request.getContextPath() + "/pages/customer/home.jsp");
                 return;
             }
