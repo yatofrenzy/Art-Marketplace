@@ -23,7 +23,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- Admin password = 123456789
 -- Customer Password = 123456789
 INSERT INTO users (user_id, name, email, password, role, contact_number, profile_image, account_status, phone) VALUES
-(1, 'Admin', 'admin@gmail.com', '123', '$2a$10$6cFa/jsQoPgXYs5kcSaQAuS3GMe2QEWDHUmqzW0Ib7nKTtDqwwk9C', NULL, NULL, 'Approved', '9800000000'),
+(1, 'Admin', 'admin@gmail.com', '$2a$10$6cFa/jsQoPgXYs5kcSaQAuS3GMe2QEWDHUmqzW0Ib7nKTtDqwwk9C', 'admin', NULL, NULL, 'Approved', '9800000000'),
 (2, 'Customer', 'customer@gmail.com', '$2a$10$k0clZAroNJK4kD4LC97Szear2qqmsBFv8ZQbx38dbsuZO/9lI3vm.', 'customer', '9819821233', NULL, 'Approved', '9819821233'),
 (3, 'Asmi', 'asmi@gmail.com', '$2a$10$M42roEiNaWR8TCfFN73kme/3u4g.75A1gDZQ1ScmzS4SofEoCKVKa', 'customer', NULL, NULL, 'Approved', '9812340983'),
 (4, 'Nabraj', 'nabraj@gmail.com', '$2a$10$gGZX7Z/X6Cim4.z/09VdneuRvL5Ya7Yvc.ofunygfeTrc.8R.Qreu', 'customer', NULL, NULL, 'Pending', '9812340912'),
