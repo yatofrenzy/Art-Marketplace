@@ -114,12 +114,66 @@ public class OrderDAO {
         return orders;
     }
 
+    public List<Order> getAllOrders() {
+        List<Order> orders = new ArrayList<>();
+
+        String sql = "SELECT o.*, u.name AS customer_name " +
+                     "FROM orders o " +
+                     "JOIN users u ON o.user_id = u.user_id " +
+                     "ORDER BY o.order_id DESC";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setUserId(rs.getInt("user_id"));
+                order.setTotalAmount(rs.getDouble("total_amount"));
+                order.setOrderStatus(rs.getString("order_status"));
+                order.setPaymentMethod(rs.getString("payment_method"));
+                order.setPaymentStatus(rs.getString("payment_status"));
+                order.setOrderDate(rs.getString("order_date"));
+                order.setCustomerName(rs.getString("customer_name"));
+                order.setItems(getOrderItems(order.getOrderId()));
+
+                orders.add(order);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return orders;
+    }
+
+    public boolean updateOrderStatus(int orderId, String status) {
+        String sql = "UPDATE orders SET order_status=? WHERE order_id=?";
+
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, status);
+            ps.setInt(2, orderId);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     public List<OrderItem> getOrderItems(int orderId) {
         List<OrderItem> items = new ArrayList<>();
 
-        String sql = "SELECT oi.order_item_id, oi.order_id, oi.artwork_id, oi.quantity, oi.price, a.title " +
+        String sql = "SELECT oi.order_item_id, oi.order_id, oi.artwork_id, oi.quantity, oi.price, " +
+                     "a.title, c.category_name " +
                      "FROM order_items oi " +
                      "JOIN artworks a ON oi.artwork_id = a.artwork_id " +
+                     "JOIN categories c ON a.category_id = c.category_id " +
                      "WHERE oi.order_id=?";
 
         try (Connection conn = DbConfig.getConnection();
@@ -136,6 +190,7 @@ public class OrderDAO {
                 item.setQuantity(rs.getInt("quantity"));
                 item.setPrice(rs.getDouble("price"));
                 item.setTitle(rs.getString("title"));
+                item.setCategoryName(rs.getString("category_name"));
 
                 items.add(item);
             }

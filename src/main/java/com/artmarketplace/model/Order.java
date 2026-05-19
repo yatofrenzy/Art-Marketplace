@@ -10,6 +10,7 @@ public class Order {
     private String paymentMethod;
     private String paymentStatus;
     private String orderDate;
+    private String customerName;
     private List<OrderItem> items;
 
     public int getOrderId() {
@@ -66,6 +67,14 @@ public class Order {
 
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public List<OrderItem> getItems() {

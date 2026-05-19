@@ -5,6 +5,7 @@ public class OrderItem {
     private int orderId;
     private int artworkId;
     private String title;
+    private String categoryName;
     private int quantity;
     private double price;
 
@@ -38,6 +39,14 @@ public class OrderItem {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public int getQuantity() {
