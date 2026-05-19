@@ -309,8 +309,22 @@
 }
 
 .product-card h4{
-    font-size:19px;
-    margin-bottom:8px;
+
+    font-size:22px;
+    font-weight:700;
+    color:#1f1f1f;
+
+    text-align:center;
+
+    min-height:50px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    margin-bottom:10px;
+
+    line-height:1.4;
 }
 
 .product-card p{
