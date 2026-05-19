@@ -65,7 +65,7 @@ public class ArtworkServlet extends HttpServlet {
 
         } else {
             request.setAttribute("artworks", artworkDAO.getAllArtworks());
-            request.getRequestDispatcher("/pages/admin/artwork-list.jsp").forward(request, response);
+            request.getRequestDispatcher("/pages/admin/artworks.jsp").forward(request, response);
         }
     }
 
