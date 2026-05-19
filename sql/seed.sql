@@ -26,9 +26,9 @@ INSERT INTO users (user_id, name, email, password, role, contact_number, profile
 (1, 'Admin', 'admin@gmail.com', '123', '$2a$10$6cFa/jsQoPgXYs5kcSaQAuS3GMe2QEWDHUmqzW0Ib7nKTtDqwwk9C', NULL, NULL, 'Approved', '9800000000'),
 (2, 'Customer', 'customer@gmail.com', '$2a$10$k0clZAroNJK4kD4LC97Szear2qqmsBFv8ZQbx38dbsuZO/9lI3vm.', 'customer', '9819821233', NULL, 'Approved', '9819821233'),
 (3, 'Asmi', 'asmi@gmail.com', '$2a$10$M42roEiNaWR8TCfFN73kme/3u4g.75A1gDZQ1ScmzS4SofEoCKVKa', 'customer', NULL, NULL, 'Approved', '9812340983'),
-(4, 'Nabraj', 'nabraj@gmail.com', '$2a$10$gGZX7Z/X6Cim4.z/09VdneuRvL5Ya7Yvc.ofunygfeTrc.8R.Qreu', 'customer', NULL, NULL, 'Pending', '9812340912');
-(5, 'Samrat', 'samrat@gmail.com', '$2a$10$gGZX7Z/X6Cim4.z/09VdneuRvL5Ya7Yvc.ofunygfeTrc.8R.Qreu', 'customer', NULL, NULL, 'Pending', '9812340912');
-(6, 'Sudeshna', 'sudeshna@gmail.com', '$2a$10$NQlPuARk98ZQ/ba1R.lP3.P6Xcu5Tk4RGGIzbcDf9Dqoo9TJRbChG', 'customer', NULL, NULL, 'Pending', '9812340912');
+(4, 'Nabraj', 'nabraj@gmail.com', '$2a$10$gGZX7Z/X6Cim4.z/09VdneuRvL5Ya7Yvc.ofunygfeTrc.8R.Qreu', 'customer', NULL, NULL, 'Pending', '9812340912'),
+(5, 'Samrat', 'samrat@gmail.com', '$2a$10$gGZX7Z/X6Cim4.z/09VdneuRvL5Ya7Yvc.ofunygfeTrc.8R.Qreu', 'customer', NULL, NULL, 'Pending', '9812340913'),
+(6, 'Sudeshna', 'sudeshna@gmail.com', '$2a$10$NQlPuARk98ZQ/ba1R.lP3.P6Xcu5Tk4RGGIzbcDf9Dqoo9TJRbChG', 'customer', NULL, NULL, 'Pending', '9812340914');
 
 INSERT INTO categories (category_id, category_name) VALUES
 (1, 'Painting'),
