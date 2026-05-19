@@ -226,4 +226,39 @@ public class ArtworkDAO {
 
         return false;
     }
+    
+    public List<Artwork> getAllArtworks() {
+
+        List<Artwork> artworks = new ArrayList<>();
+
+        String sql = "SELECT * FROM artworks";
+
+        try {
+
+            Connection conn = DBConnection.getConnection();
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                Artwork art = new Artwork();
+
+                art.setArtworkId(rs.getInt("artwork_id"));
+                art.setTitle(rs.getString("title"));
+                art.setDescription(rs.getString("description"));
+                art.setPrice(rs.getDouble("price"));
+                art.setImagePath(rs.getString("image_path"));
+                art.setCategoryId(rs.getInt("category_id"));
+
+                artworks.add(art);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return artworks;
+    }
 }

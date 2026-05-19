@@ -1,11 +1,20 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%@ page import="java.util.List" %>
+<%@ page import="com.artmarketplace.dao.ArtworkDAO" %>
+<%@ page import="com.artmarketplace.model.Artwork" %>
+
+<%
+    ArtworkDAO dao = new ArtworkDAO();
+    List<Artwork> artworks = dao.getAllArtworks();
+%>
+
 <!DOCTYPE html>
 <html>
 
 <head>
 
-    <title>Artworks</title>
+    <title>Artwork</title>
 
     <!-- GOOGLE FONT -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
@@ -31,7 +40,6 @@
         <jsp:param name="active" value="artworks"/>
     </jsp:include>
 
-
     <!-- MAIN CONTENT -->
     <main class="main-content">
 
@@ -40,16 +48,33 @@
 
             <h1>Artworks</h1>
 
-            <button class="add-artwork-btn"
-                    onclick="openArtworkModal()">
+            <div class="topbar-actions">
+            
+            
+                            <button class="add-artwork-btn"
+                        onclick="openArtworkModal()">
 
-                <i class="fa-solid fa-plus"></i>
-                Add Artwork
+                    <i class="fa-solid fa-plus"></i>
+                    Add Artwork
 
-            </button>
+                </button>
+
+                <select class="artwork-filter">
+
+                    <option value="all">All Categories</option>
+                    <option value="1">Digital Art</option>
+                    <option value="2">Nature Art</option>
+                    <option value="3">Paintings</option>
+                    <option value="4">Portrait</option>
+                    <option value="5">Sketch</option>
+
+                </select>
+
+
+
+            </div>
 
         </div>
-
 
         <!-- SUCCESS MESSAGE -->
         <% if(request.getParameter("success") != null){ %>
@@ -60,7 +85,6 @@
 
         <% } %>
 
-
         <!-- ERROR MESSAGE -->
         <% if(request.getParameter("error") != null){ %>
 
@@ -70,63 +94,63 @@
 
         <% } %>
 
-
-
         <!-- SECTION TITLE -->
         <h3 class="section-title">Top Selling Products</h3>
-
-
 
         <!-- PRODUCT GRID -->
         <div class="product-grid">
 
-            <!-- CARD 1 -->
+            <%
+                if (artworks != null && !artworks.isEmpty()) {
+
+                    for (Artwork art : artworks) {
+
+                        String imagePath = art.getImagePath();
+
+                        if(imagePath == null || imagePath.trim().isEmpty()) {
+
+                            imagePath = "resources/images/default.jpg";
+                        }
+
+                        String fullImagePath =
+                                request.getContextPath() + "/" + imagePath;
+            %>
+
             <div class="product-card">
 
-                <img src="${pageContext.request.contextPath}/resources/images/Digital_Art/La Robotte.png"
-                     alt="La Robotte">
+                <img src="<%= fullImagePath %>"
+                     alt="<%= art.getTitle() %>">
 
-                <h4>La Robotte</h4>
+                <div class="product-content">
 
-                <p>Rs 7100</p>
+                    <h4><%= art.getTitle() %></h4>
+
+                    <div class="art-description">
+                        <%= art.getDescription() %>
+                    </div>
+
+                    <p>Rs <%= art.getPrice() %></p>
+
+                </div>
 
             </div>
 
+            <%
+                    }
+                } else {
+            %>
 
+                <p>No artwork found.</p>
 
-            <!-- CARD 2 -->
-            <div class="product-card">
-
-                <img src="${pageContext.request.contextPath}/resources/images/Nature-Art/Echoes in the Blue Forest.jpg"
-                     alt="Echoes in the Blue Forest">
-
-                <h4>Echoes in the Blue Forest</h4>
-
-                <p>Rs 6200</p>
-
-            </div>
-
-
-
-            <!-- CARD 3 -->
-            <div class="product-card">
-
-                <img src="${pageContext.request.contextPath}/resources/images/Paintings/fox watercolor.png"
-                     alt="fox watercolor">
-
-                <h4>fox watercolor</h4>
-
-                <p>Rs 4200</p>
-
-            </div>
+            <%
+                }
+            %>
 
         </div>
 
     </main>
 
 </div>
-
-
 
 <!-- ========================= -->
 <!-- ADD ARTWORK MODAL -->
@@ -150,14 +174,11 @@
 
         </div>
 
-
-
         <!-- FORM -->
         <form action="${pageContext.request.contextPath}/addArtwork"
               method="post"
               enctype="multipart/form-data"
               class="artwork-form">
-
 
             <!-- TITLE -->
             <div class="form-group">
@@ -171,8 +192,6 @@
 
             </div>
 
-
-
             <!-- DESCRIPTION -->
             <div class="form-group">
 
@@ -183,8 +202,6 @@
                           required></textarea>
 
             </div>
-
-
 
             <!-- PRICE + CATEGORY -->
             <div class="form-row">
@@ -201,31 +218,29 @@
 
                 </div>
 
-
                 <div class="form-group">
 
-                   <label>Category</label>
+                    <label>Category</label>
 
-                        <select name="categoryId" required>
+                    <select name="categoryId" required>
 
-                              <option value="">Select Category</option>
+                        <option value="">Select Category</option>
 
-                              <option value="1">Digital_Art</option>
+                        <option value="1">Digital_Art</option>
 
-                              <option value="2">Nature_Art</option>
+                        <option value="2">Nature_Art</option>
 
-                              <option value="3">Paintings</option>
- 
-                              <option value="4">Portrait</option>
+                        <option value="3">Paintings</option>
 
-                              <option value="5">Sketch</option>
+                        <option value="4">Portrait</option>
 
-                       </select> 
+                        <option value="5">Sketch</option>
+
+                    </select>
+
                 </div>
 
             </div>
-
-
 
             <!-- IMAGE -->
             <div class="form-group">
@@ -238,8 +253,6 @@
                        required>
 
             </div>
-
-
 
             <!-- BUTTON -->
             <button type="submit" class="upload-btn">
@@ -254,12 +267,7 @@
 
 </div>
 
-
-
-<!-- ========================= -->
 <!-- JAVASCRIPT -->
-<!-- ========================= -->
-
 <script>
 
 function openArtworkModal() {
@@ -268,15 +276,11 @@ function openArtworkModal() {
             .style.display = "flex";
 }
 
-
 function closeArtworkModal() {
 
     document.getElementById("artworkModal")
             .style.display = "none";
 }
-
-
-/* CLOSE WHEN CLICKING OUTSIDE */
 
 window.onclick = function(event) {
 
