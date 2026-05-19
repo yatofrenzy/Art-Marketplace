@@ -62,11 +62,11 @@
                 <select class="artwork-filter">
 
                     <option value="all">All Categories</option>
-                    <option value="1">Digital Art</option>
-                    <option value="2">Nature Art</option>
-                    <option value="3">Paintings</option>
-                    <option value="4">Portrait</option>
-                    <option value="5">Sketch</option>
+                    <option value="3">Digital Art</option>
+                    <option value="6">Nature Art</option>
+                    <option value="1">Paintings</option>
+                    <option value="7">Portrait</option>
+                    <option value="2">Sketch</option>
 
                 </select>
 
@@ -226,15 +226,15 @@
 
                         <option value="">Select Category</option>
 
-                        <option value="1">Digital_Art</option>
+                        <option value="3">Digital_Art</option>
 
-                        <option value="2">Nature_Art</option>
+                        <option value="6">Nature_Art</option>
 
-                        <option value="3">Paintings</option>
+                        <option value="1">Paintings</option>
 
-                        <option value="4">Portrait</option>
+                        <option value="7">Portrait</option>
 
-                        <option value="5">Sketch</option>
+                        <option value="2">Sketch</option>
 
                     </select>
 
