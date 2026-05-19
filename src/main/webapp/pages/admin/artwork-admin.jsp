@@ -116,7 +116,7 @@
                                 request.getContextPath() + "/" + imagePath;
             %>
 
-            <div class="product-card">
+            <div class="product-card" data-category="<%= art.getCategoryId() %>">
 
                 <img src="<%= fullImagePath %>"
                      alt="<%= art.getTitle() %>">
@@ -291,6 +291,32 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
+
+</script>
+
+
+<script>
+
+    const filterDropdown = document.querySelector('.artwork-filter');
+    const artworkCards = document.querySelectorAll('.product-card');
+
+    filterDropdown.addEventListener('change', function () {
+
+        const selectedCategory = this.value;
+
+        artworkCards.forEach(card => {
+
+            const cardCategory = card.getAttribute('data-category');
+
+            if (selectedCategory === 'all' || selectedCategory === cardCategory) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+
+        });
+
+    });
 
 </script>
 
