@@ -9,8 +9,22 @@ import java.util.List;
 import com.artmarketplace.model.User;
 import com.artmarketplace.utilities.DbConfig;
 
+/**
+ * Data Access Object (DAO) class for managing user accounts in the system.
+ * Handles database operations including user registration, authentication, 
+ * profile updates, password resets, and admin status management.
+ * 
+ * @author Your Name
+ * @version 1.0
+ */
 public class UserDAO {
 
+    /**
+     * Registers a new user into the database with default statuses.
+     * 
+     * @param user The {@link User} object containing registration details.
+     * @return {@code true} if the user was successfully registered; {@code false} otherwise.
+     */
     public boolean registerUser(User user) {
         String sql = "INSERT INTO users (name, email, password, role, phone, account_status) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -33,6 +47,13 @@ public class UserDAO {
         return false;
     }
 
+    /**
+     * Checks if an email address is already registered in the system.
+     * Used to prevent duplicate accounts during registration.
+     * 
+     * @param email The email address to look up.
+     * @return {@code true} if the email exists in the users table; {@code false} otherwise.
+     */
     public boolean isEmailExists(String email) {
         String sql = "SELECT user_id FROM users WHERE email = ?";
 
@@ -51,6 +72,14 @@ public class UserDAO {
         return false;
     }
 
+    /**
+     * Retrieves a complete user profile by their email address.
+     * This method handles fallback mappings gracefully for optional 
+     * legacy database fields like contact_number and profile_image.
+     * 
+     * @param email The email address of the target user.
+     * @return A {@link User} object filled with database records, or {@code null} if no user is found.
+     */
     public User getUserByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
 
@@ -89,6 +118,13 @@ public class UserDAO {
         return null;
     }
 
+    /**
+     * Updates editable profile parameters for an existing user.
+     * Updates email address, optional contact number, and profile image file path string.
+     * 
+     * @param user The {@link User} object housing updated properties linked to an existing ID.
+     * @return {@code true} if the record row was updated successfully; {@code false} otherwise.
+     */
     public boolean updateProfile(User user) {
         String sql = "UPDATE users SET email=?, contact_number=?, profile_image=? WHERE user_id=?";
 
@@ -109,6 +145,14 @@ public class UserDAO {
         return false;
     }
 
+    /**
+     * Fetches basic user records matching both email address and primary phone.
+     * Commonly utilized for account recovery verifications.
+     * 
+     * @param email The user's registered email address.
+     * @param phone The user's registered phone number string.
+     * @return A restricted details {@link User} entity object, or {@code null} if the lookup blocks fail.
+     */
     public User getUserByEmailAndPhone(String email, String phone) {
         String sql = "SELECT * FROM users WHERE email=? AND phone=?";
 
@@ -137,6 +181,13 @@ public class UserDAO {
         return null;
     }
 
+    /**
+     * Modifies the security password string for an account row entry.
+     * 
+     * @param userId The unique integer identifier primary key of the target user account.
+     * @param newPassword The plain text or hashed string value of the replacement password.
+     * @return {@code true} if update is successful; {@code false} otherwise.
+     */
     public boolean updatePassword(int userId, String newPassword) {
         String sql = "UPDATE users SET password=? WHERE user_id=?";
 
@@ -155,6 +206,12 @@ public class UserDAO {
         return false;
     }
 
+    /**
+     * Pulls a list collection tracking all customer records containing a "Pending" status flag.
+     * Sorted dynamically in reverse order starting from the newest accounts.
+     * 
+     * @return A {@link List} containing {@link User} profiles matching criteria, or empty if none match.
+     */
     public List<User> getPendingCustomers() {
         List<User> users = new ArrayList<>();
 
@@ -184,6 +241,14 @@ public class UserDAO {
         return users;
     }
 
+    /**
+     * Changes administrative processing markers specifically matching customer accounts.
+     * Updates flag states such as changing values to 'Approved', 'Rejected', or 'Suspended'.
+     * 
+     * @param userId The target customer identifier primary key integer.
+     * @param status The target state update string configuration value.
+     * @return {@code true} if state changed successfully; {@code false} if targeted row is not matching customer role.
+     */
     public boolean updateAccountStatus(int userId, String status) {
         String sql = "UPDATE users SET account_status=? WHERE user_id=? AND role='customer'";
 

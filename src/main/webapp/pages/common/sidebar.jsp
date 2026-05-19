@@ -17,14 +17,14 @@
     <ul class="menu">
 
         <li class="<%= active.equals("dashboard") ? "active" : "" %>">
-            <a href="${pageContext.request.contextPath}/pages/admin/dashboard-admin.jsp">
+            <a href="${pageContext.request.contextPath}/admin-dashboard">
                 <i class="fa-solid fa-house"></i>
                 <span>Dashboard</span>
             </a>
         </li>
 
         <li class="<%= active.equals("analytics") ? "active" : "" %>">
-            <a href="${pageContext.request.contextPath}/pages/admin/analytics-admin.jsp">
+            <a href="${pageContext.request.contextPath}/admin-analytics">
                 <i class="fa-solid fa-chart-line"></i>
                 <span>Analytics</span>
             </a>

@@ -1,33 +1,49 @@
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%
+List<String> topProducts =
+(List<String>) request.getAttribute("topProducts");
+
+List<Double> monthlySales =
+(List<Double>) request.getAttribute("monthlySales");
+%>
+
 <!DOCTYPE html>
 <html>
+
 <head>
+
     <title>Admin Dashboard</title>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- GOOGLE FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
 
-    <!-- Font Awesome Icons -->
+    <!-- FONT AWESOME -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- CSS -->
     <link rel="stylesheet"
-      type="text/css"
-      href="${pageContext.request.contextPath}/css/dashboard.css?v=10">
-      
+          type="text/css"
+          href="${pageContext.request.contextPath}/css/dashboard.css?v=10">
 
-    <!-- Chart JS -->
+    <!-- CHART JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
 
 <div class="dashboard">
 
-	<jsp:include page="/pages/common/sidebar.jsp">
-    <jsp:param name="active" value="dashboard"/>
-	</jsp:include>
+    <!-- SIDEBAR -->
+    <jsp:include page="/pages/common/sidebar.jsp">
+
+        <jsp:param name="active" value="dashboard"/>
+
+    </jsp:include>
 
     <!-- MAIN CONTENT -->
     <main class="main-content">
@@ -36,98 +52,158 @@
         <div class="topbar">
 
             <div>
+
                 <h1>Overview</h1>
+
                 <p>Welcome back Admin 👋</p>
+
             </div>
 
             <div class="search-box">
+
                 <i class="fa-solid fa-magnifying-glass"></i>
+
                 <input type="text" placeholder="Search...">
+
             </div>
 
         </div>
-   <!-- STAT CARDS -->
+
+        <!-- STAT CARDS -->
         <div class="cards">
 
+            <!-- TOTAL REVENUE -->
             <div class="card">
+
                 <div>
+
                     <h4>Total Revenue</h4>
-                    <h2>Rs 82,650</h2>
-                    <span class="up">+11% this month</span>
+
+                    <h2>Rs ${totalRevenue}</h2>
+
+                    <span class="up">Live Revenue</span>
+
                 </div>
+
                 <div class="icon">
+
                     <i class="fa-solid fa-dollar-sign"></i>
+
                 </div>
+
             </div>
 
+            <!-- TOTAL ORDERS -->
             <div class="card">
+
                 <div>
+
                     <h4>Total Orders</h4>
-                    <h2>1645</h2>
-                    <span class="up">+8% this month</span>
+
+                    <h2>${totalOrders}</h2>
+
+                    <span class="up">Orders Processed</span>
+
                 </div>
+
                 <div class="icon">
+
                     <i class="fa-solid fa-cart-shopping"></i>
+
                 </div>
+
             </div>
 
+            <!-- TOTAL CUSTOMERS -->
             <div class="card">
+
                 <div>
+
                     <h4>Total Customers</h4>
-                    <h2>1462</h2>
-                    <span class="up">+5% this month</span>
+
+                    <h2>${totalCustomers}</h2>
+
+                    <span class="up">Registered Users</span>
+
                 </div>
+
                 <div class="icon">
+
                     <i class="fa-solid fa-users"></i>
+
                 </div>
+
             </div>
 
         </div>
 
-        <!-- CHART -->
+        <!-- SALES CHART -->
         <div class="chart-section">
 
             <div class="chart-header">
+
                 <h3>Sales Analytics</h3>
 
                 <select>
-                    <option>July 2023</option>
-                    <option>August 2023</option>
+
+                    <option>2026</option>
+                    <option>2025</option>
+                    <option>2024</option>
+
                 </select>
+
             </div>
 
             <div class="chart-card">
+
                 <canvas id="salesChart"></canvas>
+
             </div>
 
         </div>
 
-        <!-- PRODUCTS -->
+        <!-- TOP PRODUCTS -->
         <div class="products-section">
 
             <h3>Top Selling Products</h3>
 
             <div class="product-grid">
 
-                <div class="product-card">
-   	 			<img src="${pageContext.request.contextPath}/resources/images/Digital_Art/La Robotte.png" alt="La Robotte">
-    			<h4>La Robotte</h4>
-    			<p>Rs 7100</p>
-			</div>
+                <%
 
-			<div class="product-card">
-   				<img src="${pageContext.request.contextPath}/resources/images/Nature-Art/Echoes in the Blue Forest.jpg" alt="Echoes in the Blue Forest">
-    			<h4>Echoes in the Blue Forest</h4>
-    			<p>Rs 6200</p>
-			</div>
+                if(topProducts != null && !topProducts.isEmpty()){
 
-			<div class="product-card">
-    			<img src="${pageContext.request.contextPath}/resources/images/Paintings/fox watercolor.png" alt="fox watercolor">
-    			<h4>fox watercolor</h4>
-    			<p>Rs 4200</p>
-			</div>
+                    for(String product : topProducts){
 
-			
+                %>
+
+                    <div class="product-card">
+
+                        <img
+                        src="${pageContext.request.contextPath}/resources/images/default-art.png"
+                        alt="Artwork">
+
+                        <h4><%= product %></h4>
+
+                        <p>Top Selling Artwork</p>
+
+                    </div>
+
+                <%
+
+                    }
+
+                } else {
+
+                %>
+
+                    <p>No top selling products found.</p>
+
+                <%
+
+                }
+
+                %>
 
             </div>
 
@@ -140,51 +216,103 @@
 <!-- CHART SCRIPT -->
 <script>
 
-    const ctx = document.getElementById('salesChart').getContext('2d');
+const ctx = document.getElementById('salesChart').getContext('2d');
 
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['22 Jul', '23 Jul', '24 Jul', '25 Jul', '26 Jul', '27 Jul', '28 Jul'],
-            datasets: [{
-                data: [12000, 42000, 18000, 38000, 52000, 22000, 48000],
-                borderColor: '#52d6c5',
-                backgroundColor: 'rgba(82,214,197,0.20)',
-                fill: true,
-                tension: 0.45,
-                pointRadius: 0
-            }]
+new Chart(ctx, {
+
+    type: 'line',
+
+    data: {
+
+        labels: [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec'
+        ],
+
+        datasets: [{
+
+            label: 'Monthly Sales',
+
+            data: [
+            	<%= (monthlySales != null ? monthlySales.toString().replace("[", "").replace("]", "") : "") %>
+],
+
+            borderColor: '#52d6c5',
+
+            backgroundColor: 'rgba(82,214,197,0.20)',
+
+            fill: true,
+
+            tension: 0.45,
+
+            pointRadius: 4,
+
+            pointHoverRadius: 6
+
+        }]
+    },
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        plugins: {
+
+            legend: {
+                display: true
+            }
+
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
+
+        scales: {
+
+            x: {
+
+                grid: {
                     display: false
                 }
+
             },
-            scales: {
-                x: {
-                    grid: {
-                        display: false
+
+            y: {
+
+                beginAtZero: true,
+
+                ticks: {
+
+                    callback: function(value) {
+
+                        return 'Rs ' + value;
+
                     }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return value / 1000 + 'k';
-                        }
-                    }
+
                 }
+
             }
+
         }
-    });
+
+    }
+
+});
 
 </script>
-
+<%= monthlySales %>
+<!-- JS -->
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
 
-
 </body>
+
 </html>
