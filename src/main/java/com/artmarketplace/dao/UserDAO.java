@@ -71,6 +71,40 @@ public class UserDAO {
 
         return false;
     }
+    public java.util.List<User> getAllCustomersWithOrderCount() {
+        java.util.List<User> customers = new java.util.ArrayList<>();
+
+        String sql = "SELECT u.user_id, u.name, u.email, u.phone, u.account_status, " +
+                     "COUNT(o.order_id) AS order_count " +
+                     "FROM users u " +
+                     "LEFT JOIN orders o ON u.user_id = o.user_id " +
+                     "WHERE u.role = 'customer' " +
+                     "GROUP BY u.user_id, u.name, u.email, u.phone, u.account_status " +
+                     "ORDER BY u.user_id DESC";
+
+        try (java.sql.Connection conn = DbConfig.getConnection();
+             java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+             java.sql.ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                User user = new User();
+
+                user.setUserId(rs.getInt("user_id"));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setPhone(rs.getString("phone"));
+                user.setAccountStatus(rs.getString("account_status"));
+                user.setOrderCount(rs.getInt("order_count"));
+
+                customers.add(user);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return customers;
+    }
 
     /**
      * Retrieves a complete user profile by their email address.

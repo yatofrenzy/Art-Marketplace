@@ -38,10 +38,10 @@
         </li>
 
         <li class="<%= active.equals("orders") ? "active" : "" %>">
-            <a href="${pageContext.request.contextPath}/pages/admin/order-admin.jsp">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span>Orders</span>
-            </a>
+           <a href="${pageContext.request.contextPath}/pages/admin/orders-admin.jsp">
+    		<i class="fa-solid fa-cart-shopping"></i>
+   			 <span>Orders</span>
+			</a>
         </li>
 
         <li class="<%= active.equals("customers") ? "active" : "" %>">

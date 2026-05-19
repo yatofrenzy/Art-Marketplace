@@ -10,6 +10,7 @@ public class User {
     private String profileImage;
     private String phone;
     private String accountStatus;
+    private int orderCount;
 
     public int getUserId() {
         return userId;
@@ -82,4 +83,12 @@ public class User {
     public void setAccountStatus(String accountStatus) {
         this.accountStatus = accountStatus;
     }
+
+	public int getOrderCount() {
+		return orderCount;
+	}
+
+	public void setOrderCount(int orderCount) {
+		this.orderCount = orderCount;
+	}
 }

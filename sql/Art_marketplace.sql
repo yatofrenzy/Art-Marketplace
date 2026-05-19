@@ -1,5 +1,5 @@
 -- Art Marketplace Database Schema
--- Run this file first
+
 
 CREATE DATABASE IF NOT EXISTS art_marketplace;
 USE art_marketplace;
