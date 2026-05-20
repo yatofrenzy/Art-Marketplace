@@ -75,6 +75,10 @@ public class AddArtworkServlet extends HttpServlet {
             String category =
                     artworkDAO.getCategoryNameById(categoryId);
 
+            // Replace spaces with underscores
+            category =
+                    category.replaceAll("\\s+", "_");
+
 
             /* =====================================================
                RECEIVING IMAGE FILE
@@ -103,30 +107,29 @@ public class AddArtworkServlet extends HttpServlet {
 
 
             /* =====================================================
-               UPLOAD FOLDER
+               EXTERNAL ROOT FOLDER
             ===================================================== */
 
-            String uploadFolder =
-                    "resources/images/" + category;
+            String uploadRoot =
+                    "D:/ArtMarketplaceUploads";
 
 
             /* =====================================================
-               MAIN PROJECT PATH
+               PHYSICAL CATEGORY FOLDER
             ===================================================== */
 
-            String mainFolder =
-                    request.getServletContext()
-                           .getRealPath("");
+            String physicalUploadFolder =
+                    uploadRoot
+                    + File.separator
+                    + category;
 
 
             /* =====================================================
-               CREATE CATEGORY FOLDER
+               CREATE CATEGORY DIRECTORY
             ===================================================== */
 
             File fileSaveDir =
-                    new File(mainFolder
-                    + File.separator
-                    + uploadFolder);
+                    new File(physicalUploadFolder);
 
             if (!fileSaveDir.exists()) {
 
@@ -139,19 +142,36 @@ public class AddArtworkServlet extends HttpServlet {
             ===================================================== */
 
             String fileAccessPath =
-                    uploadFolder
+                    "uploads/"
+                    + category
                     + "/"
                     + imageName;
 
 
             /* =====================================================
-               FULL FILE PATH
+               FULL PHYSICAL FILE PATH
             ===================================================== */
 
             String stringFilePath =
-                    mainFolder
+                    physicalUploadFolder
                     + File.separator
-                    + fileAccessPath;
+                    + imageName;
+
+
+            /* =====================================================
+               DEBUG LOGS
+            ===================================================== */
+
+            System.out.println("CATEGORY: " + category);
+
+            System.out.println("PHYSICAL FOLDER: "
+                    + physicalUploadFolder);
+
+            System.out.println("DATABASE PATH: "
+                    + fileAccessPath);
+
+            System.out.println("FULL FILE PATH: "
+                    + stringFilePath);
 
 
             /* =====================================================
@@ -186,6 +206,10 @@ public class AddArtworkServlet extends HttpServlet {
             boolean result =
                     artworkDAO.addArtwork(artwork);
 
+            System.out.println(
+                    "DATABASE INSERT RESULT: "
+                    + result);
+
 
             /* =====================================================
                SUCCESS / FAILURE
@@ -210,7 +234,7 @@ public class AddArtworkServlet extends HttpServlet {
 
             response.sendRedirect(
                     request.getContextPath()
-                    + "/admin-artworks?error=true");
+                    + "/pages/admin/artwork-admin.jsp?error=true");
         }
     }
 }

@@ -92,7 +92,21 @@
                             imagePath = "resources/images/Nature-Art/default.jpg";
                         }
 
-                        String fullImagePath = request.getContextPath() + "/" + imagePath;
+                        String fullImagePath;
+
+                        if(imagePath.startsWith("uploads/")) {
+
+                            // External uploaded images
+                            fullImagePath = "/" + imagePath;
+
+                        } else {
+
+                            // Old internal project images
+                            fullImagePath =
+                                    request.getContextPath()
+                                    + "/"
+                                    + imagePath;
+                        }
 
                         String title = art.getTitle() != null ? art.getTitle() : "";
                         String description = art.getDescription() != null ? art.getDescription() : "";
