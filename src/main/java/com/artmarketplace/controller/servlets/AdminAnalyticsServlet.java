@@ -70,7 +70,7 @@ public class AdminAnalyticsServlet extends HttpServlet {
         // =========================================
 
         request.getRequestDispatcher(
-                "/pages/admin/analytics-admin.jsp")
-                .forward(request, response);
+        	    "/WEB-INF/views/admin/analytics-admin.jsp")
+        	    .forward(request, response);
     }
 }
