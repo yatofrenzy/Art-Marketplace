@@ -88,7 +88,7 @@ public class LoginServlet extends HttpServlet {
                 // Set session and redirect to admin dashboard
                 SessionUtil.setUserSession(request, user);
                 CookieUtil.addCookie(response, "rememberedEmail", user.getEmail(), 60 * 60 * 24 * 7);
-                response.sendRedirect(request.getContextPath() + "/pages/admin/dashboard-admin.jsp");
+                response.sendRedirect(request.getContextPath() + "/admin-dashboard");
                 return;
             }
 
