@@ -4,7 +4,9 @@
 <%@ page import="com.artmarketplace.model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%-- Customer cart view. Displays cart items, quantities, totals, and update actions. --%>
 <%
+    // A valid session is required before loading cart data.
     User user = (User) session.getAttribute("user");
 
     if (user == null) {
@@ -12,9 +14,11 @@
         return;
     }
 
+    // Load cart rows from the database for the logged-in customer.
     CartDAO cartDAO = new CartDAO();
     List<CartItem> cartItems = cartDAO.getCartItems(user.getUserId());
 
+    // Calculate the cart total by summing every cart item total.
     double grandTotal = 0;
 %>
 
@@ -56,6 +60,7 @@
 
                     <td>
                         <div class="qty-control">
+                            <%-- Quantity decrease submits to UpdateCartServlet. --%>
                             <form action="${pageContext.request.contextPath}/update-cart" method="post">
                                 <input type="hidden" name="cartItemId" value="<%= item.getCartItemId() %>">
                                 <input type="hidden" name="quantity" value="<%= item.getQuantity() %>">
@@ -65,6 +70,7 @@
 
                             <span><%= item.getQuantity() %></span>
 
+                            <%-- Quantity increase submits to UpdateCartServlet. --%>
                             <form action="${pageContext.request.contextPath}/update-cart" method="post">
                                 <input type="hidden" name="cartItemId" value="<%= item.getCartItemId() %>">
                                 <input type="hidden" name="quantity" value="<%= item.getQuantity() %>">
@@ -78,6 +84,7 @@
                     <td>Rs. <%= item.getTotal() %></td>
 
                     <td>
+                        <%-- Remove action deletes the cart row through UpdateCartServlet. --%>
                         <form action="${pageContext.request.contextPath}/update-cart" method="post">
                             <input type="hidden" name="cartItemId" value="<%= item.getCartItemId() %>">
                             <input type="hidden" name="quantity" value="<%= item.getQuantity() %>">

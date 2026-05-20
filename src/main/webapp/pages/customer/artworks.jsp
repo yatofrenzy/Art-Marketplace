@@ -96,7 +96,7 @@
                                 request.getContextPath()
                                 + "/"
                                 + imagePath;
-                        }
+                        
 
                         String title = art.getTitle() != null ? art.getTitle() : "";
                         String description = art.getDescription() != null ? art.getDescription() : "";
@@ -132,7 +132,7 @@
 
             <%
                     }
-                } else {
+                }else {
             %>
 
             <p>No artworks available.</p>

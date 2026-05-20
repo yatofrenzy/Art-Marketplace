@@ -9,19 +9,28 @@ import java.util.List;
 import com.artmarketplace.model.Artwork;
 import com.artmarketplace.utilities.DbConfig;
 
+/**
+ * Data Access Object (DAO) representing operations on Artworks.
+ * Part of the DAO layer in the MVC architecture.
+ * Implements CRUD actions on the artworks database table.
+ */
 public class ArtworkDAO {
 
-    // =========================================
-    // ADD ARTWORK
-    // =========================================
-
+    /**
+     * Inserts a new artwork record into the database.
+     * 
+     * @param artwork The {@link Artwork} object containing details of the artwork to be added.
+     * @return {@code true} if inserted successfully; {@code false} otherwise.
+     */
     public boolean addArtwork(Artwork artwork) {
 
+        // SQL query to insert artwork records
         String sql =
                 "INSERT INTO artworks " +
                 "(category_id, title, description, price, image_path) " +
                 "VALUES (?, ?, ?, ?, ?)";
 
+        // Try-with-resources auto-closes the connection and prepared statement objects
         try (
 
             Connection conn = DbConfig.getConnection();
@@ -31,6 +40,7 @@ public class ArtworkDAO {
 
         ) {
 
+            // Bind values to placeholders
             ps.setInt(1, artwork.getCategoryId());
 
             ps.setString(2, artwork.getTitle());
@@ -41,6 +51,7 @@ public class ArtworkDAO {
 
             ps.setString(5, artwork.getImagePath());
 
+            // Execute insert query and check if rows affected > 0
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -52,14 +63,17 @@ public class ArtworkDAO {
     }
 
 
-    // =========================================
-    // GET CATEGORY NAME BY ID
-    // =========================================
-
+    /**
+     * Resolves the text name of a category based on its unique integer ID.
+     * 
+     * @param categoryId The unique identifier of the category.
+     * @return The resolved category name string, with spaces replaced by underscores, defaulting to "Others".
+     */
     public String getCategoryNameById(int categoryId) {
 
         String categoryName = "Others";
 
+        // SQL query to fetch category name filtered by category ID
         String sql =
                 "SELECT category_name " +
                 "FROM categories " +
@@ -74,10 +88,12 @@ public class ArtworkDAO {
 
         ) {
 
+            // Set category ID parameter
             ps.setInt(1, categoryId);
 
             ResultSet rs = ps.executeQuery();
 
+            // Read matched category name
             if(rs.next()) {
 
                 categoryName =
@@ -89,7 +105,7 @@ public class ArtworkDAO {
             e.printStackTrace();
         }
 
-        // Replace spaces with underscore
+        // Replace spaces with underscore to make formatting consistent for directory creation or path checks
         categoryName =
                 categoryName.replaceAll("\\s+", "_");
 
@@ -97,15 +113,17 @@ public class ArtworkDAO {
     }
 
 
-    // =========================================
-    // GET ALL ARTWORKS
-    // =========================================
-
+    /**
+     * Retrieves all artwork items stored in the database in descending order of ID.
+     * 
+     * @return A {@link List} containing all {@link Artwork} objects.
+     */
     public List<Artwork> getAllArtworks() {
 
         List<Artwork> list =
                 new ArrayList<>();
 
+        // SQL query to retrieve all artwork records
         String sql =
                 "SELECT * FROM artworks " +
                 "ORDER BY artwork_id DESC";
@@ -122,6 +140,7 @@ public class ArtworkDAO {
 
         ) {
 
+            // Loop through the query results and map each record to an Artwork model
             while (rs.next()) {
 
                 Artwork artwork =
@@ -157,12 +176,15 @@ public class ArtworkDAO {
     }
 
 
-    // =========================================
-    // GET ARTWORK BY ID
-    // =========================================
-
+    /**
+     * Retrieves a single artwork item by its unique ID.
+     * 
+     * @param artworkId The unique ID of the artwork.
+     * @return The matching {@link Artwork} object if found; {@code null} otherwise.
+     */
     public Artwork getArtworkById(int artworkId) {
 
+        // SQL query to retrieve a single artwork record matching the ID
         String sql =
                 "SELECT * FROM artworks " +
                 "WHERE artwork_id = ?";
@@ -176,10 +198,12 @@ public class ArtworkDAO {
 
         ) {
 
+            // Bind the artwork ID parameter
             ps.setInt(1, artworkId);
 
             ResultSet rs = ps.executeQuery();
 
+            // Populate the Artwork model from the matched record
             if (rs.next()) {
 
                 Artwork artwork =
@@ -215,12 +239,15 @@ public class ArtworkDAO {
     }
 
 
-    // =========================================
-    // UPDATE ARTWORK
-    // =========================================
-
+    /**
+     * Updates an existing artwork record details in the database.
+     * 
+     * @param artwork The {@link Artwork} object containing updated details.
+     * @return {@code true} if update is successful; {@code false} otherwise.
+     */
     public boolean updateArtwork(Artwork artwork) {
 
+        // SQL query to modify an artwork record details
         String sql =
                 "UPDATE artworks SET " +
                 "category_id=?, title=?, description=?, " +
@@ -236,6 +263,7 @@ public class ArtworkDAO {
 
         ) {
 
+            // Bind update parameters
             ps.setInt(1, artwork.getCategoryId());
 
             ps.setString(2, artwork.getTitle());
@@ -248,6 +276,7 @@ public class ArtworkDAO {
 
             ps.setInt(6, artwork.getArtworkId());
 
+            // Execute the update query and return result status
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -259,34 +288,40 @@ public class ArtworkDAO {
     }
 
 
-    // =========================================
-    // DELETE ARTWORK
-    // =========================================
-
+    /**
+     * Deletes an artwork record from the database.
+     * First deletes matching records in cart_items and order_items tables to prevent foreign key violations.
+     * 
+     * @param artworkId The unique identifier of the artwork.
+     * @return {@code true} if deleted successfully; {@code false} otherwise.
+     */
     public boolean deleteArtwork(int artworkId) {
 
+        // SQL statement to clean up associated shopping cart items
         String deleteCartItems =
             "DELETE FROM cart_items WHERE artwork_id = ?";
 
+        // SQL statement to clean up associated order line items
         String deleteOrderItems =
             "DELETE FROM order_items WHERE artwork_id = ?";
 
+        // SQL statement to delete the actual artwork record
         String deleteArtwork =
             "DELETE FROM artworks WHERE artwork_id = ?";
 
         try (Connection conn = DbConfig.getConnection()) {
 
-            // Delete from cart_items first
+            // Execute cart_items deletion
             PreparedStatement ps1 = conn.prepareStatement(deleteCartItems);
             ps1.setInt(1, artworkId);
             ps1.executeUpdate();
 
-            // Delete from order_items first
+            // Execute order_items deletion
             PreparedStatement ps2 = conn.prepareStatement(deleteOrderItems);
             ps2.setInt(1, artworkId);
             ps2.executeUpdate();
 
-            // Delete artwork
+            // Execute artwork deletion
             PreparedStatement ps3 = conn.prepareStatement(deleteArtwork);
             ps3.setInt(1, artworkId);
 

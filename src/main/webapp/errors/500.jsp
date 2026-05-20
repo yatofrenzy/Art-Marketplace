@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%-- Error view displayed when the server encounters an unexpected problem. --%>
 <!DOCTYPE html>
 <html>
 <head>

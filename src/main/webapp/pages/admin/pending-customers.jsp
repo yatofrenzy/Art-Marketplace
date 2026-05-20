@@ -3,7 +3,9 @@
 <%@ page import="com.artmarketplace.model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%-- Admin pending customer approval view. Allows admins to approve or reject new accounts. --%>
 <%
+    // Verify admin session before showing pending user approval actions.
     User loggedUser = (User) session.getAttribute("user");
 
     if (loggedUser == null || !"admin".equalsIgnoreCase(loggedUser.getRole())) {
@@ -11,6 +13,7 @@
         return;
     }
 
+    // Load only customers whose accounts are waiting for approval.
     UserDAO userDAO = new UserDAO();
     List<User> pendingCustomers = userDAO.getPendingCustomers();
 %>

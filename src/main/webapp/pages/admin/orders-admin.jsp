@@ -5,7 +5,9 @@
 <%@ page import="com.artmarketplace.model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%-- Admin orders view. Lists customer orders and provides status update controls. --%>
 <%
+    // Only administrators can access order management.
     User admin = (User) session.getAttribute("user");
 
     if (admin == null || !"admin".equalsIgnoreCase(admin.getRole())) {
@@ -13,6 +15,7 @@
         return;
     }
 
+    // Load all orders and their related order items from the database.
     OrderDAO orderDAO = new OrderDAO();
     List<Order> orders = orderDAO.getAllOrders();
 %>

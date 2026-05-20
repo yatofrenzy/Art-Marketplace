@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%-- Informational About page for visitors and customers. --%>
 <!DOCTYPE html>
 <html>
 <head>

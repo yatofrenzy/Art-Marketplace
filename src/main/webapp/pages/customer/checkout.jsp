@@ -4,7 +4,9 @@
 <%@ page import="com.artmarketplace.model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%-- Checkout page that reviews cart items and submits selected payment method. --%>
 <%
+    // Checkout requires a logged-in user because orders are linked to a user ID.
     User user = (User) session.getAttribute("user");
 
     if (user == null) {
@@ -12,9 +14,11 @@
         return;
     }
 
+    // Load current cart contents for order summary display.
     CartDAO cartDAO = new CartDAO();
     List<CartItem> cartItems = cartDAO.getCartItems(user.getUserId());
 
+    // Calculate total amount shown before placing the order.
     double grandTotal = 0;
     for (CartItem item : cartItems) {
         grandTotal += item.getTotal();
@@ -40,6 +44,7 @@
 
         <h2 class="section-title">Order Summary</h2>
 
+        <%-- Display checkout error passed as a redirect query parameter. --%>
         <% if(request.getParameter("error") != null) { %>
             <div class="error-message">Checkout failed. Please make sure your cart is not empty.</div>
         <% } %>
@@ -78,6 +83,7 @@
         <h2 class="section-title">Payment</h2>
 
         <div class="form-card">
+            <%-- Checkout form posts the payment method to CheckoutServlet. --%>
             <form action="${pageContext.request.contextPath}/checkout" method="post">
                 <div class="form-group">
                     <label>Payment Method</label>

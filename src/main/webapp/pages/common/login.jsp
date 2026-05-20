@@ -1,7 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.artmarketplace.utilities.CookieUtil" %>
 
+<%-- Login view for both customer and admin users in the MVC flow. --%>
 <%
+    // Read remembered email cookie so returning users see their email pre-filled.
     String rememberedEmail = CookieUtil.getCookieValue(request, "rememberedEmail");
 %>
 <!DOCTYPE html>
@@ -60,14 +62,17 @@
             <h2>Login</h2>
             <p class="sub">Enter your account details to continue browsing the marketplace.</p>
 
+            <%-- Show success feedback after registration redirect. --%>
             <% if(request.getParameter("registered") != null) { %>
                 <div class="success-message">Registration successful. Please wait for admin approval.</div>
             <% } %>
 
+            <%-- Show success feedback after password reset redirect. --%>
             <% if(request.getParameter("reset") != null) { %>
                 <div class="success-message">Password reset successful. Please login.</div>
             <% } %>
 
+            <%-- Display validation or authentication errors forwarded by LoginServlet. --%>
             <% if(request.getAttribute("error") != null) { %>
                 <div class="notice-error"><%= request.getAttribute("error") %></div>
             <% } %>
@@ -77,6 +82,7 @@
                 <button type="button" id="adminBtn" class="role-btn" onclick="setRole('admin')">Admin</button>
             </div>
 
+            <%-- Login form posts credentials and selected role to LoginServlet. --%>
             <form action="${pageContext.request.contextPath}/login" method="post">
                 <input type="hidden" name="role" id="role" value="customer">
 
@@ -117,6 +123,7 @@
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
 
 <script>
+// Updates the hidden role field and active button before submitting the login form.
 function setRole(role) {
     document.getElementById("role").value = role;
 

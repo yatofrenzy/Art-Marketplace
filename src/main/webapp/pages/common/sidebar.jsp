@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 
+<%-- Shared admin sidebar. The active parameter highlights the current admin section. --%>
 <%
+    // Default active menu item to dashboard when no value is provided by the including JSP.
     String active = request.getParameter("active");
     if (active == null) active = "";
 %>

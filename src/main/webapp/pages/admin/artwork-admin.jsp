@@ -7,7 +7,9 @@
 <%@ page import="com.artmarketplace.model.Category" %>
 <%@ page import="com.artmarketplace.model.User" %>
 
+<%-- Admin artwork management view for listing, adding, editing, and deleting artwork records. --%>
 <%
+    // Verify admin session before showing management tools.
     User admin = (User) session.getAttribute("user");
 
     if (admin == null || !"admin".equalsIgnoreCase(admin.getRole())) {
@@ -19,6 +21,7 @@
         return;
     }
 
+    // Load artwork and category data used by the table and add-artwork form.
     ArtworkDAO dao = new ArtworkDAO();
 
     CategoryDAO categoryDAO =

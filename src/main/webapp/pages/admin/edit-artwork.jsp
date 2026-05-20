@@ -5,7 +5,9 @@
 <%@ page import="com.artmarketplace.model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%-- Admin edit artwork view. Pre-fills an artwork form using the model supplied by ArtworkServlet. --%>
 <%
+    // Verify admin session before allowing artwork edits.
     User admin = (User) session.getAttribute("user");
 
     if (admin == null || !"admin".equalsIgnoreCase(admin.getRole())) {
@@ -13,6 +15,7 @@
         return;
     }
 
+    // ArtworkServlet places the selected artwork into request scope before forwarding here.
     Artwork artwork = (Artwork) request.getAttribute("artwork");
 
     if (artwork == null) {
@@ -20,6 +23,7 @@
         return;
     }
 
+    // Categories are loaded to populate the edit form dropdown.
     CategoryDAO categoryDAO = new CategoryDAO();
     List<Category> categories = categoryDAO.getAllCategories();
 %>

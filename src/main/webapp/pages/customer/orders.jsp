@@ -5,7 +5,9 @@
 <%@ page import="com.artmarketplace.model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%-- Customer orders page that displays past orders and line items. --%>
 <%
+    // Orders are customer-specific, so the logged-in user is required.
     User user = (User) session.getAttribute("user");
 
     if (user == null) {
@@ -13,6 +15,7 @@
         return;
     }
 
+    // Load all orders and their items for the current customer.
     OrderDAO orderDAO = new OrderDAO();
     List<Order> orders = orderDAO.getOrdersByUser(user.getUserId());
 %>
@@ -34,6 +37,7 @@
             <p>View your order history and payment status.</p>
         </section>
 
+        <%-- Show confirmation after successful checkout redirect. --%>
         <% if(request.getParameter("success") != null) { %>
             <div class="success-message">Order placed successfully.</div>
         <% } %>

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%-- Contact page view with a simple enquiry form and shared navigation/footer includes. --%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,6 +19,7 @@
         <h2 class="section-title">Send Message</h2>
 
         <div class="form-card">
+            <%-- Static contact form placeholder; no servlet action is currently connected. --%>
             <form action="#" method="post">
                 <div class="form-group">
                     <label>Full Name</label>

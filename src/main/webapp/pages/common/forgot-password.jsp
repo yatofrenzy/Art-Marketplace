@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%-- Password reset view that verifies email and phone before updating credentials. --%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,10 +30,12 @@
             <h2>Forgot Password</h2>
             <p class="sub">Enter your email, phone number, and new password.</p>
 
+            <%-- Display validation or lookup errors forwarded by ForgotPasswordServlet. --%>
             <% if(request.getAttribute("error") != null) { %>
                 <div class="notice-error"><%= request.getAttribute("error") %></div>
             <% } %>
 
+            <%-- Form posts identity details and new password to ForgotPasswordServlet. --%>
             <form action="${pageContext.request.contextPath}/forgot-password" method="post">
                 <div class="input-box">
                     <label>Email Address</label>

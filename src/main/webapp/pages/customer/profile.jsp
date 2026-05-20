@@ -1,7 +1,9 @@
 <%@ page import="com.artmarketplace.model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%-- Customer profile page for viewing and updating account contact details. --%>
 <%
+    // Load logged-in user from the session before showing profile data.
     User user = (User) session.getAttribute("user");
 
     if (user == null) {
@@ -9,6 +11,7 @@
         return;
     }
 
+    // Prepare profile values for display and for the update form.
     String name = user.getName();
     String email = user.getEmail();
     String role = user.getRole();
@@ -36,6 +39,7 @@
 
         <h2 class="section-title">Account Information</h2>
 
+        <%-- Show update result messages after profile servlet redirect. --%>
         <% if(request.getParameter("success") != null) { %>
             <div class="success-message">Profile updated successfully.</div>
         <% } %>
@@ -46,6 +50,7 @@
 
         <div class="card profile-box">
 
+            <%-- Show uploaded profile image when available; otherwise show initials avatar. --%>
             <% if(profileImage != null && !profileImage.isEmpty()) { %>
                 <img src="${pageContext.request.contextPath}/<%= profileImage %>"
                      alt="Profile Image"
@@ -77,6 +82,7 @@
         <div id="editForm" class="form-card" style="display:none; margin-top:30px;">
             <h2 style="margin-bottom:20px;">Edit Profile</h2>
 
+            <%-- Multipart form sends updated contact details and optional image to UpdateProfileServlet. --%>
             <form action="${pageContext.request.contextPath}/update-profile"
                   method="post"
                   enctype="multipart/form-data">

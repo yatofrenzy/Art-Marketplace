@@ -15,8 +15,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
 /**
- * Servlet responsible for uploading artwork image
- * and storing artwork details into database.
+ * Servlet responsible for uploading artwork images and storing artwork details.
+ * Works as a Controller in the MVC architecture by reading form data from the view,
+ * preparing an Artwork model, and calling the ArtworkDAO to insert the record.
  */
 @WebServlet(urlPatterns = { "/addArtwork" })
 
@@ -30,6 +31,16 @@ public class AddArtworkServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Handles artwork creation from the admin artwork form.
+     * Reads multipart form fields, saves the uploaded image, stores the relative image path,
+     * and redirects to the admin artwork page based on the database insert result.
+     *
+     * @param request  The multipart HTTP request containing artwork fields and image file.
+     * @param response The HTTP response used to redirect after processing.
+     * @throws ServletException If file upload parsing fails.
+     * @throws IOException If image writing or redirecting fails.
+     */
     @Override
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
@@ -39,7 +50,7 @@ public class AddArtworkServlet extends HttpServlet {
         try {
 
             /* =========================================
-               FORM DATA
+               FORM DATA FROM JSP VIEW
             ========================================= */
 
             String title =
@@ -58,7 +69,7 @@ public class AddArtworkServlet extends HttpServlet {
 
 
             /* =========================================
-               DAO
+               DAO USED FOR DATABASE INSERT
             ========================================= */
 
             ArtworkDAO artworkDAO =
@@ -66,7 +77,7 @@ public class AddArtworkServlet extends HttpServlet {
 
 
             /* =========================================
-               CATEGORY NAME
+               CATEGORY NAME USED FOR IMAGE FOLDER
             ========================================= */
 
             String category =
@@ -77,7 +88,7 @@ public class AddArtworkServlet extends HttpServlet {
 
 
             /* =========================================
-               IMAGE FILE
+               IMAGE FILE FROM MULTIPART REQUEST
             ========================================= */
 
             Part image =
@@ -85,7 +96,7 @@ public class AddArtworkServlet extends HttpServlet {
 
 
             /* =========================================
-               IMAGE NAME
+               UNIQUE IMAGE NAME TO AVOID OVERWRITING FILES
             ========================================= */
 
             String originalImageName =
@@ -98,7 +109,7 @@ public class AddArtworkServlet extends HttpServlet {
 
 
             /* =========================================
-               INTERNAL UPLOAD FOLDER
+               INTERNAL UPLOAD FOLDER STORED UNDER WEB RESOURCES
             ========================================= */
 
             String uploadFolder =
@@ -115,7 +126,7 @@ public class AddArtworkServlet extends HttpServlet {
 
 
             /* =========================================
-               CREATE DIRECTORY
+               CREATE DIRECTORY IF IT DOES NOT ALREADY EXIST
             ========================================= */
 
             File fileSaveDir =
@@ -157,7 +168,7 @@ public class AddArtworkServlet extends HttpServlet {
 
 
             /* =========================================
-               ARTWORK OBJECT
+               ARTWORK MODEL OBJECT SENT TO DAO LAYER
             ========================================= */
 
             Artwork artwork =
@@ -175,7 +186,7 @@ public class AddArtworkServlet extends HttpServlet {
 
 
             /* =========================================
-               DATABASE INSERT
+               DATABASE INSERT THROUGH DAO
             ========================================= */
 
             boolean result =
@@ -183,7 +194,7 @@ public class AddArtworkServlet extends HttpServlet {
 
 
             /* =========================================
-               REDIRECT
+               REDIRECT BASED ON INSERT RESULT
             ========================================= */
 
             if (result) {
@@ -201,6 +212,7 @@ public class AddArtworkServlet extends HttpServlet {
 
         } catch (Exception e) {
 
+            // Print exception details for debugging and return the admin to an error state.
             e.printStackTrace();
 
             response.sendRedirect(

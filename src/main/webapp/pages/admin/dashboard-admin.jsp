@@ -2,14 +2,17 @@
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%-- Admin dashboard view. Displays key sales, customer, order, and top-product metrics. --%>
 <%
 
+// Read analytics data prepared by AdminDashboardServlet.
 List<TopProduct> topProducts =
 (List<TopProduct>) request.getAttribute("topProducts");
 
 List<Double> monthlySales =
 (List<Double>) request.getAttribute("monthlySales");
 
+// Selected year controls which monthly sales values are shown in the chart.
 String selectedYear = request.getParameter("year");
 
 if(selectedYear == null){

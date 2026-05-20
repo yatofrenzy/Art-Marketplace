@@ -11,6 +11,11 @@ import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Filter responsible for protecting secured pages in the application.
+ * Acts as a controller-level guard in the MVC flow before requests reach JSP views or servlets.
+ * Checks login sessions, allows public resources, and redirects users based on their role.
+ */
 @WebFilter("/*")
 public class AuthenticationFilter extends HttpFilter {
 
@@ -19,10 +24,20 @@ public class AuthenticationFilter extends HttpFilter {
 	 */
 	private static final long serialVersionUID = 1L;
 
+    /**
+     * Intercepts every request and decides whether it should continue or be redirected.
+     *
+     * @param request  The incoming HTTP request containing the URL and session data.
+     * @param response The HTTP response used for redirects when access is not allowed.
+     * @param chain    The filter chain used to continue processing valid requests.
+     * @throws IOException If a redirect or filter operation fails.
+     * @throws ServletException If servlet filtering fails.
+     */
 	@Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
+        // Read the current request path so public and protected areas can be separated.
         String path = request.getRequestURI();
         String context = request.getContextPath();
 
@@ -32,13 +47,13 @@ public class AuthenticationFilter extends HttpFilter {
             return;
         }
 
-        // Allow login/register
+        // Allow authentication pages and their servlet endpoints without requiring an existing session.
         if (path.contains("login.jsp") || path.contains("register.jsp") || path.contains("/login") || path.contains("/register")) {
             chain.doFilter(request, response);
             return;
         }
 
-        // Get logged user
+        // Get logged-in user from the HTTP session.
         User user = (User) request.getSession().getAttribute("user");
 
         // If not logged in
@@ -61,7 +76,7 @@ public class AuthenticationFilter extends HttpFilter {
             return;
         }
 
-        // Everything OK
+        // Everything is valid, so pass control to the requested servlet or JSP page.
         chain.doFilter(request, response);
     }
 }

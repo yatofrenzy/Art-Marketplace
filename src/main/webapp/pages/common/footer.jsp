@@ -1,3 +1,4 @@
+<%-- Shared footer included at the bottom of common and customer JSP pages. --%>
 <div style="
     margin-top: 60px;
     padding: 30px 0;

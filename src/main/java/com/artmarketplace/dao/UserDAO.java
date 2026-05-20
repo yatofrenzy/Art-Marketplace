@@ -13,6 +13,7 @@ import com.artmarketplace.utilities.DbConfig;
  * Data Access Object (DAO) class for managing user accounts in the system.
  * Handles database operations including user registration, authentication, 
  * profile updates, password resets, and admin status management.
+ * Part of the DAO layer in the MVC architecture.
  * 
  * @author Your Name
  * @version 1.0
@@ -26,11 +27,14 @@ public class UserDAO {
      * @return {@code true} if the user was successfully registered; {@code false} otherwise.
      */
     public boolean registerUser(User user) {
+        // SQL query to insert new user record
         String sql = "INSERT INTO users (name, email, password, role, phone, account_status) VALUES (?, ?, ?, ?, ?, ?)";
 
+        // Try-with-resources: Auto-closes connection and prepared statement
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            // Bind values to placeholders
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
@@ -38,6 +42,7 @@ public class UserDAO {
             ps.setString(5, user.getPhone());
             ps.setString(6, user.getAccountStatus());
 
+            // Execute insert statement
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -55,14 +60,17 @@ public class UserDAO {
      * @return {@code true} if the email exists in the users table; {@code false} otherwise.
      */
     public boolean isEmailExists(String email) {
+        // SQL query to check if email exists in database
         String sql = "SELECT user_id FROM users WHERE email = ?";
 
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            // Bind the email parameter
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
 
+            // Return true if ResultSet contains a matching record row
             return rs.next();
 
         } catch (Exception e) {
@@ -71,9 +79,17 @@ public class UserDAO {
 
         return false;
     }
+
+    /**
+     * Retrieves all customer profiles alongside their total checkout order counts.
+     * Performs a LEFT JOIN between the users and orders tables.
+     * 
+     * @return A {@link List} of {@link User} profiles with order counts populated.
+     */
     public java.util.List<User> getAllCustomersWithOrderCount() {
         java.util.List<User> customers = new java.util.ArrayList<>();
 
+        // SQL LEFT JOIN query to aggregate customer users and order quantities
         String sql = "SELECT u.user_id, u.name, u.email, u.phone, u.account_status, " +
                      "COUNT(o.order_id) AS order_count " +
                      "FROM users u " +
@@ -82,10 +98,12 @@ public class UserDAO {
                      "GROUP BY u.user_id, u.name, u.email, u.phone, u.account_status " +
                      "ORDER BY u.user_id DESC";
 
+        // Try-with-resources to automatically close the DB connection, statement, and result set
         try (java.sql.Connection conn = DbConfig.getConnection();
              java.sql.PreparedStatement ps = conn.prepareStatement(sql);
              java.sql.ResultSet rs = ps.executeQuery()) {
 
+            // Iterate over retrieved records to construct customer models
             while (rs.next()) {
                 User user = new User();
 
@@ -100,6 +118,7 @@ public class UserDAO {
             }
 
         } catch (Exception e) {
+            // Logs any database execution or mapping error
             e.printStackTrace();
         }
 
@@ -115,11 +134,13 @@ public class UserDAO {
      * @return A {@link User} object filled with database records, or {@code null} if no user is found.
      */
     public User getUserByEmail(String email) {
+        // SQL query to retrieve a user record matching the email
         String sql = "SELECT * FROM users WHERE email = ?";
 
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            // Bind parameter
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
 
@@ -134,10 +155,12 @@ public class UserDAO {
                 user.setPhone(rs.getString("phone"));
                 user.setAccountStatus(rs.getString("account_status"));
 
+                // Fallback exception handling for contact_number (if column is missing/different in schema)
                 try {
                     user.setContactNumber(rs.getString("contact_number"));
                 } catch (Exception ignored) {}
 
+                // Fallback exception handling for profile_image (if column is missing/different in schema)
                 try {
                     user.setProfileImage(rs.getString("profile_image"));
                 } catch (Exception ignored) {}
@@ -160,16 +183,19 @@ public class UserDAO {
      * @return {@code true} if the record row was updated successfully; {@code false} otherwise.
      */
     public boolean updateProfile(User user) {
+        // SQL query to modify user profile information
         String sql = "UPDATE users SET email=?, contact_number=?, profile_image=? WHERE user_id=?";
 
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            // Bind parameters
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getContactNumber());
             ps.setString(3, user.getProfileImage());
             ps.setInt(4, user.getUserId());
 
+            // Execute the update
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -188,16 +214,19 @@ public class UserDAO {
      * @return A restricted details {@link User} entity object, or {@code null} if the lookup blocks fail.
      */
     public User getUserByEmailAndPhone(String email, String phone) {
+        // SQL query to verify email and phone
         String sql = "SELECT * FROM users WHERE email=? AND phone=?";
 
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            // Bind values
             ps.setString(1, email);
             ps.setString(2, phone);
 
             ResultSet rs = ps.executeQuery();
 
+            // Populate restricted fields for identity validation check
             if (rs.next()) {
                 User user = new User();
                 user.setUserId(rs.getInt("user_id"));
@@ -223,14 +252,17 @@ public class UserDAO {
      * @return {@code true} if update is successful; {@code false} otherwise.
      */
     public boolean updatePassword(int userId, String newPassword) {
+        // SQL query to update user password
         String sql = "UPDATE users SET password=? WHERE user_id=?";
 
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            // Bind input values
             ps.setString(1, newPassword);
             ps.setInt(2, userId);
 
+            // Execute database update
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -249,12 +281,14 @@ public class UserDAO {
     public List<User> getPendingCustomers() {
         List<User> users = new ArrayList<>();
 
+        // SQL query to fetch customer accounts with status 'Pending'
         String sql = "SELECT * FROM users WHERE role='customer' AND account_status='Pending' ORDER BY user_id DESC";
 
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
+            // Loop through results and build User objects list
             while (rs.next()) {
                 User user = new User();
 
@@ -284,11 +318,13 @@ public class UserDAO {
      * @return {@code true} if state changed successfully; {@code false} if targeted row is not matching customer role.
      */
     public boolean updateAccountStatus(int userId, String status) {
+        // SQL query to modify account_status for customer role only
         String sql = "UPDATE users SET account_status=? WHERE user_id=? AND role='customer'";
 
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            // Bind new status and user ID parameters
             ps.setString(1, status);
             ps.setInt(2, userId);
 

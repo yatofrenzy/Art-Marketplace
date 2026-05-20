@@ -3,7 +3,9 @@
 <%@ page import="com.artmarketplace.model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%-- Admin customer list view. Shows customer account details and order counts. --%>
 <%
+    // Only administrators can view the customer management page.
     User admin = (User) session.getAttribute("user");
 
     if (admin == null || !"admin".equalsIgnoreCase(admin.getRole())) {
@@ -11,6 +13,7 @@
         return;
     }
 
+    // Load customers with order counts from the database for reporting.
     UserDAO userDAO = new UserDAO();
     List<User> customers = userDAO.getAllCustomersWithOrderCount();
 %>

@@ -1,6 +1,8 @@
 <%@ page import="com.artmarketplace.model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%-- Customer home page shown after successful login. --%>
 <%
+    // Retrieve logged-in user from session to personalize the welcome message.
     User user = (User) session.getAttribute("user");
     String userName = user != null ? user.getName() : "Artist";
 %>

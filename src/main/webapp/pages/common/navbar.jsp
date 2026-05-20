@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%-- Shared navigation bar included by public and customer-facing JSP pages. --%>
 <nav class="navbar">
     <a href="${pageContext.request.contextPath}/pages/customer/home.jsp" class="logo">
         Art<span>Marketplace</span>
@@ -12,6 +13,7 @@
         <a href="${pageContext.request.contextPath}/pages/customer/orders.jsp">Orders</a>
 
         <% 
+            // Read the current user from session so the navbar can show profile/logout options.
             com.artmarketplace.model.User navUser = 
                 (com.artmarketplace.model.User) session.getAttribute("user");
 
@@ -22,6 +24,7 @@
 
         <a href="${pageContext.request.contextPath}/pages/customer/profile.jsp">Profile</a>
 
+        <%-- Search form sends the query to the artwork listing JSP. --%>
         <form action="${pageContext.request.contextPath}/pages/customer/artworks.jsp"
               method="get"
               class="nav-search">

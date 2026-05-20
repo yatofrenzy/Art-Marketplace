@@ -1,6 +1,7 @@
 <%@ page import="java.util.*" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%-- Admin analytics view. Shows revenue, order totals, and chart data supplied by AdminAnalyticsServlet. --%>
 <!DOCTYPE html>
 <html>
 

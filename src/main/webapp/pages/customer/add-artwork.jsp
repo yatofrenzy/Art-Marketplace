@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%-- Customer-facing artwork submission page for uploading new artwork details. --%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,7 +21,7 @@
         <h2 class="section-title">Artwork Details</h2>
 
         <div class="form-card">
-            <%-- enctype="multipart/form-data" is required for file upload --%>
+            <%-- enctype="multipart/form-data" is required so the servlet can read the uploaded image Part. --%>
             <form action="${pageContext.request.contextPath}/artist/add-artwork"
                   method="post"
                   enctype="multipart/form-data">

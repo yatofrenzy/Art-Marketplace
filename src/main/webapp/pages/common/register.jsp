@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%-- Registration view that collects new customer account details for RegisterServlet. --%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,10 +31,12 @@
             <h2>Create Account</h2>
             <p class="sub">Register your details and begin exploring the marketplace.</p>
 
+            <%-- Display validation errors forwarded by RegisterServlet. --%>
             <% if(request.getAttribute("error") != null) { %>
                 <div class="notice-error"><%= request.getAttribute("error") %></div>
             <% } %>
 
+            <%-- Registration form posts user details to the controller for validation and database insert. --%>
             <form action="${pageContext.request.contextPath}/register" method="post">
                 <div class="input-box">
                     <label>Full Name</label>
