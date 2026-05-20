@@ -102,7 +102,7 @@ public class AdminDashboardServlet extends HttpServlet {
         // =========================================
 
         request.getRequestDispatcher(
-                "/pages/admin/dashboard-admin.jsp")
-                .forward(request, response);
+        	    "/WEB-INF/views/admin/dashboard-admin.jsp")
+        	    .forward(request, response);
     }
 }
