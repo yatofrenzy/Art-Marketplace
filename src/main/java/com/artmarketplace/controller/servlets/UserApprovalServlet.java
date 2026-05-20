@@ -34,7 +34,7 @@ public class UserApprovalServlet extends HttpServlet {
         User admin = (User) request.getSession().getAttribute("user");
 
         if (admin == null || !"admin".equalsIgnoreCase(admin.getRole())) {
-            response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/");
             return;
         }
 
@@ -44,7 +44,7 @@ public class UserApprovalServlet extends HttpServlet {
 
         // Required fields must be present before status can be updated.
         if (userIdText == null || action == null) {
-            response.sendRedirect(request.getContextPath() + "/pages/admin/dashboard-admin.jsp?approval=error");
+            response.sendRedirect(request.getContextPath() + "/admin-dashboard?approval=error");
             return;
         }
 
@@ -59,7 +59,7 @@ public class UserApprovalServlet extends HttpServlet {
         } else if ("reject".equalsIgnoreCase(action)) {
             status = "Rejected";
         } else {
-            response.sendRedirect(request.getContextPath() + "/pages/admin/dashboard-admin.jsp?approval=error");
+            response.sendRedirect(request.getContextPath() + "/admin-dashboard?approval=error");
             return;
         }
 
@@ -69,9 +69,9 @@ public class UserApprovalServlet extends HttpServlet {
 
         // Redirect with approval result so the JSP can show user feedback.
         if (updated) {
-            response.sendRedirect(request.getContextPath() + "/pages/admin/dashboard-admin.jsp?approval=success");
+            response.sendRedirect(request.getContextPath() + "/admin-dashboard?approval=success");
         } else {
-            response.sendRedirect(request.getContextPath() + "/pages/admin/dashboard-admin.jsp?approval=error");
+            response.sendRedirect(request.getContextPath() + "/admin-dashboard?approval=error");
         }
     }
 }

@@ -16,11 +16,20 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
 /**
- * Servlet responsible for artwork browsing and admin artwork management.
- * Acts as a Controller in the MVC architecture by routing artwork requests,
- * validating admin actions, handling uploads, and calling ArtworkDAO for database work.
+ * Servlet controller for artwork management and browsing.
+ *
+ * <p>Handles two mapped routes:</p>
+ * <ul>
+ *   <li>{@code /artworks} — public customer view</li>
+ *   <li>{@code /admin/artwork} — admin-only management panel</li>
+ * </ul>
+ *
+ * <p>File uploads are supported with validation for type and size constraints.</p>
+ *
+ * @see ArtworkDAO
+ * @see Artwork
  */
-@WebServlet({"/admin/artwork","/artworks"})
+@WebServlet({"/admin/artwork", "/artworks"})
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024,
     maxFileSize       = 1024 * 1024 * 10,
@@ -29,11 +38,14 @@ import jakarta.servlet.http.Part;
 public class ArtworkServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    /** Data Access Object used for all database operations on {@link Artwork} entities. */
     private ArtworkDAO artworkDAO;
 
     /**
-     * Initializes the DAO dependency once when the servlet is created.
-     * The DAO is reused for artwork database operations during request handling.
+     * Initializes the servlet and creates a shared {@link ArtworkDAO} instance.
+     *
+     * <p>Called once by the container when the servlet is first loaded.
+     * The DAO is reused across all requests to avoid per-request instantiation.</p>
      */
     @Override
     public void init() {
@@ -41,57 +53,70 @@ public class ArtworkServlet extends HttpServlet {
     }
 
     /**
-     * Handles artwork listing, edit loading, and delete requests.
+     * Handles GET requests for artwork browsing and admin management actions.
      *
-     * @param request  The HTTP request containing servlet path and optional action/id parameters.
-     * @param response The HTTP response used for forwards and redirects.
-     * @throws ServletException If forwarding to a JSP fails.
-     * @throws IOException If redirecting fails.
+     * <p><b>Public route — {@code GET /artworks}:</b></p>
+     * <ul>
+     *   <li>Loads all artworks via {@link ArtworkDAO#getAllArtworks()}</li>
+     *   <li>Forwards to {@code /pages/customer/artworks.jsp}</li>
+     * </ul>
+     *
+     * <p><b>Admin route — {@code GET /admin/artwork} (requires role {@code "admin"}):</b></p>
+     * <ul>
+     *   <li>{@code action=add} — Forwards to {@code /pages/admin/add-artwork.jsp}</li>
+     *   <li>{@code action=edit&id=X} — Loads artwork by ID and forwards to
+     *       {@code /pages/admin/edit-artwork.jsp}</li>
+     *   <li>{@code action=delete&id=X} — Deletes artwork by ID; redirects to
+     *       {@code artwork-admin.jsp?deleted=true} on success or
+     *       {@code artwork-admin.jsp?deleteError=true} on failure</li>
+     *   <li>No {@code action} — Redirects to {@code /pages/admin/artwork-admin.jsp}</li>
+     * </ul>
+     *
+     * <p>Unauthenticated or non-admin users are redirected to the login page.</p>
+     *
+     * @param request  the incoming {@link HttpServletRequest}; must carry a valid admin session
+     *                 for the {@code /admin/artwork} route
+     * @param response the {@link HttpServletResponse} used to forward or redirect
+     * @throws ServletException if the JSP forward fails
+     * @throws IOException      if the redirect or response write fails
+     * @see ArtworkDAO#getAllArtworks()
+     * @see ArtworkDAO#getArtworkById(int)
+     * @see ArtworkDAO#deleteArtwork(int)
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Use the servlet path to distinguish public artwork browsing from admin management.
         String path = request.getServletPath();
 
         if (path.equals("/artworks")) {
-            // Load all artworks from the database for the customer artwork listing page.
             request.setAttribute("artworks", artworkDAO.getAllArtworks());
             request.getRequestDispatcher("/pages/customer/artworks.jsp").forward(request, response);
             return;
         }
 
-        // Admin artwork actions require a logged-in admin session.
         User user = (User) request.getSession().getAttribute("user");
-
         if (user == null || !"admin".equalsIgnoreCase(user.getRole())) {
             response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
             return;
         }
 
         String action = request.getParameter("action");
-
-        // Default to list behavior when no explicit action is supplied.
         if (action == null) {
             action = "list";
         }
 
         if (action.equals("add")) {
-            // Forward to the artwork add view.
             request.getRequestDispatcher("/pages/admin/add-artwork.jsp").forward(request, response);
 
         } else if (action.equals("edit")) {
-            // Retrieve the selected artwork and pass it to the edit JSP.
             int artworkId = Integer.parseInt(request.getParameter("id"));
             Artwork artwork = artworkDAO.getArtworkById(artworkId);
             request.setAttribute("artwork", artwork);
             request.getRequestDispatcher("/pages/admin/edit-artwork.jsp").forward(request, response);
 
         } else if (action.equals("delete")) {
-            // Delete the selected artwork through the DAO and redirect with a status flag.
             int artworkId = Integer.parseInt(request.getParameter("id"));
-
             boolean deleted = artworkDAO.deleteArtwork(artworkId);
 
             if (deleted) {
@@ -106,73 +131,94 @@ public class ArtworkServlet extends HttpServlet {
     }
 
     /**
-     * Handles artwork create and update form submissions.
-     * Validates required fields, processes optional image uploads, builds the Artwork model,
-     * and calls DAO insert/update methods.
+     * Handles POST requests for creating and updating artworks via the admin panel.
      *
-     * @param request  The multipart HTTP request containing artwork form values.
-     * @param response The HTTP response used for status redirects.
-     * @throws ServletException If multipart parsing fails.
-     * @throws IOException If file writing or redirecting fails.
+     * <p>The operation is determined by the {@code action} form field:</p>
+     * <ul>
+     *   <li>{@code action=create} — Validates input, saves the uploaded image, and inserts
+     *       a new {@link Artwork} via {@link ArtworkDAO#addArtwork(Artwork)};
+     *       redirects to {@code artwork-admin.jsp?success=true}</li>
+     *   <li>{@code action=update} — Validates input, optionally replaces the image, and
+     *       updates the record via {@link ArtworkDAO#updateArtwork(Artwork)};
+     *       redirects to {@code artwork-admin.jsp?updated=true}</li>
+     * </ul>
+     *
+     * <p><b>Required form fields:</b></p>
+     * <ul>
+     *   <li>{@code categoryId} — Integer category identifier</li>
+     *   <li>{@code title} — Artwork title (non-blank)</li>
+     *   <li>{@code description} — Artwork description (non-blank)</li>
+     *   <li>{@code price} — Positive decimal price value</li>
+     *   <li>{@code imageFile} — Image upload; required for {@code create},
+     *       optional for {@code update}</li>
+     * </ul>
+     *
+     * <p><b>Update-only fields:</b></p>
+     * <ul>
+     *   <li>{@code artworkId} — ID of the record to update</li>
+     *   <li>{@code oldImagePath} — Retained when no new image is uploaded</li>
+     * </ul>
+     *
+     * <p><b>Image rules:</b> accepted extensions are {@code jpg}, {@code jpeg},
+     * {@code png}, {@code gif}; max size 10 MB. Files are saved under
+     * {@code resources/images/artworks/} with a timestamp prefix.</p>
+     *
+     * <p>All validation failures redirect to {@code artwork-admin.jsp?error=true}.
+     * Unauthenticated or non-admin users are redirected to the login page.</p>
+     *
+     * @param request  the incoming {@link HttpServletRequest} carrying multipart form data
+     *                 and the admin session
+     * @param response the {@link HttpServletResponse} used to redirect after processing
+     * @throws ServletException if multipart parsing fails
+     * @throws IOException      if file write or redirect fails
+     * @see ArtworkDAO#addArtwork(Artwork)
+     * @see ArtworkDAO#updateArtwork(Artwork)
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Action tells the servlet whether this form is creating or updating an artwork.
         String action = request.getParameter("action");
+        boolean isUpdate = "update".equals(action);
 
-        // Only admins are allowed to create or edit artwork records from this controller.
         User user = (User) request.getSession().getAttribute("user");
-
         if (user == null || !"admin".equalsIgnoreCase(user.getRole())) {
             response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
             return;
         }
 
-        // Read form data submitted from the admin artwork JSP.
         String categoryIdText = request.getParameter("categoryId");
-        String title = request.getParameter("title");
-        String description = request.getParameter("description");
-        String priceText = request.getParameter("price");
-        String oldImagePath = request.getParameter("oldImagePath");
+        String title          = request.getParameter("title");
+        String description    = request.getParameter("description");
+        String priceText      = request.getParameter("price");
+        String oldImagePath   = request.getParameter("oldImagePath");
 
-        boolean isUpdate = "update".equals(action);
-
-        // Validate required fields before converting values or saving to the database.
         if (categoryIdText == null || categoryIdText.trim().isEmpty()
                 || title == null || title.trim().isEmpty()
                 || description == null || description.trim().isEmpty()
                 || priceText == null || priceText.trim().isEmpty()) {
-
             response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?error=true");
             return;
         }
 
         double price;
-
         try {
-            // Convert price text to a numeric value for the model and database.
             price = Double.parseDouble(priceText);
         } catch (NumberFormatException e) {
             response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?error=true");
             return;
         }
 
-        // Price must be positive for a valid artwork listing.
         if (price <= 0) {
             response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?error=true");
             return;
         }
 
-        // Keep the existing image path during updates unless a new image is uploaded.
         int categoryId = Integer.parseInt(categoryIdText);
         String resolvedImagePath = oldImagePath;
 
         Part filePart = request.getPart("imageFile");
-
         if (filePart != null && filePart.getSize() > 0) {
-            // Validate file extension before writing the upload to the server folder.
             String submittedName = filePart.getSubmittedFileName();
             String ext = submittedName.substring(submittedName.lastIndexOf(".") + 1).toLowerCase();
 
@@ -182,28 +228,22 @@ public class ArtworkServlet extends HttpServlet {
                 return;
             }
 
-            // Create the upload directory inside the deployed web application if needed.
             String uploadFolder = getServletContext().getRealPath("")
                     + File.separator + "resources"
                     + File.separator + "images"
                     + File.separator + "artworks";
-
             new File(uploadFolder).mkdirs();
 
-            // Store a timestamped filename so uploaded files do not overwrite each other.
             String uniqueFileName = System.currentTimeMillis() + "_" + submittedName;
             filePart.write(uploadFolder + File.separator + uniqueFileName);
-
             resolvedImagePath = "resources/images/artworks/" + uniqueFileName;
         }
 
-        // New artwork records require an image path before database insertion.
         if (!isUpdate && (resolvedImagePath == null || resolvedImagePath.trim().isEmpty())) {
             response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?error=true");
             return;
         }
 
-        // Build the model object that will be passed to the DAO layer.
         Artwork artwork = new Artwork();
         artwork.setCategoryId(categoryId);
         artwork.setTitle(title.trim());
@@ -212,13 +252,11 @@ public class ArtworkServlet extends HttpServlet {
         artwork.setImagePath(resolvedImagePath);
 
         if (isUpdate) {
-            // Update existing artwork record using its primary key.
             int artworkId = Integer.parseInt(request.getParameter("artworkId"));
             artwork.setArtworkId(artworkId);
             artworkDAO.updateArtwork(artwork);
             response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?updated=true");
         } else {
-            // Insert a new artwork record into the database.
             artworkDAO.addArtwork(artwork);
             response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?success=true");
         }
