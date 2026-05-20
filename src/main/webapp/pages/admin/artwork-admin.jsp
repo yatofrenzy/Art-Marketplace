@@ -158,11 +158,13 @@
         <% } %>
 
         <%
-            String error =
-                    request.getParameter("error");
+		String error = request.getParameter("error");
 
-            if ("deletefailed".equals(error)) {
-        %>
+		if ("deletefailed".equals(error)) {
+			%>
+
+          
+
 
             <div class="error-message">
                 Failed to delete artwork.
@@ -205,10 +207,11 @@
                                     "resources/images/default.jpg";
                         }
 
-                        String fullImagePath =
-                                request.getContextPath()
-                                + "/"
-                                + imagePath;
+
+                        String fullImagePath = request.getContextPath() + "/" + imagePath;
+
+                        
+
             %>
 
             <div class="product-card"
@@ -290,7 +293,7 @@
             <span class="close-modal"
                   onclick="closeArtworkModal()">
 
-                &times;
+                
 
             </span>
 
