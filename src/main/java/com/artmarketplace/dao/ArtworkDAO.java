@@ -265,25 +265,34 @@ public class ArtworkDAO {
 
     public boolean deleteArtwork(int artworkId) {
 
-        String sql =
-                "DELETE FROM artworks " +
-                "WHERE artwork_id = ?";
+        String deleteCartItems =
+            "DELETE FROM cart_items WHERE artwork_id = ?";
 
-        try (
+        String deleteOrderItems =
+            "DELETE FROM order_items WHERE artwork_id = ?";
 
-            Connection conn = DbConfig.getConnection();
+        String deleteArtwork =
+            "DELETE FROM artworks WHERE artwork_id = ?";
 
-            PreparedStatement ps =
-                    conn.prepareStatement(sql)
+        try (Connection conn = DbConfig.getConnection()) {
 
-        ) {
+            // Delete from cart_items first
+            PreparedStatement ps1 = conn.prepareStatement(deleteCartItems);
+            ps1.setInt(1, artworkId);
+            ps1.executeUpdate();
 
-            ps.setInt(1, artworkId);
+            // Delete from order_items first
+            PreparedStatement ps2 = conn.prepareStatement(deleteOrderItems);
+            ps2.setInt(1, artworkId);
+            ps2.executeUpdate();
 
-            return ps.executeUpdate() > 0;
+            // Delete artwork
+            PreparedStatement ps3 = conn.prepareStatement(deleteArtwork);
+            ps3.setInt(1, artworkId);
+
+            return ps3.executeUpdate() > 0;
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 

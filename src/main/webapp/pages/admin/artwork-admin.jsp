@@ -124,6 +124,19 @@
                 Artwork deleted successfully.
             </div>
         <% } %>
+        <%
+String error = request.getParameter("error");
+
+if ("deletefailed".equals(error)) {
+%>
+
+<div class="error-message">
+    Failed to delete artwork.
+</div>
+
+<%
+}
+%>
 
         <% if(request.getParameter("error") != null){ %>
             <div class="error-message">
