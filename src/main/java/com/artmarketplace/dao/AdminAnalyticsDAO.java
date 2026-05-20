@@ -27,9 +27,9 @@ public class AdminAnalyticsDAO {
 
         // SQL query: Sum the total_amount column from the orders table
         String sql =
-        "SELECT IFNULL(SUM(total_amount), 0) AS revenue " +
-        "FROM orders";
-
+        		"SELECT IFNULL(SUM(total_amount), 0) AS revenue " +
+        		"FROM orders " +
+        		"WHERE order_status = 'Completed'";
         // Try-with-resources: Auto-closes database connection, prepared statement, and result set
         try (
             Connection conn = DbConfig.getConnection();
@@ -64,7 +64,9 @@ public class AdminAnalyticsDAO {
 
         // SQL query: Count all records in the orders table
         String sql =
-        "SELECT COUNT(*) AS total FROM orders";
+        		"SELECT COUNT(*) AS total " +
+        		"FROM orders " +
+        		"WHERE order_status = 'Completed'";
 
         // Execute count query using prepared statement
         try (
@@ -142,12 +144,13 @@ public class AdminAnalyticsDAO {
 
         // SQL query: Extract months and sum total order amount, filtering by specified year
         String sql =
-            "SELECT MONTH(order_date) AS month, " +
-            "SUM(total_amount) AS total " +
-            "FROM orders " +
-            "WHERE YEAR(order_date) = ? " +
-            "GROUP BY MONTH(order_date) " +
-            "ORDER BY MONTH(order_date)";
+        	    "SELECT MONTH(order_date) AS month, " +
+        	    "SUM(total_amount) AS total " +
+        	    "FROM orders " +
+        	    "WHERE YEAR(order_date) = ? " +
+        	    "AND order_status = 'Completed' " +
+        	    "GROUP BY MONTH(order_date) " +
+        	    "ORDER BY MONTH(order_date)";
 
         try (
 
@@ -192,14 +195,17 @@ public class AdminAnalyticsDAO {
 
         // SQL query: Sum quantities sold per artwork, joining the artworks and order_items tables
         String sql =
-            "SELECT a.title, a.image_path, a.price," +
-            "SUM(oi.quantity) AS total_sold " +
-            "FROM order_items oi " +
-            "JOIN artworks a " +
-            "ON oi.artwork_id = a.artwork_id " +
-            "GROUP BY a.title, a.image_path, a.price " +
-            "ORDER BY total_sold DESC " +
-            "LIMIT 5";
+        	    "SELECT a.title, a.image_path, a.price," +
+        	    "SUM(oi.quantity) AS total_sold " +
+        	    "FROM order_items oi " +
+        	    "JOIN artworks a " +
+        	    "ON oi.artwork_id = a.artwork_id " +
+        	    "JOIN orders o " +
+        	    "ON oi.order_id = o.order_id " +
+        	    "WHERE o.order_status = 'Completed' " +
+        	    "GROUP BY a.title, a.image_path, a.price " +
+        	    "ORDER BY total_sold DESC " +
+        	    "LIMIT 5";
 
         try (
             Connection conn = DbConfig.getConnection();
