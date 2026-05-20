@@ -43,6 +43,13 @@ public class ArtworkServlet extends HttpServlet {
             return;
         }
 
+        User user = (User) request.getSession().getAttribute("user");
+
+        if (user == null || !"admin".equalsIgnoreCase(user.getRole())) {
+            response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
+            return;
+        }
+
         String action = request.getParameter("action");
 
         if (action == null) {
@@ -61,11 +68,10 @@ public class ArtworkServlet extends HttpServlet {
         } else if (action.equals("delete")) {
             int artworkId = Integer.parseInt(request.getParameter("id"));
             artworkDAO.deleteArtwork(artworkId);
-            response.sendRedirect(request.getContextPath() + "/admin/artwork");
+            response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?deleted=true");
 
         } else {
-            request.setAttribute("artworks", artworkDAO.getAllArtworks());
-            request.getRequestDispatcher("/pages/admin/artworks.jsp").forward(request, response);
+            response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp");
         }
     }
 
@@ -77,7 +83,7 @@ public class ArtworkServlet extends HttpServlet {
 
         User user = (User) request.getSession().getAttribute("user");
 
-        if (user == null) {
+        if (user == null || !"admin".equalsIgnoreCase(user.getRole())) {
             response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
             return;
         }
@@ -86,22 +92,16 @@ public class ArtworkServlet extends HttpServlet {
         String title = request.getParameter("title");
         String description = request.getParameter("description");
         String priceText = request.getParameter("price");
-        String imagePath = request.getParameter("imagePath");
+        String oldImagePath = request.getParameter("oldImagePath");
 
-        String targetPage = "update".equals(action)
-                ? "/pages/admin/edit-artwork.jsp"
-                : "/pages/admin/add-artwork.jsp";
-
-        boolean isAdd = !"update".equals(action);
+        boolean isUpdate = "update".equals(action);
 
         if (categoryIdText == null || categoryIdText.trim().isEmpty()
                 || title == null || title.trim().isEmpty()
                 || description == null || description.trim().isEmpty()
-                || priceText == null || priceText.trim().isEmpty()
-                || (!isAdd && (imagePath == null || imagePath.trim().isEmpty()))) {
+                || priceText == null || priceText.trim().isEmpty()) {
 
-            request.setAttribute("error", "All artwork fields are required.");
-            request.getRequestDispatcher(targetPage).forward(request, response);
+            response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?error=true");
             return;
         }
 
@@ -110,37 +110,27 @@ public class ArtworkServlet extends HttpServlet {
         try {
             price = Double.parseDouble(priceText);
         } catch (NumberFormatException e) {
-            request.setAttribute("error", "Price must be a valid number.");
-            request.getRequestDispatcher(targetPage).forward(request, response);
+            response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?error=true");
             return;
         }
 
         if (price <= 0) {
-            request.setAttribute("error", "Price must be greater than 0.");
-            request.getRequestDispatcher(targetPage).forward(request, response);
+            response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?error=true");
             return;
         }
 
         int categoryId = Integer.parseInt(categoryIdText);
+        String resolvedImagePath = oldImagePath;
 
-        String resolvedImagePath;
+        Part filePart = request.getPart("imageFile");
 
-        if (isAdd) {
-            Part filePart = request.getPart("imageFile");
-
-            if (filePart == null || filePart.getSize() == 0) {
-                request.setAttribute("error", "Artwork image is required.");
-                request.getRequestDispatcher("/pages/admin/add-artwork.jsp").forward(request, response);
-                return;
-            }
-
+        if (filePart != null && filePart.getSize() > 0) {
             String submittedName = filePart.getSubmittedFileName();
             String ext = submittedName.substring(submittedName.lastIndexOf(".") + 1).toLowerCase();
 
             if (!ext.equals("jpg") && !ext.equals("jpeg")
                     && !ext.equals("png") && !ext.equals("gif")) {
-                request.setAttribute("error", "Invalid image format. Only jpg, jpeg, png, gif allowed.");
-                request.getRequestDispatcher("/pages/admin/add-artwork.jsp").forward(request, response);
+                response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?error=true");
                 return;
             }
 
@@ -155,9 +145,11 @@ public class ArtworkServlet extends HttpServlet {
             filePart.write(uploadFolder + File.separator + uniqueFileName);
 
             resolvedImagePath = "resources/images/artworks/" + uniqueFileName;
+        }
 
-        } else {
-            resolvedImagePath = imagePath.trim();
+        if (!isUpdate && (resolvedImagePath == null || resolvedImagePath.trim().isEmpty())) {
+            response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?error=true");
+            return;
         }
 
         Artwork artwork = new Artwork();
@@ -167,14 +159,14 @@ public class ArtworkServlet extends HttpServlet {
         artwork.setPrice(price);
         artwork.setImagePath(resolvedImagePath);
 
-        if ("update".equals(action)) {
+        if (isUpdate) {
             int artworkId = Integer.parseInt(request.getParameter("artworkId"));
             artwork.setArtworkId(artworkId);
             artworkDAO.updateArtwork(artwork);
+            response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?updated=true");
         } else {
             artworkDAO.addArtwork(artwork);
+            response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?success=true");
         }
-
-        response.sendRedirect(request.getContextPath() + "/admin/artwork");
     }
 }
