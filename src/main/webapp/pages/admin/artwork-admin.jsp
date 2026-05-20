@@ -212,7 +212,7 @@
 
         </div>
 
-        <form action="${pageContext.request.contextPath}/admin/artwork"
+        <form action="${pageContext.request.contextPath}/addArtwork"
               method="post"
               enctype="multipart/form-data"
               class="artwork-form">

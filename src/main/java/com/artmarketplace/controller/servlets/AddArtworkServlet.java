@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
-
 /**
  * Servlet responsible for uploading artwork image
  * and storing artwork details into database.
@@ -46,7 +45,8 @@ public class AddArtworkServlet extends HttpServlet {
                RECEIVING FORM DATA
             ===================================================== */
 
-            String title = request.getParameter("title");
+            String title =
+                    request.getParameter("title");
 
             String description =
                     request.getParameter("description");
@@ -61,18 +61,45 @@ public class AddArtworkServlet extends HttpServlet {
 
 
             /* =====================================================
-               RECEIVING IMAGE FILE
+               DAO OBJECT
             ===================================================== */
 
-            Part image = request.getPart("image");
+            ArtworkDAO artworkDAO =
+                    new ArtworkDAO();
 
 
             /* =====================================================
-               EXTRACTING IMAGE FILE NAME
+               GET CATEGORY NAME FROM DATABASE
+            ===================================================== */
+
+            String category =
+                    artworkDAO.getCategoryNameById(categoryId);
+
+
+            /* =====================================================
+               RECEIVING IMAGE FILE
+            ===================================================== */
+
+            Part image =
+                    request.getPart("imageFile");
+
+
+            /* =====================================================
+               ORIGINAL IMAGE NAME
+            ===================================================== */
+
+            String originalImageName =
+                    image.getSubmittedFileName();
+
+
+            /* =====================================================
+               UNIQUE IMAGE NAME
             ===================================================== */
 
             String imageName =
-                    image.getSubmittedFileName();
+                    System.currentTimeMillis()
+                    + "_"
+                    + originalImageName;
 
 
             /* =====================================================
@@ -80,7 +107,7 @@ public class AddArtworkServlet extends HttpServlet {
             ===================================================== */
 
             String uploadFolder =
-                    "resources/uploaded-artworks";
+                    "resources/images/" + category;
 
 
             /* =====================================================
@@ -88,31 +115,18 @@ public class AddArtworkServlet extends HttpServlet {
             ===================================================== */
 
             String mainFolder =
-                    request.getServletContext().getRealPath("");
+                    request.getServletContext()
+                           .getRealPath("");
 
 
             /* =====================================================
-               FILE ACCESS PATH
-            ===================================================== */
-
-            String fileAccessPath =
-                    uploadFolder + "/" + imageName;
-
-
-            /* =====================================================
-               FULL FILE PATH
-            ===================================================== */
-
-            String stringFilePath =
-                    mainFolder + "/" + fileAccessPath;
-
-
-            /* =====================================================
-               CREATE FOLDER IF NOT EXISTS
+               CREATE CATEGORY FOLDER
             ===================================================== */
 
             File fileSaveDir =
-                    new File(mainFolder + "/" + uploadFolder);
+                    new File(mainFolder
+                    + File.separator
+                    + uploadFolder);
 
             if (!fileSaveDir.exists()) {
 
@@ -121,7 +135,27 @@ public class AddArtworkServlet extends HttpServlet {
 
 
             /* =====================================================
-               WRITING IMAGE FILE
+               DATABASE IMAGE PATH
+            ===================================================== */
+
+            String fileAccessPath =
+                    uploadFolder
+                    + "/"
+                    + imageName;
+
+
+            /* =====================================================
+               FULL FILE PATH
+            ===================================================== */
+
+            String stringFilePath =
+                    mainFolder
+                    + File.separator
+                    + fileAccessPath;
+
+
+            /* =====================================================
+               WRITE IMAGE FILE
             ===================================================== */
 
             image.write(stringFilePath);
@@ -131,7 +165,8 @@ public class AddArtworkServlet extends HttpServlet {
                CREATE ARTWORK OBJECT
             ===================================================== */
 
-            Artwork artwork = new Artwork();
+            Artwork artwork =
+                    new Artwork();
 
             artwork.setTitle(title);
 
@@ -147,8 +182,6 @@ public class AddArtworkServlet extends HttpServlet {
             /* =====================================================
                INSERT INTO DATABASE
             ===================================================== */
-
-            ArtworkDAO artworkDAO = new ArtworkDAO();
 
             boolean result =
                     artworkDAO.addArtwork(artwork);
@@ -177,7 +210,7 @@ public class AddArtworkServlet extends HttpServlet {
 
             response.sendRedirect(
                     request.getContextPath()
-                    + "/pages/admin/artwork-admin.jsp?error=true");
+                    + "/admin-artworks?error=true");
         }
     }
 }
