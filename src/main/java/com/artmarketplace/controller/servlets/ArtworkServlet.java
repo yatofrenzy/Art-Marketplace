@@ -67,8 +67,14 @@ public class ArtworkServlet extends HttpServlet {
 
         } else if (action.equals("delete")) {
             int artworkId = Integer.parseInt(request.getParameter("id"));
-            artworkDAO.deleteArtwork(artworkId);
-            response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?deleted=true");
+
+            boolean deleted = artworkDAO.deleteArtwork(artworkId);
+
+            if (deleted) {
+                response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?deleted=true");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp?deleteError=true");
+            }
 
         } else {
             response.sendRedirect(request.getContextPath() + "/pages/admin/artwork-admin.jsp");

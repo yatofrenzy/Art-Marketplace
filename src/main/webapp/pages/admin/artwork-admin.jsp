@@ -125,10 +125,10 @@
             </div>
         <% } %>
         <%
-String error = request.getParameter("error");
+		String error = request.getParameter("error");
 
-if ("deletefailed".equals(error)) {
-%>
+		if ("deletefailed".equals(error)) {
+			%>
 
 <div class="error-message">
     Failed to delete artwork.
@@ -159,21 +159,7 @@ if ("deletefailed".equals(error)) {
                             imagePath = "resources/images/default.jpg";
                         }
 
-                        String fullImagePath;
-
-                        if(imagePath.startsWith("uploads/")) {
-
-                            // External uploaded images
-                            fullImagePath = "/" + imagePath;
-
-                        } else {
-
-                            // Old internal project images
-                            fullImagePath =
-                                    request.getContextPath()
-                                    + "/"
-                                    + imagePath;
-                        }
+                        String fullImagePath = request.getContextPath() + "/" + imagePath;
             %>
 
             <div class="product-card" data-category="<%= art.getCategoryId() %>">
