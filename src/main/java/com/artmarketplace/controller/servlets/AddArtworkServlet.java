@@ -21,18 +21,15 @@ import jakarta.servlet.http.Part;
 @WebServlet(urlPatterns = { "/addArtwork" })
 
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024 * 2,   // 2MB
-    maxFileSize = 1024 * 1024 * 10,        // 10MB
-    maxRequestSize = 1024 * 1024 * 50      // 50MB
+    fileSizeThreshold = 1024 * 1024 * 2,
+    maxFileSize = 1024 * 1024 * 10,
+    maxRequestSize = 1024 * 1024 * 50
 )
 
 public class AddArtworkServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Handles artwork upload request.
-     */
     @Override
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
@@ -41,9 +38,9 @@ public class AddArtworkServlet extends HttpServlet {
 
         try {
 
-            /* =====================================================
-               RECEIVING FORM DATA
-            ===================================================== */
+            /* =========================================
+               FORM DATA
+            ========================================= */
 
             String title =
                     request.getParameter("title");
@@ -60,45 +57,39 @@ public class AddArtworkServlet extends HttpServlet {
                             request.getParameter("categoryId"));
 
 
-            /* =====================================================
-               DAO OBJECT
-            ===================================================== */
+            /* =========================================
+               DAO
+            ========================================= */
 
             ArtworkDAO artworkDAO =
                     new ArtworkDAO();
 
 
-            /* =====================================================
-               GET CATEGORY NAME FROM DATABASE
-            ===================================================== */
+            /* =========================================
+               CATEGORY NAME
+            ========================================= */
 
             String category =
                     artworkDAO.getCategoryNameById(categoryId);
 
-            // Replace spaces with underscores
             category =
                     category.replaceAll("\\s+", "_");
 
 
-            /* =====================================================
-               RECEIVING IMAGE FILE
-            ===================================================== */
+            /* =========================================
+               IMAGE FILE
+            ========================================= */
 
             Part image =
                     request.getPart("imageFile");
 
 
-            /* =====================================================
-               ORIGINAL IMAGE NAME
-            ===================================================== */
+            /* =========================================
+               IMAGE NAME
+            ========================================= */
 
             String originalImageName =
                     image.getSubmittedFileName();
-
-
-            /* =====================================================
-               UNIQUE IMAGE NAME
-            ===================================================== */
 
             String imageName =
                     System.currentTimeMillis()
@@ -106,30 +97,31 @@ public class AddArtworkServlet extends HttpServlet {
                     + originalImageName;
 
 
-            /* =====================================================
-               EXTERNAL ROOT FOLDER
-            ===================================================== */
+            /* =========================================
+               INTERNAL UPLOAD FOLDER
+            ========================================= */
 
-            String uploadRoot =
-                    "D:/ArtMarketplaceUploads";
-
-
-            /* =====================================================
-               PHYSICAL CATEGORY FOLDER
-            ===================================================== */
-
-            String physicalUploadFolder =
-                    uploadRoot
-                    + File.separator
-                    + category;
+            String uploadFolder =
+                    "resources/images/" + category;
 
 
-            /* =====================================================
-               CREATE CATEGORY DIRECTORY
-            ===================================================== */
+            /* =========================================
+               TOMCAT PROJECT PATH
+            ========================================= */
+
+            String mainFolder =
+                    request.getServletContext()
+                           .getRealPath("");
+
+
+            /* =========================================
+               CREATE DIRECTORY
+            ========================================= */
 
             File fileSaveDir =
-                    new File(physicalUploadFolder);
+                    new File(mainFolder
+                    + File.separator
+                    + uploadFolder);
 
             if (!fileSaveDir.exists()) {
 
@@ -137,53 +129,36 @@ public class AddArtworkServlet extends HttpServlet {
             }
 
 
-            /* =====================================================
+            /* =========================================
                DATABASE IMAGE PATH
-            ===================================================== */
+            ========================================= */
 
             String fileAccessPath =
-                    "uploads/"
-                    + category
+                    uploadFolder
                     + "/"
                     + imageName;
 
 
-            /* =====================================================
-               FULL PHYSICAL FILE PATH
-            ===================================================== */
+            /* =========================================
+               FULL FILE PATH
+            ========================================= */
 
             String stringFilePath =
-                    physicalUploadFolder
+                    mainFolder
                     + File.separator
-                    + imageName;
+                    + fileAccessPath;
 
 
-            /* =====================================================
-               DEBUG LOGS
-            ===================================================== */
-
-            System.out.println("CATEGORY: " + category);
-
-            System.out.println("PHYSICAL FOLDER: "
-                    + physicalUploadFolder);
-
-            System.out.println("DATABASE PATH: "
-                    + fileAccessPath);
-
-            System.out.println("FULL FILE PATH: "
-                    + stringFilePath);
-
-
-            /* =====================================================
-               WRITE IMAGE FILE
-            ===================================================== */
+            /* =========================================
+               WRITE FILE
+            ========================================= */
 
             image.write(stringFilePath);
 
 
-            /* =====================================================
-               CREATE ARTWORK OBJECT
-            ===================================================== */
+            /* =========================================
+               ARTWORK OBJECT
+            ========================================= */
 
             Artwork artwork =
                     new Artwork();
@@ -199,21 +174,17 @@ public class AddArtworkServlet extends HttpServlet {
             artwork.setImagePath(fileAccessPath);
 
 
-            /* =====================================================
-               INSERT INTO DATABASE
-            ===================================================== */
+            /* =========================================
+               DATABASE INSERT
+            ========================================= */
 
             boolean result =
                     artworkDAO.addArtwork(artwork);
 
-            System.out.println(
-                    "DATABASE INSERT RESULT: "
-                    + result);
 
-
-            /* =====================================================
-               SUCCESS / FAILURE
-            ===================================================== */
+            /* =========================================
+               REDIRECT
+            ========================================= */
 
             if (result) {
 
