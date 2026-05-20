@@ -1,12 +1,22 @@
+<%@ page import="com.artmarketplace.model.TopProduct" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
-List<String> topProducts =
-(List<String>) request.getAttribute("topProducts");
+
+List<TopProduct> topProducts =
+(List<TopProduct>) request.getAttribute("topProducts");
 
 List<Double> monthlySales =
 (List<Double>) request.getAttribute("monthlySales");
+
+String selectedYear = request.getParameter("year");
+
+if(selectedYear == null){
+
+    selectedYear = "2026";
+}
+
 %>
 
 <!DOCTYPE html>
@@ -144,13 +154,29 @@ List<Double> monthlySales =
 
                 <h3>Sales Analytics</h3>
 
-                <select>
+                <form method="get" id="yearForm">
 
-                    <option>2026</option>
-                    <option>2025</option>
-                    <option>2024</option>
+                    <select name="year"
+                            onchange="document.getElementById('yearForm').submit()">
 
-                </select>
+                        <option value="2026"
+                            <%= "2026".equals(selectedYear) ? "selected" : "" %>>
+                            2026
+                        </option>
+
+                        <option value="2025"
+                            <%= "2025".equals(selectedYear) ? "selected" : "" %>>
+                            2025
+                        </option>
+
+                        <option value="2024"
+                            <%= "2024".equals(selectedYear) ? "selected" : "" %>>
+                            2024
+                        </option>
+
+                    </select>
+
+                </form>
 
             </div>
 
@@ -169,41 +195,40 @@ List<Double> monthlySales =
 
             <div class="product-grid">
 
-                <%
+            <%
 
-                if(topProducts != null && !topProducts.isEmpty()){
+            if(topProducts != null && !topProducts.isEmpty()){
 
-                    for(String product : topProducts){
+                for(TopProduct product : topProducts){
 
-                %>
+            %>
 
-                    <div class="product-card">
+                <div class="product-card">
 
-                        <img
-                        src="${pageContext.request.contextPath}/resources/images/default-art.png"
-                        alt="Artwork">
+                    <img src="${pageContext.request.contextPath}/<%= product.getImage() %>"
+                         alt="Artwork">
 
-                        <h4><%= product %></h4>
+                    <h4><%= product.getName() %></h4>
 
-                        <p>Top Selling Artwork</p>
+                    <p>Rs <%= product.getPrice() %></p>
 
-                    </div>
+                </div>
 
-                <%
-
-                    }
-
-                } else {
-
-                %>
-
-                    <p>No top selling products found.</p>
-
-                <%
+            <%
 
                 }
 
-                %>
+            } else {
+
+            %>
+
+                <p>No top selling products found.</p>
+
+            <%
+
+            }
+
+            %>
 
             </div>
 
@@ -243,13 +268,13 @@ new Chart(ctx, {
 
             label: 'Monthly Sales',
 
-            data: [
-            	<%= (monthlySales != null ? monthlySales.toString().replace("[", "").replace("]", "") : "") %>
-],
+            data: <%= monthlySales %>,
 
             borderColor: '#52d6c5',
 
             backgroundColor: 'rgba(82,214,197,0.20)',
+
+            borderWidth: 3,
 
             fill: true,
 
@@ -271,6 +296,7 @@ new Chart(ctx, {
         plugins: {
 
             legend: {
+
                 display: true
             }
 
@@ -281,6 +307,7 @@ new Chart(ctx, {
             x: {
 
                 grid: {
+
                     display: false
                 }
 
@@ -309,7 +336,7 @@ new Chart(ctx, {
 });
 
 </script>
-<%= monthlySales %>
+
 <!-- JS -->
 <script src="${pageContext.request.contextPath}/js/ui.js"></script>
 

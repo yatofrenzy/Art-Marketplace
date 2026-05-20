@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.artmarketplace.model.TopProduct;
 import com.artmarketplace.utilities.DbConfig;
 
 public class AdminAnalyticsDAO {
@@ -106,72 +107,100 @@ public class AdminAnalyticsDAO {
         return totalCustomers;
     }
 
-    // =========================================
-    // MONTHLY SALES
-    // =========================================
-    public List<Double> getMonthlySales() {
+ // =========================================
+ // MONTHLY SALES
+ // =========================================
+ public List<Double> getMonthlySales(int year) {
 
-        List<Double> sales = new ArrayList<>();
+     List<Double> sales = new ArrayList<>();
 
-        String sql =
-        "SELECT MONTH(order_date) AS month, " +
-        "SUM(total_amount) AS total " +
-        "FROM orders " +
-        "GROUP BY MONTH(order_date) " +
-        "ORDER BY MONTH(order_date)";
+     // Fill all 12 months with 0
+     for(int i = 0; i < 12; i++) {
 
-        try (
-            Connection conn = DbConfig.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery()
-        ) {
+         sales.add(0.0);
+     }
 
-            while (rs.next()) {
+     String sql =
+         "SELECT MONTH(order_date) AS month, " +
+         "SUM(total_amount) AS total " +
+         "FROM orders " +
+         "WHERE YEAR(order_date) = ? " +
+         "GROUP BY MONTH(order_date) " +
+         "ORDER BY MONTH(order_date)";
 
-                sales.add(
-                    rs.getDouble("total")
-                );
+     try (
 
-            }
+         Connection conn = DbConfig.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)
 
-        } catch (Exception e) {
+     ) {
 
-            e.printStackTrace();
+         // SET YEAR
+         ps.setInt(1, year);
 
-        }
+         ResultSet rs = ps.executeQuery();
 
-        return sales;
-    }
+         while (rs.next()) {
+
+             int month = rs.getInt("month");
+
+             double total = rs.getDouble("total");
+
+             // month-1 because array starts from 0
+             sales.set(month - 1, total);
+         }
+
+     } catch (Exception e) {
+
+         e.printStackTrace();
+     }
+
+     return sales;
+ }
 
     // =========================================
     // TOP SELLING PRODUCTS
     // =========================================
-    public List<String> getTopSellingProducts() {
+    public List<TopProduct> getTopSellingProducts() {
 
-        List<String> products = new ArrayList<>();
+        List<TopProduct> products =
+                new ArrayList<>();
 
         String sql =
-        		"SELECT a.title, SUM(oi.quantity) AS total_sold " +
-        		"FROM order_items oi " +
-        		"JOIN artworks a ON oi.artwork_id = a.artwork_id " +
-        		"GROUP BY a.title " +
-        		"ORDER BY total_sold DESC LIMIT 5";
+            "SELECT a.title, a.image_path, a.price," +
+            "SUM(oi.quantity) AS total_sold " +
+            "FROM order_items oi " +
+            "JOIN artworks a " +
+            "ON oi.artwork_id = a.artwork_id " +
+            "GROUP BY a.title, a.image_path, a.price " +
+            "ORDER BY total_sold DESC " +
+            "LIMIT 5";
 
         try (
             Connection conn = DbConfig.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps =
+                    conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()
         ) {
 
-            while (rs.next()) {
+            while(rs.next()) {
 
-                products.add(
-                    rs.getString("title")
-                );
+                TopProduct product =
+                        new TopProduct();
 
+                product.setName(
+                        rs.getString("title"));
+
+                product.setImage(
+                        rs.getString("image_path"));
+                
+                product.setPrice(
+                	    rs.getDouble("price"));
+
+                products.add(product);
             }
 
-        } catch (Exception e) {
+        } catch(Exception e) {
 
             e.printStackTrace();
 
@@ -179,5 +208,4 @@ public class AdminAnalyticsDAO {
 
         return products;
     }
-
 }

@@ -24,17 +24,50 @@ public class AdminAnalyticsServlet extends HttpServlet {
         AdminAnalyticsDAO dao =
                 new AdminAnalyticsDAO();
 
+        // =========================================
+        // GET SELECTED YEAR
+        // =========================================
+
+        String yearParam = request.getParameter("year");
+
+        int selectedYear;
+
+        if(yearParam == null || yearParam.isEmpty()){
+
+            selectedYear = 2026;
+
+        }else{
+
+            selectedYear = Integer.parseInt(yearParam);
+        }
+
+        // =========================================
+        // TOTAL REVENUE
+        // =========================================
+
         request.setAttribute(
                 "income",
                 dao.getTotalRevenue());
+
+        // =========================================
+        // TOTAL ORDERS
+        // =========================================
 
         request.setAttribute(
                 "totalOrders",
                 dao.getTotalOrders());
 
+        // =========================================
+        // SALES DATA
+        // =========================================
+
         request.setAttribute(
                 "salesData",
-                dao.getMonthlySales());
+                dao.getMonthlySales(selectedYear));
+
+        // =========================================
+        // FORWARD
+        // =========================================
 
         request.getRequestDispatcher(
                 "/pages/admin/analytics-admin.jsp")
