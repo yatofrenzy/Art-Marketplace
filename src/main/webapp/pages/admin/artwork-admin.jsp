@@ -11,15 +11,24 @@
     User admin = (User) session.getAttribute("user");
 
     if (admin == null || !"admin".equalsIgnoreCase(admin.getRole())) {
-        response.sendRedirect(request.getContextPath() + "/pages/common/login.jsp");
+
+        response.sendRedirect(
+                request.getContextPath()
+                + "/pages/common/login.jsp");
+
         return;
     }
 
     ArtworkDAO dao = new ArtworkDAO();
-    CategoryDAO categoryDAO = new CategoryDAO();
 
-    List<Artwork> artworks = dao.getAllArtworks();
-    List<Category> categories = categoryDAO.getAllCategories();
+    CategoryDAO categoryDAO =
+            new CategoryDAO();
+
+    List<Artwork> artworks =
+            dao.getAllArtworks();
+
+    List<Category> categories =
+            categoryDAO.getAllCategories();
 %>
 
 <!DOCTYPE html>
@@ -40,7 +49,9 @@
           href="${pageContext.request.contextPath}/css/dashboard.css?v=15">
 
     <style>
+
         .card-actions {
+
             display: flex;
             justify-content: center;
             gap: 14px;
@@ -49,6 +60,7 @@
 
         .edit-btn,
         .delete-btn {
+
             width: 42px;
             height: 42px;
             border-radius: 14px;
@@ -60,14 +72,17 @@
         }
 
         .edit-btn {
+
             background: #e6fffa;
             color: #0f766e;
         }
 
         .delete-btn {
+
             background: #fff1f2;
             color: #be123c;
         }
+
     </style>
 
 </head>
@@ -88,19 +103,30 @@
 
             <div class="topbar-actions">
 
-                <button class="add-artwork-btn" onclick="openArtworkModal()">
+                <button class="add-artwork-btn"
+                        onclick="openArtworkModal()">
+
                     <i class="fa-solid fa-plus"></i>
                     Add Artwork
+
                 </button>
 
                 <select class="artwork-filter">
-                    <option value="all">All Categories</option>
+
+                    <option value="all">
+                        All Categories
+                    </option>
 
                     <% for(Category category : categories) { %>
+
                         <option value="<%= category.getCategoryId() %>">
+
                             <%= category.getCategoryName() %>
+
                         </option>
+
                     <% } %>
+
                 </select>
 
             </div>
@@ -108,43 +134,61 @@
         </div>
 
         <% if(request.getParameter("success") != null){ %>
+
             <div class="success-message">
                 Artwork uploaded successfully.
             </div>
+
         <% } %>
 
         <% if(request.getParameter("updated") != null){ %>
+
             <div class="success-message">
                 Artwork updated successfully.
             </div>
+
         <% } %>
 
         <% if(request.getParameter("deleted") != null){ %>
+
             <div class="success-message">
                 Artwork deleted successfully.
             </div>
+
         <% } %>
+
         <%
 		String error = request.getParameter("error");
 
 		if ("deletefailed".equals(error)) {
 			%>
 
-<div class="error-message">
-    Failed to delete artwork.
-</div>
+          
 
-<%
-}
-%>
+
+            <div class="error-message">
+                Failed to delete artwork.
+            </div>
+
+        <%
+            }
+        %>
 
         <% if(request.getParameter("error") != null){ %>
+
             <div class="error-message">
                 Artwork operation failed.
             </div>
+
         <% } %>
 
-        <h3 class="section-title">Top Selling Products</h3>
+        <h3 class="section-title">
+            Top Selling Products
+        </h3>
+
+        <!-- ===================================================== -->
+        <!-- PRODUCT GRID -->
+        <!-- ===================================================== -->
 
         <div class="product-grid">
 
@@ -153,41 +197,62 @@
 
                     for (Artwork art : artworks) {
 
-                        String imagePath = art.getImagePath();
+                        String imagePath =
+                                art.getImagePath();
 
-                        if(imagePath == null || imagePath.trim().isEmpty()) {
-                            imagePath = "resources/images/default.jpg";
+                        if (imagePath == null
+                                || imagePath.trim().isEmpty()) {
+
+                            imagePath =
+                                    "resources/images/default.jpg";
                         }
 
+
                         String fullImagePath = request.getContextPath() + "/" + imagePath;
+
+                        
+
             %>
 
-            <div class="product-card" data-category="<%= art.getCategoryId() %>">
+            <div class="product-card"
+                 data-category="<%= art.getCategoryId() %>">
 
                 <img src="<%= fullImagePath %>"
                      alt="<%= art.getTitle() %>">
 
                 <div class="product-content">
 
-                    <h4><%= art.getTitle() %></h4>
+                    <h4>
+                        <%= art.getTitle() %>
+                    </h4>
 
                     <div class="art-description">
+
                         <%= art.getDescription() %>
+
                     </div>
 
-                    <p>Rs <%= art.getPrice() %></p>
+                    <p>
+                        Rs <%= art.getPrice() %>
+                    </p>
 
                     <div class="card-actions">
+
                         <a class="edit-btn"
                            href="${pageContext.request.contextPath}/admin/artwork?action=edit&id=<%= art.getArtworkId() %>">
+
                             <i class="fa-solid fa-pen-to-square"></i>
+
                         </a>
 
                         <a class="delete-btn"
                            href="${pageContext.request.contextPath}/admin/artwork?action=delete&id=<%= art.getArtworkId() %>"
                            onclick="return confirm('Are you sure you want to delete this artwork?');">
+
                             <i class="fa-solid fa-trash"></i>
+
                         </a>
+
                     </div>
 
                 </div>
@@ -196,6 +261,7 @@
 
             <%
                     }
+
                 } else {
             %>
 
@@ -211,7 +277,12 @@
 
 </div>
 
-<div id="artworkModal" class="artwork-modal">
+<!-- ===================================================== -->
+<!-- MODAL -->
+<!-- ===================================================== -->
+
+<div id="artworkModal"
+     class="artwork-modal">
 
     <div class="artwork-modal-content">
 
@@ -219,8 +290,11 @@
 
             <h2>Add New Artwork</h2>
 
-            <span class="close-modal" onclick="closeArtworkModal()">
-                &times;
+            <span class="close-modal"
+                  onclick="closeArtworkModal()">
+
+                
+
             </span>
 
         </div>
@@ -230,7 +304,9 @@
               enctype="multipart/form-data"
               class="artwork-form">
 
-            <input type="hidden" name="action" value="add">
+            <input type="hidden"
+                   name="action"
+                   value="add">
 
             <div class="form-group">
 
@@ -271,14 +347,21 @@
 
                     <label>Category</label>
 
-                    <select name="categoryId" required>
+                    <select name="categoryId"
+                            required>
 
-                        <option value="">Select Category</option>
+                        <option value="">
+                            Select Category
+                        </option>
 
                         <% for(Category category : categories) { %>
+
                             <option value="<%= category.getCategoryId() %>">
+
                                 <%= category.getCategoryName() %>
+
                             </option>
+
                         <% } %>
 
                     </select>
@@ -298,8 +381,11 @@
 
             </div>
 
-            <button type="submit" class="upload-btn">
+            <button type="submit"
+                    class="upload-btn">
+
                 Upload Artwork
+
             </button>
 
         </form>
@@ -311,17 +397,24 @@
 <script>
 
 function openArtworkModal() {
-    document.getElementById("artworkModal").style.display = "flex";
+
+    document.getElementById("artworkModal")
+            .style.display = "flex";
 }
 
 function closeArtworkModal() {
-    document.getElementById("artworkModal").style.display = "none";
+
+    document.getElementById("artworkModal")
+            .style.display = "none";
 }
 
 window.onclick = function(event) {
-    const modal = document.getElementById("artworkModal");
+
+    const modal =
+            document.getElementById("artworkModal");
 
     if (event.target === modal) {
+
         modal.style.display = "none";
     }
 }
@@ -330,26 +423,34 @@ window.onclick = function(event) {
 
 <script>
 
-    const filterDropdown = document.querySelector('.artwork-filter');
-    const artworkCards = document.querySelectorAll('.product-card');
+const filterDropdown =
+        document.querySelector('.artwork-filter');
 
-    filterDropdown.addEventListener('change', function () {
+const artworkCards =
+        document.querySelectorAll('.product-card');
 
-        const selectedCategory = this.value;
+filterDropdown.addEventListener('change', function () {
 
-        artworkCards.forEach(card => {
+    const selectedCategory = this.value;
 
-            const cardCategory = card.getAttribute('data-category');
+    artworkCards.forEach(card => {
 
-            if (selectedCategory === 'all' || selectedCategory === cardCategory) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
+        const cardCategory =
+                card.getAttribute('data-category');
 
-        });
+        if (selectedCategory === 'all'
+                || selectedCategory === cardCategory) {
+
+            card.style.display = 'block';
+
+        } else {
+
+            card.style.display = 'none';
+        }
 
     });
+
+});
 
 </script>
 
